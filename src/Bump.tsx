@@ -6,6 +6,7 @@ export interface Props {
     duration?: number;
     delay?: number;
     distance?: number;
+    offset?: number;
 }
 
 export const Bump: React.FC<Props> = ({
@@ -13,13 +14,14 @@ export const Bump: React.FC<Props> = ({
     direction,
     duration = 15,
     delay = 0,
-    distance = 100
+    distance = 100,
+    offset = 0
 }) => {
     const currentFrame = useCurrentFrame();
     const translate = interpolate(
         currentFrame - delay,
         [0, duration],
-        [0, distance],
+        [offset, offset - distance],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -30,7 +32,7 @@ export const Bump: React.FC<Props> = ({
     return (
         <AbsoluteFill
             style={{
-                transform: direction === 'up' ? `translateY(-${translate}px)` : direction === 'down' ? `translateY(${translate}px)` : direction === 'left' ? `translateX(-${translate}px)` : `translateX(${translate}px)`,
+                transform: direction === 'up' ? `translateY(${translate}px)` : direction === 'down' ? `translateY(-${translate}px)` : direction === 'left' ? `translateX(${translate}px)` : `translateX(-${translate}px)`,
             }}
         >
             {children}

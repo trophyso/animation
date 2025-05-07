@@ -7,7 +7,7 @@ interface Props {
     min?: number;
 }
 
-export const FadeIn: React.FC<Props> = ({
+export const FadeOut: React.FC<Props> = ({
     children,
     duration = 15,
     delay = 0,
@@ -17,7 +17,7 @@ export const FadeIn: React.FC<Props> = ({
     const opacity = interpolate(
         currentFrame - delay,
         [0, duration],
-        [min, 1],
+        [1, min],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
