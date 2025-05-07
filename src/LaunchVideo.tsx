@@ -1,25 +1,43 @@
 import { AbsoluteFill, Sequence } from "remotion";
+import { HashBackground } from "./HashBackground";
 import { LightBackground } from "./LightBackground";
 import { Typing } from "./Typing";
 import { DarkBackground } from "./DarkBackground";
 import { Cursor } from "./Cursor";
 import { ScrollWords } from "./ScrollWords";
+import { ZoomIn } from "./ZoomIn";
+import { FadeOut } from "./FadeOut";
+import { ZoomOut } from "./ZoomOut";
+import { CodeSnippet } from "./CodeSnippet";
 
 export const LaunchVideo: React.FC = () => {
     return (
         <AbsoluteFill>
             <Sequence durationInFrames={45}>
-                <LightBackground />
-                <Typing text="introducing trophy" />
+                <HashBackground />
+                <Typing text="Introducing Trophy" />
             </Sequence>
             <Sequence from={45} durationInFrames={45}>
                 <DarkBackground />
                 <Typing text="APIs & SDKs for" theme="dark" />
             </Sequence>
-            <Sequence from={90}>
+            <Sequence from={90} durationInFrames={120}>
                 <LightBackground />
-                <ScrollWords />
-                <Cursor delay={75} />
+                <FadeOut delay={90} duration={30}>
+                    <ZoomIn delay={90} duration={30} startScale={1} endScale={25}>
+                        <HashBackground />
+                        <ScrollWords />
+                        <Cursor delay={75} />
+                    </ZoomIn>
+                </FadeOut>
+            </Sequence>
+            <Sequence from={210} durationInFrames={200}>
+                <FadeOut delay={210} duration={15}>
+                    <ZoomOut duration={20} startScale={20} endScale={1}>
+                        <HashBackground />
+                        <CodeSnippet />
+                    </ZoomOut>
+                </FadeOut>
             </Sequence>
         </AbsoluteFill>
     );
