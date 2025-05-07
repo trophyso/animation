@@ -53,10 +53,23 @@ await trophy.metrics.event("words-written", {
     }).join('\n');
 
     // Calculate overall typing progress
-    const totalFrames = lines.length * 15 + 45; // Add title frames
+    const typingFrames = lines.length * 15 + 45; // Add title frames
+    const postTypingFrames = 5; // Reduced from 15 to 8 frames for even quicker rotation
+
     const typingProgress = interpolate(
         frame,
-        [45, totalFrames], // Start after title
+        [45, typingFrames], // Start after title
+        [0, 1],
+        {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+        }
+    );
+
+    // Calculate post-typing rotation (starts after typing is complete)
+    const postTypingProgress = interpolate(
+        frame,
+        [typingFrames, typingFrames + postTypingFrames], // Use the new frame calculations
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -79,23 +92,28 @@ await trophy.metrics.event("words-written", {
     const verticalPosition = interpolate(
         typingProgress,
         [0, 1],
-        [0, -40],
+        [0, -60], // Increased scroll distance
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
         }
     );
 
-    // Calculate 3D rotation based on typing progress
+    // Calculate 3D rotation based on typing progress and post-typing rotation
     const rotateX = interpolate(typingProgress, [0, 1], [0, 15]);
-    const rotateY = interpolate(typingProgress, [0, 1], [0, 45]);
+
+    // Adjust the rotation timing
+    const typingRotation = interpolate(typingProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during typing
+    const postTypingRotation = interpolate(postTypingProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after typing
+    const rotateY = typingRotation + postTypingRotation;
+
     const scale = interpolate(typingProgress, [0, 1], [1, 0.95]);
 
-    // Calculate title offset based on rotation
+    // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(
-        typingProgress,
+        typingProgress + postTypingProgress,
         [0, 1],
-        [0, -100], // Move up by 100px at max rotation
+        [0, -180], // Increased offset to match faster scroll and rotation
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',

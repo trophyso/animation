@@ -31,13 +31,15 @@ export const LaunchVideo: React.FC = () => {
                     </ZoomIn>
                 </FadeOut>
             </Sequence>
-            <Sequence from={210} durationInFrames={200}>
-                <FadeOut delay={210} duration={15}>
-                    <ZoomOut duration={20} startScale={20} endScale={1}>
-                        <HashBackground />
-                        <CodeSnippet />
-                    </ZoomOut>
-                </FadeOut>
+            <Sequence from={210} durationInFrames={230}>
+                <ZoomOut duration={20} startScale={20} endScale={1}>
+                    <HashBackground />
+                    <CodeSnippet />
+                </ZoomOut>
+            </Sequence>
+            <Sequence from={440} durationInFrames={230}>
+                <HashBackground />
+                <Typing text="Get started" />
             </Sequence>
         </AbsoluteFill>
     );
