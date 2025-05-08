@@ -1,4 +1,4 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, spring, useCurrentFrame } from "remotion";
 
 interface Props {
     children: React.ReactNode;
@@ -14,15 +14,18 @@ export const FadeOut: React.FC<Props> = ({
     min = 0
 }) => {
     const currentFrame = useCurrentFrame();
-    const opacity = interpolate(
-        currentFrame - delay,
-        [0, duration],
-        [1, min],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const opacity = spring({
+        frame: currentFrame - delay,
+        fps: 30,
+        from: 1,
+        to: min,
+        durationInFrames: duration,
+        config: {
+            damping: 12,
+            mass: 0.5,
+            stiffness: 100,
         }
-    );
+    });
 
     return (
         <AbsoluteFill

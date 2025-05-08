@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, spring } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
 import { Mail, Trophy, BarChart2, RefreshCw } from "lucide-react";
 
@@ -6,12 +6,13 @@ const { fontFamily } = loadFont();
 
 export const Emails: React.FC = () => {
     const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
 
     // Title typing animation
     const titleText = "and automated emails...";
     const titleProgress = interpolate(
         frame,
-        [0, 30],
+        [0, 25],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -65,26 +66,32 @@ export const Emails: React.FC = () => {
     // Calculate post-email rotation
     const postEmailFrames = 5;
     const postEmailDelay = 5;
-    const postEmailProgress = interpolate(
-        frame,
-        [30 + totalEmailFrames + postEmailDelay, 30 + totalEmailFrames + postEmailDelay + postEmailFrames],
-        [0, 1],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const postEmailProgress = spring({
+        frame: frame - (30 + totalEmailFrames + postEmailDelay),
+        fps: 30,
+        from: 0,
+        to: 1,
+        durationInFrames: postEmailFrames,
+        config: {
+            damping: 6,
+            mass: 0.5,
+            stiffness: 50,
         }
-    );
+    });
 
     // Initial zoom animation
-    const initialZoom = interpolate(
-        frame,
-        [20, 45],
-        [1, 2.2],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const initialZoom = spring({
+        frame: frame,
+        fps,
+        from: 1,
+        to: 2.2,
+        durationInFrames: 30,
+        config: {
+            damping: 15,
+            mass: 0.6,
+            stiffness: 80,
         }
-    );
+    });
 
     // Calculate vertical position based on email progress
     const verticalPosition = interpolate(
@@ -98,11 +105,11 @@ export const Emails: React.FC = () => {
     );
 
     // Calculate 3D rotation based on email progress and post-email rotation
-    const rotateX = interpolate(emailProgress, [0, 1], [0, 15]);
-    const emailRotation = interpolate(emailProgress, [0, 1], [0, 20]);
-    const postEmailRotation = interpolate(postEmailProgress, [0, 1], [0, 70]);
+    const rotateX = interpolate(emailProgress, [0, 1], [0, 8]);
+    const emailRotation = interpolate(emailProgress, [0, 1], [0, 10]);
+    const postEmailRotation = interpolate(postEmailProgress, [0, 1], [0, 80]);
     const rotateY = emailRotation + postEmailRotation;
-    const scale = interpolate(emailProgress, [0, 1], [1, 0.95]);
+    const scale = interpolate(emailProgress, [0, 1], [1, 0.97]);
 
     // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(

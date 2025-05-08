@@ -5,7 +5,7 @@ export const DarkBackground: React.FC = () => {
     return (
         <AbsoluteFill
             style={{
-                backgroundColor: '#000',
+                backgroundColor: '#1E1E1E',
                 alignItems: 'center',
                 justifyContent: 'center',
             }}

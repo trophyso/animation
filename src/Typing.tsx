@@ -36,7 +36,7 @@ export const Typing: React.FC<Props> = ({ text, theme = 'light' }) => {
                         height: '60px',
                         backgroundColor: theme === 'light' ? '#333' : theme === 'dark' ? '#fff' : '#4CC74A',
                         opacity: cursorOpacity,
-                        marginLeft: `${currentText.length * 34}px`,
+                        marginLeft: `${currentText.length * 36}px`,
                     }}
                 />
             </AbsoluteFill>

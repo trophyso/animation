@@ -1,4 +1,4 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, spring, useCurrentFrame } from "remotion";
 
 interface Props {
     children: React.ReactNode;
@@ -16,15 +16,18 @@ export const ZoomOut: React.FC<Props> = ({
     endScale = 1
 }) => {
     const currentFrame = useCurrentFrame();
-    const scale = interpolate(
-        currentFrame - delay,
-        [0, duration],
-        [startScale, endScale],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const scale = spring({
+        frame: currentFrame - delay,
+        fps: 30,
+        from: startScale,
+        to: endScale,
+        durationInFrames: duration,
+        config: {
+            damping: 100,
+            mass: 0.5,
+            stiffness: 100,
         }
-    );
+    });
 
     return (
         <AbsoluteFill

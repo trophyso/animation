@@ -7,7 +7,7 @@ export const ScrollWords: React.FC = () => {
     return (
         <>
             <Bump direction="left" distance={500}>
-                <FadeOut min={0.5}>
+                <FadeOut min={0.25}>
                     <Text text="APIs & SDKs for" />
                 </FadeOut>
             </Bump>

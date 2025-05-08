@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, spring } from "remotion";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { loadFont } from "@remotion/google-fonts/Montserrat";
@@ -55,6 +55,7 @@ await trophy.metrics.event("words-written", {
     // Calculate overall typing progress
     const typingFrames = lines.length * 15 + 45; // Add title frames
     const postTypingFrames = 5; // Reduced from 15 to 8 frames for even quicker rotation
+    const finalZoomFrames = 30; // Frames for the final zoom animation
 
     const typingProgress = interpolate(
         frame,
@@ -65,6 +66,20 @@ await trophy.metrics.event("words-written", {
             extrapolateRight: 'clamp',
         }
     );
+
+    // Calculate final zoom animation
+    const finalZoom = spring({
+        frame: frame - (typingFrames - 20),
+        fps: 30,
+        from: 1,
+        to: 15,
+        durationInFrames: finalZoomFrames + 20,
+        config: {
+            damping: 12,
+            mass: 0.5,
+            stiffness: 100,
+        }
+    });
 
     // Calculate post-typing rotation (starts after typing is complete)
     const postTypingProgress = interpolate(
@@ -78,21 +93,24 @@ await trophy.metrics.event("words-written", {
     );
 
     // Initial zoom animation (first 30 frames)
-    const initialZoom = interpolate(
-        frame,
-        [45, 75], // Start after title
-        [1, 2.2],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const initialZoom = spring({
+        frame: frame - 45, // Start after title
+        fps: 30,
+        from: 1,
+        to: 2.2,
+        durationInFrames: 20,
+        config: {
+            damping: 12,
+            mass: 0.5,
+            stiffness: 100,
         }
-    );
+    });
 
     // Calculate vertical position based on typing progress
     const verticalPosition = interpolate(
         typingProgress,
         [0, 1],
-        [0, -80], // Increased scroll distance
+        [0, -10], // Increased scroll distance
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -100,12 +118,10 @@ await trophy.metrics.event("words-written", {
     );
 
     // Calculate 3D rotation based on typing progress and post-typing rotation
-    const rotateX = interpolate(typingProgress, [0, 1], [0, 15]);
+    const rotateX = interpolate(typingProgress, [0, 1], [0, 10]); // Reduced from 15 to 10 degrees
 
     // Adjust the rotation timing
-    const typingRotation = interpolate(typingProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during typing
-    const postTypingRotation = interpolate(postTypingProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after typing
-    const rotateY = typingRotation + postTypingRotation;
+    const rotateY = interpolate(typingProgress, [0, 1], [0, 15]); // Reduced from 20 to 15 degrees and removed post-typing rotation
 
     const scale = interpolate(typingProgress, [0, 1], [1, 0.95]);
 
@@ -132,8 +148,8 @@ await trophy.metrics.event("words-written", {
                 alignItems: 'center',
                 padding: '2rem',
                 perspective: '1000px',
-                transform: `scale(${initialZoom})`,
-                transformOrigin: 'center top',
+                transform: `scale(${initialZoom * finalZoom})`,
+                transformOrigin: 'center center',
                 transition: 'transform 0.2s ease-out',
                 paddingTop: '10%',
             }}

@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
 import { Flame } from "lucide-react";
 
@@ -6,6 +6,7 @@ const { fontFamily } = loadFont();
 
 export const Streaks: React.FC = () => {
     const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
 
     // Array of streak colors
     const streaks = [
@@ -65,15 +66,18 @@ export const Streaks: React.FC = () => {
     );
 
     // Initial zoom animation
-    const initialZoom = interpolate(
-        frame,
-        [30, 60],
-        [1, 2.2],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const initialZoom = spring({
+        frame: frame,
+        fps,
+        from: 1,
+        to: 2.2,
+        durationInFrames: 30,
+        config: {
+            damping: 15,
+            mass: 0.6,
+            stiffness: 80,
         }
-    );
+    });
 
     // Calculate vertical position based on streak progress
     const verticalPosition = interpolate(
@@ -88,8 +92,8 @@ export const Streaks: React.FC = () => {
 
     // Calculate 3D rotation based on streak progress and post-streak rotation
     const rotateX = interpolate(streakProgress, [0, 1], [0, 15]);
-    const streakRotation = interpolate(streakProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during streak rendering
-    const postStreakRotation = interpolate(postStreakProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after streaks
+    const streakRotation = interpolate(streakProgress, [0, 1], [0, 10]); // Only rotate to 20 degrees during streak rendering
+    const postStreakRotation = interpolate(postStreakProgress, [0, 1], [0, 80]); // Rotate remaining 70 degrees after streaks
     const rotateY = streakRotation + postStreakRotation;
     const scale = interpolate(streakProgress, [0, 1], [1, 0.95]);
 
@@ -157,15 +161,18 @@ export const Streaks: React.FC = () => {
                 >
                     {streaks.map((color, index) => {
                         const streakStartFrame = 30 + index * streakRenderFrames;
-                        const streakProgress = interpolate(
-                            frame,
-                            [streakStartFrame, streakStartFrame + 10],
-                            [0, 1],
-                            {
-                                extrapolateLeft: 'clamp',
-                                extrapolateRight: 'clamp',
+                        const streakProgress = spring({
+                            frame: frame - streakStartFrame,
+                            fps,
+                            from: 0,
+                            to: 1,
+                            durationInFrames: 10,
+                            config: {
+                                damping: 10,
+                                mass: 6,
+                                stiffness: 100,
                             }
-                        );
+                        });
 
                         return (
                             <div

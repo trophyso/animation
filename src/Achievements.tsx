@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile, spring } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
 
 const { fontFamily } = loadFont();
@@ -62,21 +62,24 @@ export const Achievements: React.FC = () => {
     );
 
     // Initial zoom animation
-    const initialZoom = interpolate(
-        frame,
-        [30, 75],
-        [1, 2.2],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
+    const initialZoom = spring({
+        frame: frame - 25, // Start after title typing
+        fps: 30,
+        from: 1,
+        to: 2.2,
+        durationInFrames: 60,
+        config: {
+            damping: 15,
+            mass: 0.6,
+            stiffness: 80,
         }
-    );
+    });
 
     // Calculate vertical position based on badge progress
     const verticalPosition = interpolate(
         badgeProgress,
         [0, 1],
-        [0, -80],
+        [0, -60],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -84,17 +87,17 @@ export const Achievements: React.FC = () => {
     );
 
     // Calculate 3D rotation based on badge progress and post-badge rotation
-    const rotateX = interpolate(badgeProgress, [0, 1], [0, 15]);
-    const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during badge rendering
-    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after badges
+    const rotateX = interpolate(badgeProgress, [0, 1], [0, 8]);
+    const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 12]);
+    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 35]);
     const rotateY = badgeRotation + postBadgeRotation;
-    const scale = interpolate(badgeProgress, [0, 1], [1, 0.95]);
+    const scale = interpolate(badgeProgress, [0, 1], [1, 0.97]);
 
     // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(
         badgeProgress + postBadgeProgress,
         [0, 1],
-        [0, -275],
+        [0, -200],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -154,15 +157,18 @@ export const Achievements: React.FC = () => {
                 >
                     {badges.map((badge, index) => {
                         const badgeStartFrame = 45 + index * badgeRenderFrames;
-                        const badgeProgress = interpolate(
-                            frame,
-                            [badgeStartFrame, badgeStartFrame + 10],
-                            [0, 1],
-                            {
-                                extrapolateLeft: 'clamp',
-                                extrapolateRight: 'clamp',
+                        const badgeProgress = spring({
+                            frame: frame - badgeStartFrame,
+                            fps: 30,
+                            from: 0,
+                            to: 1,
+                            durationInFrames: 10,
+                            config: {
+                                damping: 10,
+                                mass: 6,
+                                stiffness: 100,
                             }
-                        );
+                        });
 
                         return (
                             <div
