@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile, spring } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile, spring, useVideoConfig } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
 
 const { fontFamily } = loadFont();
@@ -6,21 +6,19 @@ const { fontFamily } = loadFont();
 // Array of badge paths
 const badges = [
     'badges/variant1_pink.png',
-    'badges/variant1_purple.png',
     'badges/variant1_red.png',
+    'badges/variant1_purple.png',
     'badges/variant2_gold.png',
     'badges/variant2_orange.png',
     'badges/variant2_red.png',
     'badges/variant3_bronze.png',
-    'badges/variant3_gold.png',
     'badges/variant3_silver.png',
-    'badges/variant4_apple.png',
-    'badges/variant4_book.png',
-    'badges/variant4_books.png',
+    'badges/variant3_gold.png',
 ];
 
 export const Achievements: React.FC = () => {
     const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
 
     // Title typing animation
     const titleText = "Achievements...";
@@ -37,7 +35,7 @@ export const Achievements: React.FC = () => {
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
     // Calculate badge rendering progress
-    const badgeRenderFrames = 9; // 0.3 seconds per badge at 30fps
+    const badgeRenderFrames = 7; // 0.23 seconds per badge at 30fps
     const totalBadgeFrames = badges.length * badgeRenderFrames;
     const badgeProgress = interpolate(
         frame,
@@ -64,14 +62,14 @@ export const Achievements: React.FC = () => {
     // Initial zoom animation
     const initialZoom = spring({
         frame: frame - 25, // Start after title typing
-        fps: 30,
+        fps,
         from: 1,
         to: 2.2,
-        durationInFrames: 60,
+        durationInFrames: 45,
         config: {
             damping: 15,
             mass: 0.6,
-            stiffness: 80,
+            stiffness: 200,
         }
     });
 
@@ -88,8 +86,8 @@ export const Achievements: React.FC = () => {
 
     // Calculate 3D rotation based on badge progress and post-badge rotation
     const rotateX = interpolate(badgeProgress, [0, 1], [0, 8]);
-    const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 12]);
-    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 35]);
+    const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 10]);
+    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 80]);
     const rotateY = badgeRotation + postBadgeRotation;
     const scale = interpolate(badgeProgress, [0, 1], [1, 0.97]);
 
@@ -150,7 +148,7 @@ export const Achievements: React.FC = () => {
                 <div
                     style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: '2rem',
                         padding: '2rem',
                     }}
@@ -159,14 +157,14 @@ export const Achievements: React.FC = () => {
                         const badgeStartFrame = 45 + index * badgeRenderFrames;
                         const badgeProgress = spring({
                             frame: frame - badgeStartFrame,
-                            fps: 30,
+                            fps,
                             from: 0,
                             to: 1,
                             durationInFrames: 10,
                             config: {
-                                damping: 10,
-                                mass: 6,
-                                stiffness: 100,
+                                damping: 1,
+                                mass: 0.6,
+                                stiffness: 10,
                             }
                         });
 

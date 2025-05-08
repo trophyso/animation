@@ -41,7 +41,7 @@ export const Streaks: React.FC = () => {
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
     // Calculate streak rendering progress
-    const streakRenderFrames = 9; // 0.3 seconds per streak at 30fps
+    const streakRenderFrames = 5; // 0.16 seconds per streak at 30fps
     const totalStreakFrames = streaks.length * streakRenderFrames;
     const streakProgress = interpolate(
         frame,
@@ -168,9 +168,9 @@ export const Streaks: React.FC = () => {
                             to: 1,
                             durationInFrames: 10,
                             config: {
-                                damping: 10,
-                                mass: 6,
-                                stiffness: 100,
+                                damping: 1,
+                                mass: 0.6,
+                                stiffness: 10,
                             }
                         });
 

@@ -68,7 +68,7 @@ export const Emails: React.FC = () => {
     const postEmailDelay = 5;
     const postEmailProgress = spring({
         frame: frame - (30 + totalEmailFrames + postEmailDelay),
-        fps: 30,
+        fps,
         from: 0,
         to: 1,
         durationInFrames: postEmailFrames,
@@ -187,7 +187,7 @@ export const Emails: React.FC = () => {
                         const emailStartFrame = 45 + index * emailRenderFrames;
                         const springProgress = spring({
                             frame: frame - emailStartFrame,
-                            fps: 30,
+                            fps,
                             config: {
                                 damping: 24,
                                 mass: 0.5,

@@ -1,5 +1,5 @@
 import { MousePointer } from "lucide-react";
-import { AbsoluteFill, useCurrentFrame, spring } from "remotion";
+import { AbsoluteFill, useCurrentFrame, spring, useVideoConfig } from "remotion";
 
 interface Props {
     duration?: number;
@@ -8,10 +8,11 @@ interface Props {
 
 export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
     const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
 
     const translateX = spring({
         frame: frame - delay,
-        fps: 30,
+        fps,
         from: 50,
         to: 0,
         durationInFrames: duration,
@@ -24,7 +25,7 @@ export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
 
     const translateY = spring({
         frame: frame - delay,
-        fps: 30,
+        fps,
         from: 50,
         to: 0,
         durationInFrames: duration,
@@ -38,7 +39,7 @@ export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
     // First scale up as it moves in
     const initialScale = spring({
         frame: frame - delay,
-        fps: 30,
+        fps,
         from: 0.5,
         to: 1.5,
         durationInFrames: duration * 0.5,
@@ -52,7 +53,7 @@ export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
     // Then create a click effect by scaling down and up
     const clickDownScale = spring({
         frame: frame - delay - duration * 0.5,
-        fps: 30,
+        fps,
         from: 1.5,
         to: 0.2,
         durationInFrames: duration * 0.25,
@@ -65,7 +66,7 @@ export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
 
     const clickUpScale = spring({
         frame: frame - delay - duration * 0.5 - duration * 0.25,
-        fps: 30,
+        fps,
         from: 0.2,
         to: 0.5,
         durationInFrames: duration * 0.25,

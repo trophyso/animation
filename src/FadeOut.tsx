@@ -1,4 +1,4 @@
-import { AbsoluteFill, spring, useCurrentFrame } from "remotion";
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 
 interface Props {
     children: React.ReactNode;
@@ -14,9 +14,11 @@ export const FadeOut: React.FC<Props> = ({
     min = 0
 }) => {
     const currentFrame = useCurrentFrame();
+    const { fps } = useVideoConfig();
+
     const opacity = spring({
         frame: currentFrame - delay,
-        fps: 30,
+        fps,
         from: 1,
         to: min,
         durationInFrames: duration,

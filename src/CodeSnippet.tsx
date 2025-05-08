@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, spring } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { loadFont } from "@remotion/google-fonts/Montserrat";
@@ -7,6 +7,8 @@ const { fontFamily } = loadFont();
 
 export const CodeSnippet: React.FC = () => {
     const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
+
     const codeString = `const trophy = new TrophyApiClient({
     apiKey: process.env.TROPHY_API_KEY as string,
 });
@@ -21,7 +23,7 @@ await trophy.metrics.event("words-written", {
 });`;
 
     // Title typing animation
-    const titleText = "Track any user interaction...";
+    const titleText = "Track user behavior...";
     const titleProgress = interpolate(
         frame,
         [0, 45], // Type over 45 frames
@@ -70,7 +72,7 @@ await trophy.metrics.event("words-written", {
     // Calculate final zoom animation
     const finalZoom = spring({
         frame: frame - (typingFrames - 20),
-        fps: 30,
+        fps,
         from: 1,
         to: 15,
         durationInFrames: finalZoomFrames + 20,
@@ -95,7 +97,7 @@ await trophy.metrics.event("words-written", {
     // Initial zoom animation (first 30 frames)
     const initialZoom = spring({
         frame: frame - 45, // Start after title
-        fps: 30,
+        fps,
         from: 1,
         to: 2.2,
         durationInFrames: 20,

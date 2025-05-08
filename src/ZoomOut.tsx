@@ -1,4 +1,4 @@
-import { AbsoluteFill, spring, useCurrentFrame } from "remotion";
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 
 interface Props {
     children: React.ReactNode;
@@ -16,9 +16,11 @@ export const ZoomOut: React.FC<Props> = ({
     endScale = 1
 }) => {
     const currentFrame = useCurrentFrame();
+    const { fps } = useVideoConfig();
+
     const scale = spring({
         frame: currentFrame - delay,
-        fps: 30,
+        fps,
         from: startScale,
         to: endScale,
         durationInFrames: duration,
