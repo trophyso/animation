@@ -22,8 +22,8 @@ export const LaunchVideo: React.FC = () => {
                 <Typing text="Introducing Trophy" />
             </Sequence>
             <Sequence from={45} durationInFrames={45}>
-                <DarkBackground />
-                <Typing text="APIs & SDKs for" theme="dark" />
+                <HashBackground />
+                <Typing text="APIs & SDKs for" />
             </Sequence>
             <Sequence from={90} durationInFrames={120}>
                 <LightBackground />
