@@ -9,7 +9,7 @@ import { ZoomIn } from "./ZoomIn";
 import { FadeOut } from "./FadeOut";
 import { ZoomOut } from "./ZoomOut";
 import { CodeSnippet } from "./CodeSnippet";
-import { Badges } from "./Badges";
+import { Achievements } from "./Achievements";
 
 export const LaunchVideo: React.FC = () => {
     return (
@@ -44,7 +44,7 @@ export const LaunchVideo: React.FC = () => {
             </Sequence>
             <Sequence from={470} durationInFrames={230}>
                 <HashBackground />
-                <Badges />
+                <Achievements />
             </Sequence>
         </AbsoluteFill>
     );
