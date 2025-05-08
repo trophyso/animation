@@ -1,32 +1,35 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
+import { Flame } from "lucide-react";
 
 const { fontFamily } = loadFont();
 
-// Array of badge paths
-const badges = [
-    'badges/variant1_pink.png',
-    'badges/variant1_purple.png',
-    'badges/variant1_red.png',
-    'badges/variant2_gold.png',
-    'badges/variant2_orange.png',
-    'badges/variant2_red.png',
-    'badges/variant3_bronze.png',
-    'badges/variant3_gold.png',
-    'badges/variant3_silver.png',
-    'badges/variant4_apple.png',
-    'badges/variant4_book.png',
-    'badges/variant4_books.png',
-];
-
-export const Achievements: React.FC = () => {
+export const Streaks: React.FC = () => {
     const frame = useCurrentFrame();
 
+    // Array of streak colors
+    const streaks = [
+        null,
+        '#4CC74A',
+        '#4CC74A',
+        '#4CC74A',
+        '#eee',
+        '#eee',
+        '#4CC74A',
+        '#4CC74A',
+        '#eee',
+        '#4CC74A',
+        '#4CC74A',
+        '#4CC74A',
+        '#4CC74A',
+        null
+    ];
+
     // Title typing animation
-    const titleText = "Achievements";
+    const titleText = "Streaks";
     const titleProgress = interpolate(
         frame,
-        [0, 25],
+        [0, 20],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -36,12 +39,12 @@ export const Achievements: React.FC = () => {
     const visibleTitleChars = Math.floor(titleText.length * titleProgress);
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
-    // Calculate badge rendering progress
-    const badgeRenderFrames = 9; // 0.3 seconds per badge at 30fps
-    const totalBadgeFrames = badges.length * badgeRenderFrames;
-    const badgeProgress = interpolate(
+    // Calculate streak rendering progress
+    const streakRenderFrames = 9; // 0.3 seconds per streak at 30fps
+    const totalStreakFrames = streaks.length * streakRenderFrames;
+    const streakProgress = interpolate(
         frame,
-        [45, 45 + totalBadgeFrames],
+        [30, 30 + totalStreakFrames],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -49,11 +52,11 @@ export const Achievements: React.FC = () => {
         }
     );
 
-    // Calculate post-badge rotation
-    const postBadgeFrames = 5;
-    const postBadgeProgress = interpolate(
+    // Calculate post-streak rotation
+    const postStreakFrames = 5;
+    const postStreakProgress = interpolate(
         frame,
-        [45 + totalBadgeFrames, 45 + totalBadgeFrames + postBadgeFrames],
+        [30 + totalStreakFrames, 30 + totalStreakFrames + postStreakFrames],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -64,7 +67,7 @@ export const Achievements: React.FC = () => {
     // Initial zoom animation
     const initialZoom = interpolate(
         frame,
-        [30, 75],
+        [30, 60],
         [1, 2.2],
         {
             extrapolateLeft: 'clamp',
@@ -72,36 +75,36 @@ export const Achievements: React.FC = () => {
         }
     );
 
-    // Calculate vertical position based on badge progress
+    // Calculate vertical position based on streak progress
     const verticalPosition = interpolate(
-        badgeProgress,
+        streakProgress,
         [0, 1],
-        [0, -80],
+        [0, -60],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
         }
     );
 
-    // Calculate 3D rotation based on badge progress and post-badge rotation
-    const rotateX = interpolate(badgeProgress, [0, 1], [0, 15]);
-    const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during badge rendering
-    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after badges
-    const rotateY = badgeRotation + postBadgeRotation;
-    const scale = interpolate(badgeProgress, [0, 1], [1, 0.95]);
+    // Calculate 3D rotation based on streak progress and post-streak rotation
+    const rotateX = interpolate(streakProgress, [0, 1], [0, 15]);
+    const streakRotation = interpolate(streakProgress, [0, 1], [0, 20]); // Only rotate to 20 degrees during streak rendering
+    const postStreakRotation = interpolate(postStreakProgress, [0, 1], [0, 70]); // Rotate remaining 70 degrees after streaks
+    const rotateY = streakRotation + postStreakRotation;
+    const scale = interpolate(streakProgress, [0, 1], [1, 0.95]);
 
     // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(
-        badgeProgress + postBadgeProgress,
+        streakProgress + postStreakProgress,
         [0, 1],
-        [0, -275],
+        [0, -50],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
         }
     );
 
-    // Shared transform for both title and badges grid
+    // Shared transform for both title and streaks grid
     const sharedTransform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale}) translateY(${verticalPosition}%)`;
 
     return (
@@ -126,7 +129,7 @@ export const Achievements: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 45 ? 1 : 0.8,
+                    opacity: frame < 30 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -137,26 +140,26 @@ export const Achievements: React.FC = () => {
             <div
                 style={{
                     width: '80%',
-                    maxWidth: '800px',
+                    maxWidth: '400px',
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 45 ? 0 : 1,
+                    opacity: frame < 30 ? 0 : 1,
                 }}
             >
                 <div
                     style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        gap: '2rem',
-                        padding: '2rem',
+                        gridTemplateColumns: 'repeat(5, 1fr)',
+                        gap: '1rem',
+                        padding: '1rem',
                     }}
                 >
-                    {badges.map((badge, index) => {
-                        const badgeStartFrame = 45 + index * badgeRenderFrames;
-                        const badgeProgress = interpolate(
+                    {streaks.map((color, index) => {
+                        const streakStartFrame = 30 + index * streakRenderFrames;
+                        const streakProgress = interpolate(
                             frame,
-                            [badgeStartFrame, badgeStartFrame + 10],
+                            [streakStartFrame, streakStartFrame + 10],
                             [0, 1],
                             {
                                 extrapolateLeft: 'clamp',
@@ -166,24 +169,37 @@ export const Achievements: React.FC = () => {
 
                         return (
                             <div
-                                key={badge}
+                                key={color}
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    opacity: badgeProgress,
-                                    transform: `scale(${badgeProgress})`,
+                                    opacity: streakProgress,
+                                    transform: `scale(${streakProgress})`,
                                     transition: 'all 0.2s ease-out',
                                 }}
                             >
-                                <Img
-                                    src={staticFile(badge)}
+                                <div
                                     style={{
                                         width: '100%',
-                                        height: 'auto',
-                                        maxWidth: '120px',
+                                        aspectRatio: '1',
+                                        maxWidth: '80px',
+                                        backgroundColor: color || 'transparent',
+                                        borderRadius: '25px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        boxShadow: color ? '0 4px 6px rgba(0, 0, 0, 0.1)' : 'none',
                                     }}
-                                />
+                                >
+                                    <Flame
+                                        size={40}
+                                        color="white"
+                                        style={{
+                                            opacity: 0.9,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         );
                     })}
@@ -191,5 +207,4 @@ export const Achievements: React.FC = () => {
             </div>
         </AbsoluteFill>
     );
-};
-
+}; 

@@ -10,6 +10,7 @@ import { FadeOut } from "./FadeOut";
 import { ZoomOut } from "./ZoomOut";
 import { CodeSnippet } from "./CodeSnippet";
 import { Achievements } from "./Achievements";
+import { Streaks } from "./Streaks";
 
 export const LaunchVideo: React.FC = () => {
     return (
@@ -42,9 +43,13 @@ export const LaunchVideo: React.FC = () => {
                 <DarkBackground />
                 <Typing text="powering..." theme="dark" />
             </Sequence>
-            <Sequence from={470} durationInFrames={230}>
+            <Sequence from={470} durationInFrames={160}>
                 <HashBackground />
                 <Achievements />
+            </Sequence>
+            <Sequence from={630} durationInFrames={160}>
+                <HashBackground />
+                <Streaks />
             </Sequence>
         </AbsoluteFill>
     );
