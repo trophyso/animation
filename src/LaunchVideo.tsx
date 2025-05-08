@@ -48,23 +48,23 @@ export const LaunchVideo: React.FC = () => {
                 <DarkBackground />
                 <Typing text="and power..." theme="dark" />
             </Sequence>
-            <Sequence from={485} durationInFrames={120}>
+            <Sequence from={485} durationInFrames={150}>
                 <HashBackground />
                 <Achievements />
             </Sequence>
-            <Sequence from={605} durationInFrames={110}>
+            <Sequence from={635} durationInFrames={140}>
                 <HashBackground />
                 <Streaks />
             </Sequence>
-            <Sequence from={715} durationInFrames={165}>
+            <Sequence from={775} durationInFrames={175}>
                 <HashBackground />
                 <Emails />
             </Sequence>
-            <Sequence from={880} durationInFrames={75}>
+            <Sequence from={950} durationInFrames={75}>
                 <HashBackground />
                 <Typing text="npm i @trophyso/node" />
             </Sequence>
-            <Sequence from={955} durationInFrames={75}>
+            <Sequence from={1025} durationInFrames={75}>
                 <HashBackground />
                 <FadeIn>
                     <LightBackground />

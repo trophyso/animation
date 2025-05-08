@@ -21,7 +21,7 @@ export const Achievements: React.FC = () => {
     const { fps } = useVideoConfig();
 
     // Title typing animation
-    const titleText = "Achievements...";
+    const titleText = "Achievements";
     const titleProgress = interpolate(
         frame,
         [0, 25],
@@ -35,23 +35,11 @@ export const Achievements: React.FC = () => {
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
     // Calculate badge rendering progress
-    const badgeRenderFrames = 7; // 0.23 seconds per badge at 30fps
+    const badgeRenderFrames = 10; // 0.33 seconds per badge at 30fps
     const totalBadgeFrames = badges.length * badgeRenderFrames;
     const badgeProgress = interpolate(
         frame,
-        [45, 45 + totalBadgeFrames],
-        [0, 1],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
-        }
-    );
-
-    // Calculate post-badge rotation
-    const postBadgeFrames = 5;
-    const postBadgeProgress = interpolate(
-        frame,
-        [45 + totalBadgeFrames, 45 + totalBadgeFrames + postBadgeFrames],
+        [25, totalBadgeFrames + 60],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -87,15 +75,14 @@ export const Achievements: React.FC = () => {
     // Calculate 3D rotation based on badge progress and post-badge rotation
     const rotateX = interpolate(badgeProgress, [0, 1], [0, 8]);
     const badgeRotation = interpolate(badgeProgress, [0, 1], [0, 10]);
-    const postBadgeRotation = interpolate(postBadgeProgress, [0, 1], [0, 80]);
-    const rotateY = badgeRotation + postBadgeRotation;
+    const rotateY = badgeRotation;
     const scale = interpolate(badgeProgress, [0, 1], [1, 0.97]);
 
     // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(
-        badgeProgress + postBadgeProgress,
+        badgeProgress,
         [0, 1],
-        [0, -200],
+        [0, -250],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -162,9 +149,9 @@ export const Achievements: React.FC = () => {
                             to: 1,
                             durationInFrames: 10,
                             config: {
-                                damping: 1,
-                                mass: 0.6,
-                                stiffness: 10,
+                                damping: 15,
+                                mass: 0.8,
+                                stiffness: 100,
                             }
                         });
 

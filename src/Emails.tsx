@@ -9,7 +9,7 @@ export const Emails: React.FC = () => {
     const { fps } = useVideoConfig();
 
     // Title typing animation
-    const titleText = "and automated emails...";
+    const titleText = "Automated emails";
     const titleProgress = interpolate(
         frame,
         [0, 25],
@@ -55,7 +55,7 @@ export const Emails: React.FC = () => {
     const totalEmailFrames = emails.length * emailRenderFrames;
     const emailProgress = interpolate(
         frame,
-        [30, 30 + totalEmailFrames],
+        [25, totalEmailFrames + 60],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -63,25 +63,9 @@ export const Emails: React.FC = () => {
         }
     );
 
-    // Calculate post-email rotation
-    const postEmailFrames = 5;
-    const postEmailDelay = 5;
-    const postEmailProgress = spring({
-        frame: frame - (30 + totalEmailFrames + postEmailDelay),
-        fps,
-        from: 0,
-        to: 1,
-        durationInFrames: postEmailFrames,
-        config: {
-            damping: 6,
-            mass: 0.5,
-            stiffness: 50,
-        }
-    });
-
     // Initial zoom animation
     const initialZoom = spring({
-        frame: frame,
+        frame: frame - 25,
         fps,
         from: 1,
         to: 2.2,
@@ -97,7 +81,7 @@ export const Emails: React.FC = () => {
     const verticalPosition = interpolate(
         emailProgress,
         [0, 1],
-        [0, -100],
+        [0, -50],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -107,15 +91,14 @@ export const Emails: React.FC = () => {
     // Calculate 3D rotation based on email progress and post-email rotation
     const rotateX = interpolate(emailProgress, [0, 1], [0, 8]);
     const emailRotation = interpolate(emailProgress, [0, 1], [0, 10]);
-    const postEmailRotation = interpolate(postEmailProgress, [0, 1], [0, 80]);
-    const rotateY = emailRotation + postEmailRotation;
+    const rotateY = emailRotation;
     const scale = interpolate(emailProgress, [0, 1], [1, 0.97]);
 
     // Calculate title offset based on rotation and scroll
     const titleOffset = interpolate(
-        emailProgress + postEmailProgress,
+        emailProgress,
         [0, 1],
-        [0, -220],
+        [0, -110],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -147,7 +130,7 @@ export const Emails: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 45 ? 1 : 0.8,
+                    opacity: frame < 25 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -162,7 +145,7 @@ export const Emails: React.FC = () => {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 45 ? 0 : 1,
+                    opacity: frame < 25 ? 0 : 1,
                     backgroundColor: 'white',
                     borderRadius: '12px',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -184,7 +167,7 @@ export const Emails: React.FC = () => {
                 </div>
                 <div style={{ padding: '1rem' }}>
                     {emails.map((email, index) => {
-                        const emailStartFrame = 45 + index * emailRenderFrames;
+                        const emailStartFrame = 25 + index * emailRenderFrames;
                         const springProgress = spring({
                             frame: frame - emailStartFrame,
                             fps,
