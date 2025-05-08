@@ -67,7 +67,7 @@ export const Cursor: React.FC<Props> = ({ duration = 30, delay = 0 }) => {
         frame: frame - delay - duration * 0.5 - duration * 0.25,
         fps: 30,
         from: 0.2,
-        to: 0.8,
+        to: 0.5,
         durationInFrames: duration * 0.25,
         config: {
             mass: 2,

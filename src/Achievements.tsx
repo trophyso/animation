@@ -23,7 +23,7 @@ export const Achievements: React.FC = () => {
     const frame = useCurrentFrame();
 
     // Title typing animation
-    const titleText = "Achievements";
+    const titleText = "Achievements...";
     const titleProgress = interpolate(
         frame,
         [0, 25],

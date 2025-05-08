@@ -21,7 +21,7 @@ await trophy.metrics.event("words-written", {
 });`;
 
     // Title typing animation
-    const titleText = "Just a few lines of code";
+    const titleText = "Track any user interaction...";
     const titleProgress = interpolate(
         frame,
         [0, 45], // Type over 45 frames
@@ -37,7 +37,7 @@ await trophy.metrics.event("words-written", {
     // Split code into lines and create typing animation
     const lines = codeString.split('\n');
     const visibleLines = lines.map((line, index) => {
-        const lineStartFrame = index * 15 + 45; // Start after title typing
+        const lineStartFrame = index * 10 + 45; // Start after title typing
         const lineProgress = interpolate(
             frame,
             [lineStartFrame, lineStartFrame + 15],
@@ -92,7 +92,7 @@ await trophy.metrics.event("words-written", {
     const verticalPosition = interpolate(
         typingProgress,
         [0, 1],
-        [0, -60], // Increased scroll distance
+        [0, -80], // Increased scroll distance
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -113,7 +113,7 @@ await trophy.metrics.event("words-written", {
     const titleOffset = interpolate(
         typingProgress + postTypingProgress,
         [0, 1],
-        [0, -180], // Increased offset to match faster scroll and rotation
+        [0, -220], // Increased offset to match faster scroll and rotation
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',

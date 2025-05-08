@@ -6,7 +6,7 @@ import { Text } from "./Text";
 export const ScrollWords: React.FC = () => {
     return (
         <>
-            <Bump direction="left" distance={500} duration={20}>
+            <Bump direction="left" distance={500}>
                 <FadeOut min={0.5}>
                     <Text text="APIs & SDKs for" />
                 </FadeOut>

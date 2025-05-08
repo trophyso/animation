@@ -26,7 +26,7 @@ export const Streaks: React.FC = () => {
     ];
 
     // Title typing animation
-    const titleText = "Streaks";
+    const titleText = "Streaks...";
     const titleProgress = interpolate(
         frame,
         [0, 20],
@@ -185,7 +185,7 @@ export const Streaks: React.FC = () => {
                                         aspectRatio: '1',
                                         maxWidth: '80px',
                                         backgroundColor: color || 'transparent',
-                                        borderRadius: '25px',
+                                        borderRadius: '15px',
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',

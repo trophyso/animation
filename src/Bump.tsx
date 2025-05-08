@@ -1,33 +1,40 @@
-import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 
 export interface Props {
     children: React.ReactNode;
     direction: 'up' | 'down' | 'left' | 'right';
-    duration?: number;
     delay?: number;
     distance?: number;
     offset?: number;
+    damping?: number;
+    mass?: number;
+    stiffness?: number;
 }
 
 export const Bump: React.FC<Props> = ({
     children,
     direction,
-    duration = 15,
     delay = 0,
     distance = 100,
-    offset = 0
+    offset = 0,
+    damping = 10,
+    mass = 0.5,
+    stiffness = 100
 }) => {
     const currentFrame = useCurrentFrame();
-    const translate = interpolate(
-        currentFrame - delay,
-        [0, duration],
-        [offset, offset - distance],
-        {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
-            easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
-        }
-    );
+    const { fps } = useVideoConfig();
+
+    const translate = spring({
+        frame: currentFrame - delay,
+        fps,
+        config: {
+            damping,
+            mass,
+            stiffness,
+        },
+        from: offset,
+        to: offset - distance,
+    });
 
     return (
         <AbsoluteFill
