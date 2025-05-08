@@ -9,6 +9,7 @@ import { ZoomIn } from "./ZoomIn";
 import { FadeOut } from "./FadeOut";
 import { ZoomOut } from "./ZoomOut";
 import { CodeSnippet } from "./CodeSnippet";
+import { Badges } from "./Badges";
 
 export const LaunchVideo: React.FC = () => {
     return (
@@ -37,9 +38,13 @@ export const LaunchVideo: React.FC = () => {
                     <CodeSnippet />
                 </ZoomOut>
             </Sequence>
-            <Sequence from={440} durationInFrames={230}>
+            <Sequence from={440} durationInFrames={30}>
+                <DarkBackground />
+                <Typing text="powering..." theme="dark" />
+            </Sequence>
+            <Sequence from={470} durationInFrames={230}>
                 <HashBackground />
-                <Typing text="Get started" />
+                <Badges />
             </Sequence>
         </AbsoluteFill>
     );
