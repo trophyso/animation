@@ -81,7 +81,7 @@ export const Emails: React.FC = () => {
     const verticalPosition = interpolate(
         emailProgress,
         [0, 1],
-        [0, -50],
+        [0, -60],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -98,7 +98,7 @@ export const Emails: React.FC = () => {
     const titleOffset = interpolate(
         emailProgress,
         [0, 1],
-        [0, -110],
+        [0, -150],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
