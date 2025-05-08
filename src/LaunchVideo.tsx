@@ -17,54 +17,54 @@ import { FadeIn } from "./FadeIn";
 export const LaunchVideo: React.FC = () => {
     return (
         <AbsoluteFill>
-            <Sequence durationInFrames={45}>
+            <Sequence durationInFrames={90}>
                 <HashBackground />
                 <Typing text="Introducing Trophy" />
             </Sequence>
-            <Sequence from={45} durationInFrames={45}>
+            <Sequence from={90} durationInFrames={90}>
                 <HashBackground />
                 <Typing text="APIs & SDKs for" />
             </Sequence>
-            <Sequence from={90} durationInFrames={120}>
+            <Sequence from={180} durationInFrames={240}>
                 <LightBackground />
-                <FadeOut delay={90} duration={20}>
-                    <ZoomIn delay={90} duration={20} startScale={1} endScale={25}>
+                <FadeOut delay={180} duration={40}>
+                    <ZoomIn delay={180} duration={40} startScale={1} endScale={25}>
                         <HashBackground />
                         <ScrollWords />
-                        <Cursor delay={70} />
+                        <Cursor delay={120} />
                     </ZoomIn>
                 </FadeOut>
             </Sequence>
-            <Sequence from={210} durationInFrames={235}>
+            <Sequence from={420} durationInFrames={470}>
                 <FadeOut>
                     <LightBackground />
                 </FadeOut>
-                <ZoomOut duration={20} startScale={10} endScale={1}>
+                <ZoomOut duration={50} startScale={10} endScale={1}>
                     <HashBackground />
                     <CodeSnippet />
                 </ZoomOut>
             </Sequence>
-            <Sequence from={445} durationInFrames={40}>
+            <Sequence from={890} durationInFrames={80}>
                 <DarkBackground />
                 <Typing text="and power..." theme="dark" />
             </Sequence>
-            <Sequence from={485} durationInFrames={150}>
+            <Sequence from={970} durationInFrames={300}>
                 <HashBackground />
                 <Achievements />
             </Sequence>
-            <Sequence from={635} durationInFrames={140}>
+            <Sequence from={1270} durationInFrames={280}>
                 <HashBackground />
                 <Streaks />
             </Sequence>
-            <Sequence from={775} durationInFrames={175}>
+            <Sequence from={1550} durationInFrames={350}>
                 <HashBackground />
                 <Emails />
             </Sequence>
-            <Sequence from={950} durationInFrames={75}>
+            <Sequence from={1900} durationInFrames={150}>
                 <HashBackground />
                 <Typing text="npm i @trophyso/node" />
             </Sequence>
-            <Sequence from={1025} durationInFrames={75}>
+            <Sequence from={2050} durationInFrames={150}>
                 <HashBackground />
                 <FadeIn>
                     <LightBackground />

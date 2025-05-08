@@ -24,7 +24,7 @@ export const Achievements: React.FC = () => {
     const titleText = "Achievements";
     const titleProgress = interpolate(
         frame,
-        [0, 25],
+        [0, 50],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -35,11 +35,11 @@ export const Achievements: React.FC = () => {
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
     // Calculate badge rendering progress
-    const badgeRenderFrames = 10; // 0.33 seconds per badge at 30fps
+    const badgeRenderFrames = 20; // 0.33 seconds per badge at 60fps
     const totalBadgeFrames = badges.length * badgeRenderFrames;
     const badgeProgress = interpolate(
         frame,
-        [25, totalBadgeFrames + 60],
+        [50, totalBadgeFrames + 120],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -49,11 +49,11 @@ export const Achievements: React.FC = () => {
 
     // Initial zoom animation
     const initialZoom = spring({
-        frame: frame - 25, // Start after title typing
+        frame: frame - 50, // Start after title typing
         fps,
         from: 1,
         to: 2.2,
-        durationInFrames: 45,
+        durationInFrames: 90,
         config: {
             damping: 15,
             mass: 0.6,
@@ -114,7 +114,7 @@ export const Achievements: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 45 ? 1 : 0.8,
+                    opacity: frame < 90 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -129,7 +129,7 @@ export const Achievements: React.FC = () => {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 45 ? 0 : 1,
+                    opacity: frame < 90 ? 0 : 1,
                 }}
             >
                 <div
@@ -141,7 +141,7 @@ export const Achievements: React.FC = () => {
                     }}
                 >
                     {badges.map((badge, index) => {
-                        const badgeStartFrame = 45 + index * badgeRenderFrames;
+                        const badgeStartFrame = 90 + index * badgeRenderFrames;
                         const badgeProgress = spring({
                             frame: frame - badgeStartFrame,
                             fps,

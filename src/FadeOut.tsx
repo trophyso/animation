@@ -9,7 +9,7 @@ interface Props {
 
 export const FadeOut: React.FC<Props> = ({
     children,
-    duration = 15,
+    duration = 30,
     delay = 0,
     min = 0
 }) => {

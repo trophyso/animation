@@ -12,7 +12,7 @@ export const Emails: React.FC = () => {
     const titleText = "Automated emails";
     const titleProgress = interpolate(
         frame,
-        [0, 25],
+        [0, 50],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -51,11 +51,11 @@ export const Emails: React.FC = () => {
     ];
 
     // Calculate email rendering progress
-    const emailRenderFrames = 40;
+    const emailRenderFrames = 80;
     const totalEmailFrames = emails.length * emailRenderFrames;
     const emailProgress = interpolate(
         frame,
-        [25, totalEmailFrames + 60],
+        [50, totalEmailFrames + 120],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -65,11 +65,11 @@ export const Emails: React.FC = () => {
 
     // Initial zoom animation
     const initialZoom = spring({
-        frame: frame - 25,
+        frame: frame - 50,
         fps,
         from: 1,
         to: 2.2,
-        durationInFrames: 30,
+        durationInFrames: 60,
         config: {
             damping: 15,
             mass: 0.6,
@@ -130,7 +130,7 @@ export const Emails: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 25 ? 1 : 0.8,
+                    opacity: frame < 50 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -145,7 +145,7 @@ export const Emails: React.FC = () => {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 25 ? 0 : 1,
+                    opacity: frame < 50 ? 0 : 1,
                     backgroundColor: 'white',
                     borderRadius: '12px',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -167,7 +167,7 @@ export const Emails: React.FC = () => {
                 </div>
                 <div style={{ padding: '1rem' }}>
                     {emails.map((email, index) => {
-                        const emailStartFrame = 25 + index * emailRenderFrames;
+                        const emailStartFrame = 50 + index * emailRenderFrames;
                         const springProgress = spring({
                             frame: frame - emailStartFrame,
                             fps,

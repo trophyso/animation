@@ -10,7 +10,7 @@ interface Props {
 
 export const ZoomOut: React.FC<Props> = ({
     children,
-    duration = 30,
+    duration = 60,
     delay = 0,
     startScale = 2,
     endScale = 1

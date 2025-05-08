@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion"
 import { Text } from "./Text"
-import { Theme } from "./types/theme";
+import { Theme } from "./types/theme"
 
 interface Props {
     text: string;
@@ -9,8 +9,8 @@ interface Props {
 
 export const Typing: React.FC<Props> = ({ text, theme = 'light' }) => {
     const currentFrame = useCurrentFrame();
-    const currentText = text.slice(0, Math.floor(currentFrame / 2));
-    const cursorOpacity = Math.sin(currentFrame * 0.2) > 0 ? 1 : 0;
+    const currentText = text.slice(0, Math.floor(currentFrame / 4));
+    const cursorOpacity = Math.sin(currentFrame * 0.1) > 0 ? 1 : 0;
 
     return (
         <AbsoluteFill>

@@ -30,7 +30,7 @@ export const Streaks: React.FC = () => {
     const titleText = "Streaks";
     const titleProgress = interpolate(
         frame,
-        [0, 25],
+        [0, 50],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -41,11 +41,11 @@ export const Streaks: React.FC = () => {
     const visibleTitle = titleText.slice(0, visibleTitleChars);
 
     // Calculate streak rendering progress
-    const streakRenderFrames = 7; // 0.23 seconds per streak at 30fps
+    const streakRenderFrames = 14; // 0.23 seconds per streak at 60fps
     const totalStreakFrames = streaks.length * streakRenderFrames;
     const streakProgress = interpolate(
         frame,
-        [25, totalStreakFrames + 60],
+        [50, totalStreakFrames + 120],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -55,11 +55,11 @@ export const Streaks: React.FC = () => {
 
     // Initial zoom animation
     const initialZoom = spring({
-        frame: frame - 25, // Start after title typing
+        frame: frame - 50, // Start after title typing
         fps,
         from: 1,
         to: 2.2,
-        durationInFrames: 30,
+        durationInFrames: 60,
         config: {
             damping: 15,
             mass: 0.6,
@@ -120,7 +120,7 @@ export const Streaks: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 25 ? 1 : 0.8,
+                    opacity: frame < 50 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -135,7 +135,7 @@ export const Streaks: React.FC = () => {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 25 ? 0 : 1,
+                    opacity: frame < 50 ? 0 : 1,
                 }}
             >
                 <div
@@ -147,7 +147,7 @@ export const Streaks: React.FC = () => {
                     }}
                 >
                     {streaks.map((color, index) => {
-                        const streakStartFrame = 25 + index * streakRenderFrames;
+                        const streakStartFrame = 50 + index * streakRenderFrames;
                         const streakProgress = interpolate(
                             frame - streakStartFrame,
                             [0, 10],

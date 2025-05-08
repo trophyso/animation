@@ -11,21 +11,21 @@ export const ScrollWords: React.FC = () => {
                     <Text text="APIs & SDKs for" />
                 </FadeOut>
             </Bump>
-            <Bump direction="up" delay={60}>
-                <Bump direction="up" delay={30}>
+            <Bump direction="up" delay={120}>
+                <Bump direction="up" delay={60}>
                     <FadeIn>
                         <Text text="engagement" />
                     </FadeIn>
                 </Bump>
-                <Bump direction="up" delay={30} offset={100}>
-                    <FadeIn delay={30}>
+                <Bump direction="up" delay={60} offset={100}>
+                    <FadeIn delay={60}>
                         <Text text="retention" />
                     </FadeIn>
                 </Bump>
             </Bump>
-            <Bump direction="up" delay={60} offset={100}>
-                <Bump direction="up" delay={30} offset={100}>
-                    <FadeIn delay={60}>
+            <Bump direction="up" delay={120} offset={100}>
+                <Bump direction="up" delay={60} offset={100}>
+                    <FadeIn delay={120}>
                         <Text text="gamification" theme="primary" />
                     </FadeIn>
                 </Bump>

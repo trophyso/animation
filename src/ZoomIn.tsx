@@ -10,7 +10,7 @@ interface Props {
 
 export const ZoomIn: React.FC<Props> = ({
     children,
-    duration = 30,
+    duration = 60,
     delay = 0,
     startScale = 1,
     endScale = 2

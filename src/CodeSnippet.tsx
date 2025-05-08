@@ -26,7 +26,7 @@ await trophy.metrics.event("words-written", {
     const titleText = "Track user behavior...";
     const titleProgress = interpolate(
         frame,
-        [0, 45], // Type over 45 frames
+        [0, 105],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -39,10 +39,10 @@ await trophy.metrics.event("words-written", {
     // Split code into lines and create typing animation
     const lines = codeString.split('\n');
     const visibleLines = lines.map((line, index) => {
-        const lineStartFrame = index * 10 + 45; // Start after title typing
+        const lineStartFrame = index * 20 + 150;
         const lineProgress = interpolate(
             frame,
-            [lineStartFrame, lineStartFrame + 15],
+            [lineStartFrame, lineStartFrame + 30],
             [0, 1],
             {
                 extrapolateLeft: 'clamp',
@@ -55,13 +55,13 @@ await trophy.metrics.event("words-written", {
     }).join('\n');
 
     // Calculate overall typing progress
-    const typingFrames = lines.length * 15 + 45; // Add title frames
-    const postTypingFrames = 5; // Reduced from 15 to 8 frames for even quicker rotation
-    const finalZoomFrames = 30; // Frames for the final zoom animation
+    const typingFrames = lines.length * 30 + 150;
+    const postTypingFrames = 10;
+    const finalZoomFrames = 60;
 
     const typingProgress = interpolate(
         frame,
-        [45, typingFrames], // Start after title
+        [150, typingFrames],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -71,11 +71,11 @@ await trophy.metrics.event("words-written", {
 
     // Calculate final zoom animation
     const finalZoom = spring({
-        frame: frame - (typingFrames - 20),
+        frame: frame - (typingFrames - 40),
         fps,
         from: 1,
         to: 15,
-        durationInFrames: finalZoomFrames + 20,
+        durationInFrames: finalZoomFrames + 40,
         config: {
             damping: 12,
             mass: 0.5,
@@ -86,7 +86,7 @@ await trophy.metrics.event("words-written", {
     // Calculate post-typing rotation (starts after typing is complete)
     const postTypingProgress = interpolate(
         frame,
-        [typingFrames, typingFrames + postTypingFrames], // Use the new frame calculations
+        [typingFrames, typingFrames + postTypingFrames],
         [0, 1],
         {
             extrapolateLeft: 'clamp',
@@ -94,13 +94,13 @@ await trophy.metrics.event("words-written", {
         }
     );
 
-    // Initial zoom animation (first 30 frames)
+    // Initial zoom animation
     const initialZoom = spring({
-        frame: frame - 45, // Start after title
+        frame: frame - 90, // Start after title
         fps,
         from: 1,
         to: 2.2,
-        durationInFrames: 20,
+        durationInFrames: 60,
         config: {
             damping: 12,
             mass: 0.5,
@@ -112,18 +112,18 @@ await trophy.metrics.event("words-written", {
     const verticalPosition = interpolate(
         typingProgress,
         [0, 1],
-        [0, -10], // Increased scroll distance
+        [0, -10],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
         }
     );
 
-    // Calculate 3D rotation based on typing progress and post-typing rotation
-    const rotateX = interpolate(typingProgress, [0, 1], [0, 10]); // Reduced from 15 to 10 degrees
+    // Calculate 3D rotation based on typing progress
+    const rotateX = interpolate(typingProgress, [0, 1], [0, 10]);
 
     // Adjust the rotation timing
-    const rotateY = interpolate(typingProgress, [0, 1], [0, 15]); // Reduced from 20 to 15 degrees and removed post-typing rotation
+    const rotateY = interpolate(typingProgress, [0, 1], [0, 15]);
 
     const scale = interpolate(typingProgress, [0, 1], [1, 0.95]);
 
@@ -131,7 +131,7 @@ await trophy.metrics.event("words-written", {
     const titleOffset = interpolate(
         typingProgress + postTypingProgress,
         [0, 1],
-        [0, -220], // Increased offset to match faster scroll and rotation
+        [0, -220],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -182,7 +182,7 @@ await trophy.metrics.event("words-written", {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 45 ? 0 : 1,
+                    opacity: frame < 150 ? 0 : 1,
                 }}
             >
                 <div
