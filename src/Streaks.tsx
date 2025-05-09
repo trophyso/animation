@@ -148,15 +148,18 @@ export const Streaks: React.FC = () => {
                 >
                     {streaks.map((color, index) => {
                         const streakStartFrame = 50 + index * streakRenderFrames;
-                        const streakProgress = interpolate(
-                            frame - streakStartFrame,
-                            [0, 10],
-                            [0, 1],
-                            {
-                                extrapolateLeft: 'clamp',
-                                extrapolateRight: 'clamp',
-                            }
-                        );
+                        const streakProgress = spring({
+                            frame: frame - streakStartFrame,
+                            fps,
+                            from: 0,
+                            to: 1,
+                            durationInFrames: 20,
+                            config: {
+                                damping: 20,
+                                mass: 0.5,
+                                stiffness: 100,
+                            },
+                        });
 
                         return (
                             <div
@@ -167,7 +170,6 @@ export const Streaks: React.FC = () => {
                                     alignItems: 'center',
                                     opacity: streakProgress,
                                     transform: `scale(${streakProgress})`,
-                                    transition: 'all 0.2s ease-out',
                                 }}
                             >
                                 <div
@@ -181,6 +183,7 @@ export const Streaks: React.FC = () => {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         boxShadow: color ? '0 4px 6px rgba(0, 0, 0, 0.1)' : 'none',
+                                        transform: 'translateZ(0)', // Force GPU acceleration
                                     }}
                                 >
                                     <Flame

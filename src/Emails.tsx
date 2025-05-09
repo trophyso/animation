@@ -77,11 +77,25 @@ export const Emails: React.FC = () => {
         }
     });
 
+    // Inbox container fade-in animation
+    const inboxOpacity = spring({
+        frame: frame - 50,
+        fps,
+        from: 0,
+        to: 1,
+        durationInFrames: 30,
+        config: {
+            damping: 20,
+            mass: 0.5,
+            stiffness: 100,
+        }
+    });
+
     // Calculate vertical position based on email progress
     const verticalPosition = interpolate(
         emailProgress,
         [0, 1],
-        [0, -60],
+        [0, -80],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -130,7 +144,7 @@ export const Emails: React.FC = () => {
                     fontWeight: 'bold',
                     fontFamily: fontFamily,
                     marginBottom: '2rem',
-                    opacity: frame < 50 ? 1 : 0.8,
+                    opacity: frame < 100 ? 1 : 0.8,
                     transform: `${sharedTransform} translateY(${titleOffset}px)`,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
@@ -145,7 +159,7 @@ export const Emails: React.FC = () => {
                     transform: sharedTransform,
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.1s ease-out',
-                    opacity: frame < 50 ? 0 : 1,
+                    opacity: inboxOpacity,
                     backgroundColor: 'white',
                     borderRadius: '12px',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -167,7 +181,7 @@ export const Emails: React.FC = () => {
                 </div>
                 <div style={{ padding: '1rem' }}>
                     {emails.map((email, index) => {
-                        const emailStartFrame = 50 + index * emailRenderFrames;
+                        const emailStartFrame = 100 + index * emailRenderFrames;
                         const springProgress = spring({
                             frame: frame - emailStartFrame,
                             fps,

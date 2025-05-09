@@ -23,7 +23,7 @@ await trophy.metrics.event("words-written", {
 });`;
 
     // Title typing animation
-    const titleText = "Track user behavior...";
+    const titleText = "Track user behavior";
     const titleProgress = interpolate(
         frame,
         [0, 105],
@@ -96,7 +96,7 @@ await trophy.metrics.event("words-written", {
 
     // Initial zoom animation
     const initialZoom = spring({
-        frame: frame - 90, // Start after title
+        frame: frame - 120, // Increased from 90 to 120 to delay zoom start
         fps,
         from: 1,
         to: 2.2,

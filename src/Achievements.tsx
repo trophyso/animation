@@ -65,7 +65,7 @@ export const Achievements: React.FC = () => {
     const verticalPosition = interpolate(
         badgeProgress,
         [0, 1],
-        [0, -60],
+        [0, -80],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -82,7 +82,7 @@ export const Achievements: React.FC = () => {
     const titleOffset = interpolate(
         badgeProgress,
         [0, 1],
-        [0, -250],
+        [0, -300],
         {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
