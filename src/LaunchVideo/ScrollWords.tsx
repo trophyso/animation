@@ -1,7 +1,7 @@
 import { Bump } from "./Bump";
 import { FadeIn } from "./FadeIn";
 import { FadeOut } from "./FadeOut";
-import { Text } from "./Text";
+import { Text } from "./Text"
 
 export const ScrollWords: React.FC = () => {
     return (
