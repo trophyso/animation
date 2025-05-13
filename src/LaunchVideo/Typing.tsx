@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion"
-import { Text } from "./Text"
-import { Theme } from "./types/theme"
+import { Text } from "../components/Text"
+import { Theme } from "../types/theme"
 
 interface Props {
     text: string;

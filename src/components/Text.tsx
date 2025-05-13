@@ -1,6 +1,6 @@
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { AbsoluteFill } from 'remotion';
-import { Theme } from './types/theme';
+import { Theme } from '../types/theme';
 
 interface Props {
     text: string;
