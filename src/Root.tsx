@@ -3,6 +3,7 @@ import { LaunchVideo } from "./LaunchVideo/LaunchVideo";
 import { FeatureHighlight_Metrics } from "./FeatureHighlight_Metrics/FeatureHighlight_Metrics";
 import { Widget_Emails } from "./Widget_Emails/FeatureHighlight_Metrics";
 import { HowTo_Metrics } from "./HowTo_Metrics/HowTo_Metrics";
+import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocsSite";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -34,6 +35,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="HowTo-Metrics"
         component={HowTo_Metrics}
+        durationInFrames={1}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="HowWeBuiltOurDocsSite"
+        component={HowWeBuiltOurDocsSite}
         durationInFrames={1}
         fps={60}
         width={1920}
