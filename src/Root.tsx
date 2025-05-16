@@ -4,7 +4,7 @@ import { FeatureHighlight_Metrics } from "./FeatureHighlight_Metrics/FeatureHigh
 import { Widget_Emails } from "./Widget_Emails/FeatureHighlight_Metrics";
 import { HowTo_Metrics } from "./HowTo_Metrics/HowTo_Metrics";
 import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocsSite";
-
+import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifiedStudyApp/UsingTrophyToBuildAGamifiedStudyApp";
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -43,6 +43,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="HowWeBuiltOurDocsSite"
         component={HowWeBuiltOurDocsSite}
+        durationInFrames={1}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="UsingTrophyToBuildAGamifiedStudyApp"
+        component={UsingTrophyToBuildAGamifiedStudyApp}
         durationInFrames={1}
         fps={60}
         width={1920}
