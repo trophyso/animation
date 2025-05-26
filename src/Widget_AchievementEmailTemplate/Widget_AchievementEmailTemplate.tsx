@@ -1,18 +1,89 @@
 import { AbsoluteFill } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
-import { Mail, Trophy } from "lucide-react";
+import { Image, Trophy } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 
 const { fontFamily } = loadFont();
 
-export const Widget_AchievementEmailTemplate: React.FC = () => {
-    const achievement = {
-        name: "200 Lessons Completed",
-        badge: Trophy,
-        color: "#4CC74A",
-        message: "Congratulations! You've completed 200 lessons, showing incredible dedication to your learning journey. Keep up the amazing work!"
-    };
+const AchievementBadge = () => {
+    const size = 80;
+    const center = size / 2;
+    const innerCircleRadius = 15;
+    const outerCircleRadius = 35;
+    const lines = 8; // Number of radiating lines
+    const lineExtension = 25; // How far the lines extend beyond the outer circle
 
+    return (
+        <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+        >
+            <defs>
+                <mask id="lineMask">
+                    <rect width={size} height={size} fill="white" />
+                    <circle
+                        cx={center}
+                        cy={center}
+                        r={outerCircleRadius + lineExtension}
+                        fill="url(#fadeGradient)"
+                    />
+                </mask>
+                <radialGradient id="fadeGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                    <stop offset="0%" stopColor="white" />
+                    <stop offset={`${(outerCircleRadius / (outerCircleRadius + lineExtension)) * 100}%`} stopColor="white" />
+                    <stop offset="100%" stopColor="black" />
+                </radialGradient>
+            </defs>
+
+            {/* Outer circle */}
+            <circle
+                cx={center}
+                cy={center}
+                r={outerCircleRadius}
+                fill="none"
+                stroke="#ddd"
+                strokeWidth="1.5"
+            />
+            {/* Inner circle */}
+            <circle
+                cx={center}
+                cy={center}
+                r={innerCircleRadius}
+                fill="#4CC74A"
+            />
+            {/* Radiating lines */}
+            <g mask="url(#lineMask)">
+                {Array.from({ length: lines }).map((_, i) => {
+                    const angle = (i * 360) / lines;
+                    const radians = (angle * Math.PI) / 180;
+                    const x1 = center + innerCircleRadius * Math.cos(radians);
+                    const y1 = center + innerCircleRadius * Math.sin(radians);
+                    const x2 = center + (outerCircleRadius + lineExtension) * Math.cos(radians);
+                    const y2 = center + (outerCircleRadius + lineExtension) * Math.sin(radians);
+
+                    return (
+                        <line
+                            key={i}
+                            x1={x1}
+                            y1={y1}
+                            x2={x2}
+                            y2={y2}
+                            stroke="#ddd"
+                            strokeWidth="2"
+                        />
+                    );
+                })}
+            </g>
+            {/* Icon in center */}
+            <g transform={`translate(${center - 7.5}, ${center - 7.5})`}>
+                <Image size={15} color="#fff" />
+            </g>
+        </svg>
+    );
+};
+
+export const Widget_AchievementEmailTemplate: React.FC = () => {
     return (
         <AbsoluteFill>
             <LightBackground />
@@ -27,6 +98,7 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
             >
                 <div
                     style={{
+                        width: '100%',
                         backgroundColor: 'white',
                         borderRadius: '12px',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -43,39 +115,34 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                             gap: '0.5rem',
                         }}
                     >
-                        <Mail size={18} color="#666" />
+                        <Trophy size={18} color="#666" />
                         <span style={{ color: '#666', fontFamily: fontFamily, fontSize: '14px' }}>
-                            Inbox
+                            Achievement Unlocked
                         </span>
                     </div>
                     <div style={{ padding: '1rem' }}>
-                        <div style={{ marginBottom: '1rem', borderBottom: '1px solid #e0e0e0', paddingBottom: '1rem' }}>
-                            <h2 style={{
-                                fontSize: '18px',
-                                fontWeight: 'bold',
-                                color: '#333',
-                                fontFamily: fontFamily,
-                                margin: '0 0 1rem 0'
-                            }}>
-                                🎉 Achievement Unlocked: {achievement.name}
-                            </h2>
+                        <div style={{ marginBottom: '1rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
                             <div style={{
-                                fontSize: '12px',
-                                color: '#888',
-                                fontFamily: fontFamily,
+                                width: '70%',
+                                height: '22px',
+                                backgroundColor: '#e0e0e0',
+                                borderRadius: '8px',
+                                marginBottom: '1rem'
+                            }} />
+                            <div style={{
+                                width: '40%',
+                                height: '10px',
+                                backgroundColor: '#eee',
+                                borderRadius: '8px',
                                 marginBottom: '0.5rem'
-                            }}>
-                                From: <span style={{ color: '#333' }}>Acme Inc.</span>
-                            </div>
+                            }} />
                             <div style={{
-                                fontSize: '12px',
-                                color: '#888',
-                                fontFamily: fontFamily
-                            }}>
-                                To: <span style={{ color: '#333' }}>John Doe</span>
-                            </div>
+                                width: '35%',
+                                height: '10px',
+                                backgroundColor: '#eee',
+                                borderRadius: '8px'
+                            }} />
                         </div>
-
                         <div style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -86,39 +153,45 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                             borderRadius: '8px',
                             marginBottom: '2rem'
                         }}>
-                            <div
-                                style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    borderRadius: '50%',
-                                    backgroundColor: achievement.color,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <achievement.badge size={40} color="white" />
+                            <AchievementBadge />
+                            <div style={{
+                                width: '80%',
+                                height: '22px',
+                                backgroundColor: '#e0e0e0',
+                                borderRadius: '8px'
+                            }} />
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.5rem',
+                                width: '100%',
+                                alignItems: 'center'
+                            }}>
+                                <div style={{
+                                    width: '90%',
+                                    height: '10px',
+                                    backgroundColor: '#eee',
+                                    borderRadius: '8px'
+                                }} />
+                                <div style={{
+                                    width: '85%',
+                                    height: '10px',
+                                    backgroundColor: '#eee',
+                                    borderRadius: '8px'
+                                }} />
+                                <div style={{
+                                    width: '35%',
+                                    height: '10px',
+                                    backgroundColor: '#eee',
+                                    borderRadius: '8px'
+                                }} />
                             </div>
-                            <h3 style={{
-                                fontSize: '20px',
-                                fontWeight: 'bold',
-                                color: '#333',
-                                fontFamily: fontFamily,
-                                margin: 0,
-                                textAlign: 'center'
-                            }}>
-                                {achievement.name}
-                            </h3>
-                            <p style={{
-                                fontSize: '12px',
-                                color: '#666',
-                                fontFamily: fontFamily,
-                                margin: 0,
-                                textAlign: 'center',
-                                lineHeight: '1.5'
-                            }}>
-                                {achievement.message}
-                            </p>
+                            <div style={{
+                                width: '17.5%',
+                                height: '25px',
+                                backgroundColor: '#4CC74A',
+                                borderRadius: '7px'
+                            }} />
                         </div>
                     </div>
                 </div>
@@ -126,3 +199,14 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
         </AbsoluteFill>
     );
 };
+
+// Add keyframes for the pulse animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
