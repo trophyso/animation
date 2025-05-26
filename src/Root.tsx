@@ -5,6 +5,7 @@ import { Widget_Emails } from "./Widget_Emails/Widget_Emails";
 import { HowTo_Metrics } from "./HowTo_Metrics/HowTo_Metrics";
 import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocsSite";
 import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifiedStudyApp/UsingTrophyToBuildAGamifiedStudyApp";
+import { Widget_AchievementEmailTemplate } from "./Widget_AchievementEmailTemplate/Widget_AchievementEmailTemplate";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -56,6 +57,14 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="Widget-AchievementEmailTemplate"
+        component={Widget_AchievementEmailTemplate}
+        durationInFrames={1}
+        fps={60}
+        width={500}
+        height={500}
       />
     </>
   );
