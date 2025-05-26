@@ -1,10 +1,11 @@
 import { Composition } from "remotion";
 import { LaunchVideo } from "./LaunchVideo/LaunchVideo";
 import { FeatureHighlight_Metrics } from "./FeatureHighlight_Metrics/FeatureHighlight_Metrics";
-import { Widget_Emails } from "./Widget_Emails/FeatureHighlight_Metrics";
+import { Widget_Emails } from "./Widget_Emails/Widget_Emails";
 import { HowTo_Metrics } from "./HowTo_Metrics/HowTo_Metrics";
 import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocsSite";
 import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifiedStudyApp/UsingTrophyToBuildAGamifiedStudyApp";
+
 export const RemotionRoot: React.FC = () => {
   return (
     <>
