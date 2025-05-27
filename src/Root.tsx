@@ -6,6 +6,7 @@ import { HowTo_Metrics } from "./HowTo_Metrics/HowTo_Metrics";
 import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocsSite";
 import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifiedStudyApp/UsingTrophyToBuildAGamifiedStudyApp";
 import { Widget_AchievementEmailTemplate } from "./Widget_AchievementEmailTemplate/Widget_AchievementEmailTemplate";
+import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_RecapEmailTemplate";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -61,6 +62,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="Widget-AchievementEmailTemplate"
         component={Widget_AchievementEmailTemplate}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={600}
+      />
+      <Composition
+        id="Widget-RecapEmailTemplate"
+        component={Widget_RecapEmailTemplate}
         durationInFrames={1}
         fps={60}
         width={1000}
