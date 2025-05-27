@@ -193,7 +193,7 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                                     width: '17.5%',
                                     height: '25px',
                                     borderRadius: '7px',
-                                    border: '1px dashed #e0e0e0',
+                                    border: '1.5px dashed #e0e0e0',
                                 }} />
                                 <div style={{
                                     position: 'absolute',
