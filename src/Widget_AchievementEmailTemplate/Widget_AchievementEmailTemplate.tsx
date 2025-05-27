@@ -94,7 +94,7 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: '80%',
+                        width: '50%',
                         backgroundColor: 'white',
                         borderRadius: '12px',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -211,7 +211,7 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                                         strokeWidth={1.5}
                                         style={{
                                             position: 'absolute',
-                                            transform: 'translate(200%, -60%)',
+                                            transform: 'translate(300%, -60%)',
                                         }}
                                     />
                                 </div>

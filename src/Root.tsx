@@ -63,8 +63,8 @@ export const RemotionRoot: React.FC = () => {
         component={Widget_AchievementEmailTemplate}
         durationInFrames={1}
         fps={60}
-        width={500}
-        height={500}
+        width={1000}
+        height={600}
       />
     </>
   );
