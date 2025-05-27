@@ -1,15 +1,15 @@
 import { AbsoluteFill } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
-import { Trophy, Grab } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 
 const { fontFamily } = loadFont();
 
 const AchievementBadge = () => {
-    const size = 80;
+    const size = 100;
     const center = size / 2;
-    const innerCircleRadius = 15;
-    const outerCircleRadius = 35;
+    const innerCircleRadius = 20;
+    const outerCircleRadius = 40;
     const lines = 8; // Number of radiating lines
     const lineExtension = 25; // How far the lines extend beyond the outer circle
 
@@ -76,8 +76,8 @@ const AchievementBadge = () => {
                 })}
             </g>
             {/* Icon in center */}
-            <g transform={`translate(${center - 7.5}, ${center - 7.5})`}>
-                <Trophy size={15} color="#fff" />
+            <g transform={`translate(${center - 10}, ${center - 10})`}>
+                <Trophy size={20} color="#fff" />
             </g>
         </svg>
     );
@@ -191,30 +191,10 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                             }}>
                                 <div style={{
                                     width: '17.5%',
-                                    height: '25px',
-                                    borderRadius: '7px',
-                                    border: '1.5px dashed #e0e0e0',
-                                }} />
-                                <div style={{
-                                    position: 'absolute',
-                                    width: '17.5%',
-                                    height: '25px',
+                                    height: '30px',
                                     borderRadius: '7px',
                                     backgroundColor: '#4CC74A',
-                                    transform: 'translate(30%, -30%)',
-                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.10)',
-                                }}>
-                                    <Grab
-                                        size={20}
-                                        color="#666"
-                                        fill="#fff"
-                                        strokeWidth={1.5}
-                                        style={{
-                                            position: 'absolute',
-                                            transform: 'translate(300%, -60%)',
-                                        }}
-                                    />
-                                </div>
+                                }} />
                             </div>
                         </div>
                     </div>
