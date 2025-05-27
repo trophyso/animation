@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
-import { Image, Trophy } from "lucide-react";
+import { Image, Trophy, Grab } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 
 const { fontFamily } = loadFont();
@@ -87,18 +87,14 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
     return (
         <AbsoluteFill>
             <LightBackground />
-            <AbsoluteFill
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: "5%"
-                }}
-            >
+            <AbsoluteFill>
                 <div
                     style={{
-                        width: '100%',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '80%',
                         backgroundColor: 'white',
                         borderRadius: '12px',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -151,7 +147,6 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                             padding: '2rem',
                             backgroundColor: '#f9f9f9',
                             borderRadius: '8px',
-                            marginBottom: '2rem'
                         }}>
                             <AchievementBadge />
                             <div style={{
@@ -187,11 +182,40 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
                                 }} />
                             </div>
                             <div style={{
-                                width: '17.5%',
-                                height: '25px',
-                                backgroundColor: '#4CC74A',
-                                borderRadius: '7px'
-                            }} />
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '0.5rem',
+                                position: 'relative'
+                            }}>
+                                <div style={{
+                                    width: '17.5%',
+                                    height: '25px',
+                                    borderRadius: '7px',
+                                    border: '1px dashed #e0e0e0',
+                                }} />
+                                <div style={{
+                                    position: 'absolute',
+                                    width: '17.5%',
+                                    height: '25px',
+                                    borderRadius: '7px',
+                                    backgroundColor: '#4CC74A',
+                                    transform: 'translate(30%, -30%)',
+                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.10)',
+                                }}>
+                                    <Grab
+                                        size={20}
+                                        color="#666"
+                                        fill="#fff"
+                                        strokeWidth={1.5}
+                                        style={{
+                                            position: 'absolute',
+                                            transform: 'translate(200%, -60%)',
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -199,14 +223,3 @@ export const Widget_AchievementEmailTemplate: React.FC = () => {
         </AbsoluteFill>
     );
 };
-
-// Add keyframes for the pulse animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-`;
-document.head.appendChild(style);
