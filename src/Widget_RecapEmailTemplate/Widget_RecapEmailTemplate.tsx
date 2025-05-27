@@ -133,18 +133,33 @@ export const Widget_RecapEmailTemplate: React.FC = () => {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            gap: '1rem',
-                            padding: '1rem 2rem',
+                            gap: '.5rem',
+                            padding: '1rem 2rem 1rem 2rem',
                             backgroundColor: '#f9f9f9',
                             borderRadius: '8px',
                         }}>
                             <div style={{
-                                width: '50%',
-                                height: '22px',
-                                backgroundColor: '#e0e0e0',
-                                borderRadius: '8px',
-                                marginBottom: '1rem'
-                            }} />
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%'
+                            }}>
+                                <div style={{
+                                    width: '50%',
+                                    height: '22px',
+                                    backgroundColor: '#e0e0e0',
+                                    borderRadius: '8px',
+                                    marginBottom: '.75rem'
+                                }} />
+                                <div style={{
+                                    width: '30%',
+                                    height: '10px',
+                                    backgroundColor: '#eee',
+                                    borderRadius: '8px',
+                                    marginBottom: '1rem'
+                                }} />
+                            </div>
                             <BarChart />
                         </div>
                     </div>
