@@ -7,6 +7,7 @@ import { HowWeBuiltOurDocsSite } from "./HowWeBuiltOurDocsSite/HowWeBuiltOurDocs
 import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifiedStudyApp/UsingTrophyToBuildAGamifiedStudyApp";
 import { Widget_AchievementEmailTemplate } from "./Widget_AchievementEmailTemplate/Widget_AchievementEmailTemplate";
 import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_RecapEmailTemplate";
+import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemplate/Widget_ReactivationEmailTemplate";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -70,6 +71,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="Widget-RecapEmailTemplate"
         component={Widget_RecapEmailTemplate}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={600}
+      />
+      <Composition
+        id="Widget-ReactivationEmailTemplate"
+        component={Widget_ReactivationEmailTemplate}
         durationInFrames={1}
         fps={60}
         width={1000}
