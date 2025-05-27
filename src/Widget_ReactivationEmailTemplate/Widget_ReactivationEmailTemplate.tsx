@@ -92,7 +92,7 @@ export const Widget_ReactivationEmailTemplate: React.FC = () => {
                                         <div style={{
                                             width: '50px',
                                             height: '50px',
-                                            backgroundColor: '#e0e0e0',
+                                            backgroundColor: '#4CC74A',
                                             borderRadius: '8px',
                                             display: 'flex',
                                             justifyContent: 'center',
@@ -100,7 +100,7 @@ export const Widget_ReactivationEmailTemplate: React.FC = () => {
                                             fontFamily: Roboto,
                                             fontSize: '22px',
                                             fontWeight: 'bold',
-                                            color: '#666'
+                                            color: '#fff'
                                         }}>
                                             38
                                         </div>
