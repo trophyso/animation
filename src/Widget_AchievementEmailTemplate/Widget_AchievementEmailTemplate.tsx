@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Montserrat";
-import { Image, Trophy, Grab } from "lucide-react";
+import { Trophy, Grab } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 
 const { fontFamily } = loadFont();
@@ -77,7 +77,7 @@ const AchievementBadge = () => {
             </g>
             {/* Icon in center */}
             <g transform={`translate(${center - 7.5}, ${center - 7.5})`}>
-                <Image size={15} color="#fff" />
+                <Trophy size={15} color="#fff" />
             </g>
         </svg>
     );
