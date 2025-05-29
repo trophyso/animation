@@ -60,6 +60,15 @@ export const Podcast: React.FC = () => {
                     </div>
                 </div>
             </Bump>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', opacity: opacity }}>
+                <Img
+                    src={staticFile('brand/logo_dark.svg')}
+                    style={{
+                        width: 500,
+                        height: 500,
+                    }}
+                />
+            </div>
         </div>
     );
 }; 
