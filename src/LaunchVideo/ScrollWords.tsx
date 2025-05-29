@@ -1,4 +1,4 @@
-import { Bump } from "./Bump";
+import { Bump } from "../components/Bump";
 import { FadeIn } from "./FadeIn";
 import { FadeOut } from "./FadeOut";
 import { Text } from "../components/Text"

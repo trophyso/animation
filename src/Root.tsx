@@ -8,6 +8,7 @@ import { UsingTrophyToBuildAGamifiedStudyApp } from "./UsingTrophyToBuildAGamifi
 import { Widget_AchievementEmailTemplate } from "./Widget_AchievementEmailTemplate/Widget_AchievementEmailTemplate";
 import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_RecapEmailTemplate";
 import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemplate/Widget_ReactivationEmailTemplate";
+import { Podcast } from "./Podcast/Podcast";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -83,6 +84,14 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1000}
         height={600}
+      />
+      <Composition
+        id="Podcast"
+        component={Podcast}
+        durationInFrames={180}
+        fps={60}
+        width={1920}
+        height={1080}
       />
     </>
   );

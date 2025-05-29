@@ -1,7 +1,7 @@
 import { AbsoluteFill, Img, Sequence, staticFile } from "remotion";
 import { HashBackground } from "../components/HashBackground";
 import { LightBackground } from "../components/LightBackground";
-import { Typing } from "./Typing";
+import { Typing } from "../components/Typing";
 import { DarkBackground } from "../components/DarkBackground";
 import { Cursor } from "./Cursor";
 import { ScrollWords } from "./ScrollWords";
