@@ -86,9 +86,17 @@ export const RemotionRoot: React.FC = () => {
         height={600}
       />
       <Composition
-        id="Podcast"
+        id="Podcast-Intro"
         component={Podcast}
         durationInFrames={180}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Podcast-Outro"
+        component={Podcast}
+        durationInFrames={360}
         fps={60}
         width={1920}
         height={1080}
