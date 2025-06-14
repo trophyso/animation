@@ -11,7 +11,7 @@ fi
 PROPS="{\"title\": \"$1\"}"
 
 # Create filename from title (replace spaces with underscores)
-FILENAME=$(echo "$1" | tr ' ' '_').png
+FILENAME=$(echo "$1" | tr ' -' '_').png
 
 # Run the remotion command
 npx remotion still GenericThumbnailImage \
