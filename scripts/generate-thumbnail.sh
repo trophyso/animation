@@ -18,4 +18,4 @@ npx remotion still GenericThumbnailImage \
     --image-format=png \
     --props="$PROPS" \
     --output="./out/$FILENAME" \
-    --overwrite=false
+    --overwrite=true

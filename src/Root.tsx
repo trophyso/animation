@@ -107,8 +107,8 @@ export const RemotionRoot: React.FC = () => {
         component={GenericThumbnailImage}
         durationInFrames={1}
         fps={60}
-        width={1920}
-        height={1080}
+        width={1800}
+        height={1200}
       />
     </>
   );
