@@ -10,6 +10,8 @@ import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_Re
 import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemplate/Widget_ReactivationEmailTemplate";
 import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
+import { HashBackground } from "./HashBackground/HashBackgroundComposition";
+import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -109,6 +111,22 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1800}
         height={1200}
+      />
+      <Composition
+        id="HashBackground"
+        component={HashBackground}
+        durationInFrames={1}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SalesDocImage"
+        component={SalesDocImage}
+        durationInFrames={1}
+        fps={60}
+        width={1920}
+        height={1080}
       />
     </>
   );
