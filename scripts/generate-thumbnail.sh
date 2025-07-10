@@ -7,8 +7,8 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Create the JSON props with the provided title
-PROPS="{\"title\": \"$1\"}"
+# Create the JSON props with the provided props
+PROPS="{\"title\": \"$1\", \"imageUrl\": \"$2\"}"
 
 # Create filename from title (replace spaces with underscores)
 FILENAME=$(echo "$1" | tr ' -' '_').png

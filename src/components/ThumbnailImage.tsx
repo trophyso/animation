@@ -6,9 +6,10 @@ import { fontFamily } from "@remotion/google-fonts/Montserrat";
 
 interface Props {
     title: string;
+    imageUrl: string;
 }
 
-export const ThumbnailImage: React.FC<Props> = ({ title }) => {
+export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
     return (
         <AbsoluteFill>
             <HashBackground showBlur={true} />
@@ -37,6 +38,25 @@ export const ThumbnailImage: React.FC<Props> = ({ title }) => {
             >
                 {title}
             </AbsoluteFill>
+            {imageUrl && (
+                <AbsoluteFill
+                    style={{
+                        top: "40%",
+                        left: "15%",
+                        width: "65%",
+                    }}
+                >
+                    <Img
+                        src={staticFile(imageUrl)}
+                        style={{
+                            width: "100%",
+                            borderRadius: "50px",
+                            border: "7px solid rgba(0, 0, 0, 0.05)",
+                            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)"
+                        }}
+                    />
+                </AbsoluteFill>
+            )}
         </AbsoluteFill>
     );
 };

@@ -9,6 +9,6 @@ export const GenericThumbnailImage: React.FC = () => {
     }
 
     return (
-        <ThumbnailImage title={title as string} />
+        <ThumbnailImage title={title as string} imageUrl="assets/duolingo_energy.png" />
     );
 };
