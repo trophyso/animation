@@ -44,7 +44,7 @@ export const SalesDocImage: React.FC = () => {
                         }}
                     />
                     <Img
-                        src={staticFile('brand/sales_logo_vaster.png')}
+                        src={staticFile('brand/sales_logo_bamboo.png')}
                         style={{ width: 250 }}
                     />
                 </AbsoluteFill>
@@ -66,7 +66,7 @@ export const SalesDocImage: React.FC = () => {
                             letterSpacing: "0.25rem"
                         }}
                     >
-                        CUSTOMER PROPOSAL
+                        PROJECT PLAN
                     </p>
                 </AbsoluteFill>
             </AbsoluteFill>
