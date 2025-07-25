@@ -1,7 +1,7 @@
 import { AbsoluteFill } from "remotion";
 import { loadFont as loadMontserrat } from "@remotion/google-fonts/Montserrat";
 import { loadFont as loadRoboto } from "@remotion/google-fonts/Roboto";
-import { PartyPopper, RefreshCw } from "lucide-react";
+import { Medal, PartyPopper, RefreshCw } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 
 const { fontFamily: Montserrat } = loadMontserrat();
@@ -159,92 +159,101 @@ export const Widget_ReactivationEmailTemplate: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Streak Display */}
+                            {/* Two Column Block */}
                             <div style={{
                                 display: 'flex',
-                                flexDirection: 'column',
-                                gap: '1rem'
+                                flexDirection: 'row-reverse',
+                                gap: '2rem',
                             }}>
-                                {/* Title and Description */}
+                                {/* Left Column (2/3 width) */}
                                 <div style={{
+                                    flex: 2,
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '0.5rem',
-                                    alignItems: 'center',
-                                    width: '100%'
+                                    gap: '1rem',
+                                    alignItems: 'flex-start'
                                 }}>
                                     <div style={{
-                                        width: '50%',
-                                        height: '22px',
-                                        backgroundColor: '#e0e0e0',
-                                        borderRadius: '8px'
-                                    }} />
+                                        display: 'flex',
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: "flex-end",
+                                        gap: '0.5rem',
+                                        width: '100%'
+                                    }}>
+                                        <div style={{
+                                            width: '50px',
+                                            height: '50px',
+                                            backgroundColor: '#4CC74A',
+                                            borderRadius: '8px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            fontFamily: Roboto,
+                                            fontSize: '22px',
+                                            fontWeight: 'bold',
+                                            color: '#fff'
+                                        }}>
+                                            94
+                                        </div>
+                                        <div style={{
+                                            flex: 8,
+                                            height: '50px',
+                                            backgroundColor: '#e0e0e0',
+                                            borderRadius: '8px'
+                                        }} />
+                                        <div style={{
+                                            flex: 3,
+                                            height: '50px',
+                                            backgroundColor: '#f9f9f9',
+                                            borderRadius: '8px'
+                                        }} />
+                                    </div>
                                     <div style={{
-                                        width: '30%',
-                                        height: '10px',
-                                        backgroundColor: '#eee',
-                                        borderRadius: '8px'
-                                    }} />
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-end',
+                                        gap: '0.5rem',
+                                        width: '100%'
+                                    }}>
+                                        <div style={{
+                                            width: '100%',
+                                            height: '10px',
+                                            backgroundColor: '#eee',
+                                            borderRadius: '8px'
+                                        }} />
+                                        <div style={{
+                                            width: '70%',
+                                            height: '10px',
+                                            backgroundColor: '#eee',
+                                            borderRadius: '8px'
+                                        }} />
+                                        <div style={{
+                                            width: '40%',
+                                            height: '10px',
+                                            backgroundColor: '#eee',
+                                            borderRadius: '8px'
+                                        }} />
+                                    </div>
                                 </div>
 
-                                {/* Week 1 */}
+                                {/* Right Column (1/3 width) */}
                                 <div style={{
+                                    flex: 1,
                                     display: 'flex',
-                                    gap: '0.5rem',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}>
-                                    {Array.from({ length: 7 }).map((_, i) => (
-                                        i === 0 ? (
-                                            <div
-                                                key={`week1-${i}`}
-                                                style={{
-                                                    width: '40px',
-                                                    height: '40px',
-                                                    visibility: 'hidden'
-                                                }}
-                                            />
-                                        ) : (
-                                            <div
-                                                key={`week1-${i}`}
-                                                style={{
-                                                    width: '40px',
-                                                    height: '40px',
-                                                    backgroundColor: (i === 1 || i === 2) ? '#4CC74A' : '#e0e0e0',
-                                                    borderRadius: '8px'
-                                                }}
-                                            />
-                                        )
-                                    ))}
-                                </div>
-
-                                {/* Week 2 */}
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '0.5rem',
-                                    justifyContent: 'center'
-                                }}>
-                                    {Array.from({ length: 7 }).map((_, i) => (
-                                        i === 6 ? (
-                                            <div
-                                                key={`week2-${i}`}
-                                                style={{
-                                                    width: '40px',
-                                                    height: '40px',
-                                                    visibility: 'hidden'
-                                                }}
-                                            />
-                                        ) : (
-                                            <div
-                                                key={`week2-${i}`}
-                                                style={{
-                                                    width: '40px',
-                                                    height: '40px',
-                                                    backgroundColor: (i === 3 || i === 4) ? '#4CC74A' : '#e0e0e0',
-                                                    borderRadius: '8px'
-                                                }}
-                                            />
-                                        )
-                                    ))}
+                                    <div style={{
+                                        width: '100%',
+                                        aspectRatio: '1',
+                                        backgroundColor: '#f0f0f0',
+                                        borderRadius: '10px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <Medal size={40} color="#666" />
+                                    </div>
                                 </div>
                             </div>
                         </div>

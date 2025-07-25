@@ -12,6 +12,7 @@ import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
 import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
+import { Widget_StreakEmailTemplate } from "./Widget_StreakEmailTemplate/Widget_StreakEmailTemplate";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -83,6 +84,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="Widget-ReactivationEmailTemplate"
         component={Widget_ReactivationEmailTemplate}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={600}
+      />
+      <Composition
+        id="Widget-StreakEmailTemplate"
+        component={Widget_StreakEmailTemplate}
         durationInFrames={1}
         fps={60}
         width={1000}
