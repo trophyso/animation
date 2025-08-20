@@ -41,9 +41,9 @@ export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
             {imageUrl && (
                 <AbsoluteFill
                     style={{
-                        top: "40%",
+                        top: "45%",
                         left: "15%",
-                        width: "65%",
+                        width: "50%",
                     }}
                 >
                     <Img

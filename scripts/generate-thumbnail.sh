@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Example usage: npm run generate:thumbnail "Trophy Updates - August 2025" "/assets/user_attributes.png"
+
 # Check if title is provided
 if [ -z "$1" ]; then
     echo "Error: Title is required"
