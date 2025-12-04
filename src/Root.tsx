@@ -13,6 +13,9 @@ import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailI
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
 import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
 import { Widget_StreakEmailTemplate } from "./Widget_StreakEmailTemplate/Widget_StreakEmailTemplate";
+import { Widget_AchievementPushNotification } from "./Widget_AchievementPushNotification/Widget_AchievementPushNotification";
+import { Widget_StreakPushNotification } from "./Widget_StreakPushNotification/Widget_StreakPushNotification";
+import { Widget_ReactivationPushNotification } from "./Widget_ReactivationPushNotification/Widget_ReactivationPushNotification";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -96,6 +99,30 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1000}
         height={600}
+      />
+      <Composition
+        id="Widget-AchievementPushNotification"
+        component={Widget_AchievementPushNotification}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={900}
+      />
+      <Composition
+        id="Widget-StreakPushNotification"
+        component={Widget_StreakPushNotification}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={900}
+      />
+      <Composition
+        id="Widget-ReactivationPushNotification"
+        component={Widget_ReactivationPushNotification}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={900}
       />
       <Composition
         id="Podcast-Intro"
