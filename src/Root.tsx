@@ -16,6 +16,7 @@ import { Widget_StreakEmailTemplate } from "./Widget_StreakEmailTemplate/Widget_
 import { Widget_AchievementPushNotification } from "./Widget_AchievementPushNotification/Widget_AchievementPushNotification";
 import { Widget_StreakPushNotification } from "./Widget_StreakPushNotification/Widget_StreakPushNotification";
 import { Widget_ReactivationPushNotification } from "./Widget_ReactivationPushNotification/Widget_ReactivationPushNotification";
+import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Widget_RecapPushNotification";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -119,6 +120,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="Widget-ReactivationPushNotification"
         component={Widget_ReactivationPushNotification}
+        durationInFrames={1}
+        fps={60}
+        width={1000}
+        height={900}
+      />
+      <Composition
+        id="Widget-RecapPushNotification"
+        component={Widget_RecapPushNotification}
         durationInFrames={1}
         fps={60}
         width={1000}
