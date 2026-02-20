@@ -33,29 +33,35 @@ export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
                     fontFamily: fontFamily,
                     top: "25%",
                     left: "7%",
-                    width: "83%"
+                    width: "47%"
                 }}
             >
                 {title}
             </AbsoluteFill>
             {imageUrl && (
-                <AbsoluteFill
+                <div
                     style={{
-                        top: "45%",
-                        left: "15%",
-                        width: "50%",
+                        position: "absolute",
+                        left: "54%",
+                        top: "5%",
+                        width: "42%",
+                        height: "90%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                     }}
                 >
                     <Img
                         src={staticFile(imageUrl)}
                         style={{
-                            width: "100%",
+                            maxWidth: "100%",
+                            maxHeight: "100%",
                             borderRadius: "50px",
                             border: "7px solid rgba(0, 0, 0, 0.05)",
-                            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)"
+                            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
                         }}
                     />
-                </AbsoluteFill>
+                </div>
             )}
         </AbsoluteFill>
     );
