@@ -33,7 +33,7 @@ export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
                     fontFamily: fontFamily,
                     top: "25%",
                     left: "7%",
-                    width: "47%"
+                    width: "44%"
                 }}
             >
                 {title}
