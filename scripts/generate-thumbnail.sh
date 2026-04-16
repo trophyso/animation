@@ -1,19 +1,41 @@
 #!/bin/bash
 
-# Example usage: npm run generate:thumbnail "Trophy Updates - August 2025" "/assets/user_attributes.png"
+# Examples:
+#   ./generate-thumbnail.sh "Trophy Updates" "/assets/user_attributes.png"
+#   ./generate-thumbnail.sh --no-image-border "7 Health App Gamification Examples" "/assets/fitbit-gamification.png"
 
-# Check if title is provided
-if [ -z "$1" ]; then
+NO_IMAGE_BORDER=0
+REMAINING=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --no-image-border)
+            NO_IMAGE_BORDER=1
+            shift
+            ;;
+        *)
+            REMAINING+=("$1")
+            shift
+            ;;
+    esac
+done
+
+if [ -z "${REMAINING[0]}" ]; then
     echo "Error: Title is required"
-    echo "Usage: ./generate-thumbnail.sh \"Your Title Here\""
+    echo "Usage: ./generate-thumbnail.sh [--no-image-border] \"Your Title Here\" [\"/assets/image.png\"]"
     exit 1
 fi
 
-# Create the JSON props with the provided props
-PROPS="{\"title\": \"$1\", \"imageUrl\": \"$2\"}"
+TITLE="${REMAINING[0]}"
+IMAGE_URL="${REMAINING[1]:-}"
+
+if [ "$NO_IMAGE_BORDER" -eq 1 ]; then
+    PROPS="{\"title\": \"$TITLE\", \"imageUrl\": \"$IMAGE_URL\", \"imageBorder\": false}"
+else
+    PROPS="{\"title\": \"$TITLE\", \"imageUrl\": \"$IMAGE_URL\"}"
+fi
 
 # Create filename from title (replace spaces with underscores)
-FILENAME=$(echo "$1" | tr ' -' '_').png
+FILENAME=$(echo "$TITLE" | tr ' -' '_').png
 
 # Run the remotion command
 npx remotion still GenericThumbnailImage \

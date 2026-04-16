@@ -7,9 +7,15 @@ import { fontFamily } from "@remotion/google-fonts/Montserrat";
 interface Props {
     title: string;
     imageUrl: string;
+    /** When false, no frame (border / shadow / rounded corners) on the right-side image. */
+    imageBorder?: boolean;
 }
 
-export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
+export const ThumbnailImage: React.FC<Props> = ({
+    title,
+    imageUrl,
+    imageBorder = true,
+}) => {
     return (
         <AbsoluteFill>
             <HashBackground showBlur={true} />
@@ -56,9 +62,14 @@ export const ThumbnailImage: React.FC<Props> = ({ title, imageUrl }) => {
                         style={{
                             maxWidth: "100%",
                             maxHeight: "100%",
-                            borderRadius: "50px",
-                            border: "7px solid rgba(0, 0, 0, 0.05)",
-                            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+                            ...(imageBorder
+                                ? {
+                                      borderRadius: "50px",
+                                      border: "7px solid rgba(0, 0, 0, 0.05)",
+                                      boxShadow:
+                                          "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+                                  }
+                                : {}),
                         }}
                     />
                 </div>
