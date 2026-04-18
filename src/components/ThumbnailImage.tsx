@@ -39,7 +39,7 @@ export const ThumbnailImage: React.FC<Props> = ({
                     fontFamily: fontFamily,
                     top: "25%",
                     left: "7%",
-                    width: "44%"
+                    width: imageUrl ? "44%" : "86%",
                 }}
             >
                 {title}
@@ -64,11 +64,11 @@ export const ThumbnailImage: React.FC<Props> = ({
                             maxHeight: "100%",
                             ...(imageBorder
                                 ? {
-                                      borderRadius: "50px",
-                                      border: "7px solid rgba(0, 0, 0, 0.05)",
-                                      boxShadow:
-                                          "0 0 10px 0 rgba(0, 0, 0, 0.3)",
-                                  }
+                                    borderRadius: "50px",
+                                    border: "7px solid rgba(0, 0, 0, 0.05)",
+                                    boxShadow:
+                                        "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+                                }
                                 : {}),
                         }}
                     />
