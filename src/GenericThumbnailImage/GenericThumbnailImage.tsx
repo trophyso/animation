@@ -1,18 +1,22 @@
-import { getInputProps } from "remotion";
 import { ThumbnailImage } from "../components/ThumbnailImage";
 
-export const GenericThumbnailImage: React.FC = () => {
-    const { title: titleInput, imageUrl, imageBorder } = getInputProps();
-    let title = titleInput;
+type GenericThumbnailImageProps = {
+    title?: string;
+    imageUrl?: string;
+    imageBorder?: boolean;
+};
 
-    if (!title) {
-        title = "Enter title here";
-    }
+export const GenericThumbnailImage: React.FC<GenericThumbnailImageProps> = ({
+    title: titleInput,
+    imageUrl = "",
+    imageBorder,
+}) => {
+    const title = titleInput || "Enter title here";
 
     return (
         <ThumbnailImage
-            title={title as string}
-            imageUrl={imageUrl as string}
+            title={title}
+            imageUrl={imageUrl}
             imageBorder={imageBorder !== false}
         />
     );

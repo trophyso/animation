@@ -1,12 +1,14 @@
 import { staticFile } from "remotion";
 import { Img } from "remotion";
-import { AbsoluteFill } from "remotion";
-import { HashBackground } from "./HashBackground";
-import { fontFamily } from "@remotion/google-fonts/Montserrat";
+import { AbsoluteFill, useVideoConfig } from "remotion";
+import { FlickeringGrid } from "./FlickeringGrid";
+import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+
+const { fontFamily } = loadFont();
 
 interface Props {
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     /** When false, no frame (border / shadow / rounded corners) on the right-side image. */
     imageBorder?: boolean;
 }
@@ -16,9 +18,20 @@ export const ThumbnailImage: React.FC<Props> = ({
     imageUrl,
     imageBorder = true,
 }) => {
+    const { width, height } = useVideoConfig();
+
     return (
-        <AbsoluteFill>
-            <HashBackground showBlur={true} />
+        <AbsoluteFill style={{ backgroundColor: "#fff" }}>
+            <FlickeringGrid
+                className="absolute inset-0 z-0 [mask-image:radial-gradient(5000px_circle_at_center,white,transparent)]"
+                squareSize={10}
+                gridGap={14}
+                color="#4CAF50"
+                maxOpacity={0.2}
+                flickerChance={0}
+                width={width}
+                height={height}
+            />
             <AbsoluteFill
                 style={{
                     justifyContent: "start",

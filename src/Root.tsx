@@ -17,6 +17,7 @@ import { Widget_AchievementPushNotification } from "./Widget_AchievementPushNoti
 import { Widget_StreakPushNotification } from "./Widget_StreakPushNotification/Widget_StreakPushNotification";
 import { Widget_ReactivationPushNotification } from "./Widget_ReactivationPushNotification/Widget_ReactivationPushNotification";
 import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Widget_RecapPushNotification";
+import { z } from "zod";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -156,6 +157,14 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1800}
         height={1200}
+        defaultProps={{
+          title: "Enter title here",
+        }}
+        schema={z.object({
+          title: z.string(),
+          imageUrl: z.string().optional(),
+          imageBorder: z.boolean().optional(),
+        })}
       />
       <Composition
         id="HashBackground"
