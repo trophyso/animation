@@ -3,6 +3,7 @@ import { Img } from "remotion";
 import { AbsoluteFill, useVideoConfig } from "remotion";
 import { FlickeringGrid } from "./FlickeringGrid";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+import { HeroHomepageComposition } from "./widgets/HeroHomepageComposition";
 
 const { fontFamily } = loadFont();
 
@@ -23,11 +24,17 @@ export const ThumbnailImage: React.FC<Props> = ({
     return (
         <AbsoluteFill style={{ backgroundColor: "#fff" }}>
             <FlickeringGrid
-                className="absolute inset-0 z-0 [mask-image:radial-gradient(5000px_circle_at_center,white,transparent)]"
+                className="absolute inset-0 z-0"
+                style={{
+                    maskImage:
+                        "radial-gradient(1200px circle at center, white, transparent)",
+                    WebkitMaskImage:
+                        "radial-gradient(1200px circle at center, white, transparent)",
+                }}
                 squareSize={10}
                 gridGap={14}
                 color="#4CAF50"
-                maxOpacity={0.2}
+                maxOpacity={0.15}
                 flickerChance={0}
                 width={width}
                 height={height}
@@ -57,19 +64,19 @@ export const ThumbnailImage: React.FC<Props> = ({
             >
                 {title}
             </AbsoluteFill>
-            {imageUrl && (
-                <div
-                    style={{
-                        position: "absolute",
-                        left: "54%",
-                        top: "5%",
-                        width: "42%",
-                        height: "90%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
+            <div
+                style={{
+                    position: "absolute",
+                    left: "54%",
+                    top: "5%",
+                    width: "42%",
+                    height: "90%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                {imageUrl ? (
                     <Img
                         src={staticFile(imageUrl)}
                         style={{
@@ -85,8 +92,19 @@ export const ThumbnailImage: React.FC<Props> = ({
                                 : {}),
                         }}
                     />
-                </div>
-            )}
+                ) : (
+                    <HeroHomepageComposition
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            maxWidth: "100%",
+                            minHeight: "unset",
+                            transform: "scale(1.35)",
+                            translate: "10% 10%",
+                        }}
+                    />
+                )}
+            </div>
         </AbsoluteFill>
     );
 };

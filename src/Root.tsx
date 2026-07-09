@@ -18,6 +18,7 @@ import { Widget_StreakPushNotification } from "./Widget_StreakPushNotification/W
 import { Widget_ReactivationPushNotification } from "./Widget_ReactivationPushNotification/Widget_ReactivationPushNotification";
 import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Widget_RecapPushNotification";
 import { z } from "zod";
+import { HeroHomepageComposition } from "./HeroHomepageComposition/HeroHomepageComposition";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -133,6 +134,14 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1000}
         height={900}
+      />
+      <Composition
+        id="HeroHomepageComposition"
+        component={HeroHomepageComposition}
+        durationInFrames={1}
+        fps={60}
+        width={1280}
+        height={1120}
       />
       <Composition
         id="Podcast-Intro"
