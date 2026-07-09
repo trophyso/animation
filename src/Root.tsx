@@ -20,6 +20,35 @@ import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Wid
 import { z } from "zod";
 import { HeroHomepageComposition } from "./HeroHomepageComposition/HeroHomepageComposition";
 
+const achievementBadgeIconSchema = z.enum([
+  "rocket",
+  "graduation-cap",
+  "dumbbell",
+  "shopping-bag",
+  "wallet",
+  "trophy",
+  "users",
+  "flame",
+  "star",
+  "message-circle",
+  "piggy-bank",
+  "check-check",
+]);
+
+const achievementConfigSchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  icon: achievementBadgeIconSchema.optional(),
+  color: z.string().optional(),
+});
+
+const heroCompositionConfigSchema = z.object({
+  streak: z.object({ label: z.string().optional() }).optional(),
+  level: z.object({ rankTitle: z.string().optional() }).optional(),
+  achievement: achievementConfigSchema.optional(),
+  achievement2: achievementConfigSchema.optional(),
+});
+
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -142,6 +171,9 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1280}
         height={1120}
+        schema={z.object({
+          composition: heroCompositionConfigSchema.optional(),
+        })}
       />
       <Composition
         id="Podcast-Intro"

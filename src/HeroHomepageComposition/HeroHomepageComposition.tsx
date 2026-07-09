@@ -1,8 +1,17 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
-import { HeroHomepageComposition as HeroHomepageCompositionWidget } from "../components/widgets/HeroHomepageComposition";
+import {
+    HeroHomepageComposition as HeroHomepageCompositionWidget,
+    type HeroCompositionConfig,
+} from "../components/widgets/HeroHomepageComposition";
 
-export const HeroHomepageComposition: React.FC = () => {
+type HeroHomepageCompositionProps = {
+    composition?: HeroCompositionConfig;
+};
+
+export const HeroHomepageComposition: React.FC<HeroHomepageCompositionProps> = ({
+    composition,
+}) => {
     return (
         <AbsoluteFill
             style={{
@@ -12,7 +21,7 @@ export const HeroHomepageComposition: React.FC = () => {
                 padding: 64,
             }}
         >
-            <HeroHomepageCompositionWidget />
+            <HeroHomepageCompositionWidget composition={composition} />
         </AbsoluteFill>
     );
 };

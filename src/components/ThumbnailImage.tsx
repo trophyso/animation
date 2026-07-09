@@ -3,9 +3,26 @@ import { Img } from "remotion";
 import { AbsoluteFill, useVideoConfig } from "remotion";
 import { FlickeringGrid } from "./FlickeringGrid";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
-import { HeroHomepageComposition } from "./widgets/HeroHomepageComposition";
+import { HeroHomepageComposition, type HeroCompositionConfig } from "./widgets/HeroHomepageComposition";
 
 const { fontFamily } = loadFont();
+
+const defaultWidgetComposition: HeroCompositionConfig = {
+    streak: { label: "day streak" },
+    level: { rankTitle: "Intermediate" },
+    achievement: {
+        name: "Power user",
+        description: "5,000 pts",
+        icon: "rocket",
+        color: "#4cc74a",
+    },
+    achievement2: {
+        name: "30 day streak",
+        description: "Awesome work",
+        icon: "flame",
+        color: "#ff7a00",
+    },
+};
 
 interface Props {
     title: string;
@@ -59,7 +76,7 @@ export const ThumbnailImage: React.FC<Props> = ({
                     fontFamily: fontFamily,
                     top: "25%",
                     left: "7%",
-                    width: imageUrl ? "44%" : "86%",
+                    width: "44%",
                 }}
             >
                 {title}
@@ -94,13 +111,14 @@ export const ThumbnailImage: React.FC<Props> = ({
                     />
                 ) : (
                     <HeroHomepageComposition
+                        composition={defaultWidgetComposition}
                         style={{
                             width: "100%",
                             height: "100%",
                             maxWidth: "100%",
                             minHeight: "unset",
-                            transform: "scale(1.35)",
-                            translate: "10% 10%",
+                            transform: "scale(1.75)",
+                            translate: "20% -5%",
                         }}
                     />
                 )}

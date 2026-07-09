@@ -245,7 +245,22 @@ const ACHIEVEMENT_BADGE_ICONS = {
 
 export type AchievementBadgeIcon = keyof typeof ACHIEVEMENT_BADGE_ICONS;
 
-function HexBadge({ Icon }: { Icon: LucideIcon }) {
+export type AchievementConfig = {
+    name?: string;
+    description?: string;
+    icon?: AchievementBadgeIcon;
+    color?: string;
+};
+
+function hexToRgba(hex: string, alpha: number): string {
+    const normalized = hex.replace("#", "");
+    const r = Number.parseInt(normalized.slice(0, 2), 16);
+    const g = Number.parseInt(normalized.slice(2, 4), 16);
+    const b = Number.parseInt(normalized.slice(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function HexBadge({ Icon, color = "#4cc74a" }: { Icon: LucideIcon; color?: string }) {
     return (
         <div
             style={{
@@ -265,11 +280,11 @@ function HexBadge({ Icon }: { Icon: LucideIcon }) {
             >
                 <polygon
                     points="54,8 100,34.73502691895 100,88.73502691895 54,115.4700538379 8,88.73502691895 8,34.73502691895"
-                    fill="rgba(54, 170, 52, 0.5)"
+                    fill={hexToRgba(color, 0.5)}
                 />
                 <polygon
                     points="54,14 94,37.2583302492 94,86.2117235887 54,109.4700538379 14,86.2117235887 14,37.2583302492"
-                    fill="#4cc74a"
+                    fill={color}
                 />
             </svg>
             <div style={{ position: "relative", zIndex: 1 }}>
@@ -283,11 +298,8 @@ function AchievementBadgeHomepageWidget({
     name = "Power user",
     description = "5,000 pts",
     icon = "rocket",
-}: {
-    name?: string;
-    description?: string;
-    icon?: AchievementBadgeIcon;
-}) {
+    color = "#4cc74a",
+}: AchievementConfig) {
     const Icon = ACHIEVEMENT_BADGE_ICONS[icon];
 
     return (
@@ -307,7 +319,7 @@ function AchievementBadgeHomepageWidget({
                 fontFamily: fontFamily,
             }}
         >
-            <HexBadge Icon={Icon} />
+            <HexBadge Icon={Icon} color={color} />
             <div style={{ width: "100%", minWidth: 0, textAlign: "center" }}>
                 <p
                     style={{
@@ -346,7 +358,8 @@ function AchievementBadgeHomepageWidget({
 export type HeroCompositionConfig = {
     streak?: { label?: string };
     level?: { rankTitle?: string };
-    achievement?: { name?: string; description?: string; icon?: AchievementBadgeIcon };
+    achievement?: AchievementConfig;
+    achievement2?: AchievementConfig;
 };
 
 export function HeroHomepageComposition({
@@ -371,8 +384,8 @@ export function HeroHomepageComposition({
         >
             <CompositionTile
                 style={{
-                    right: 320,
-                    top: "39%",
+                    right: 350,
+                    top: "30%",
                     zIndex: 30,
                     width: "66%",
                     maxWidth: 292,
@@ -385,8 +398,8 @@ export function HeroHomepageComposition({
 
             <CompositionTile
                 style={{
-                    right: "350",
-                    top: "53%",
+                    right: 310,
+                    top: "45%",
                     zIndex: 40,
                     width: "60%",
                     maxWidth: 280,
@@ -399,18 +412,36 @@ export function HeroHomepageComposition({
 
             <CompositionTile
                 style={{
-                    right: 295,
-                    top: "54%",
+                    right: 490,
+                    top: "65%",
                     zIndex: 50,
                     width: 160,
                     transformOrigin: "top left",
-                    transform: "rotate(2deg) scale(1.05)",
+                    transform: "rotate(2deg) scale(0.8)",
                 }}
             >
                 <AchievementBadgeHomepageWidget
                     name={composition?.achievement?.name}
                     description={composition?.achievement?.description}
                     icon={composition?.achievement?.icon}
+                    color={composition?.achievement?.color}
+                />
+            </CompositionTile>
+            <CompositionTile
+                style={{
+                    right: 340,
+                    top: "64%",
+                    zIndex: 50,
+                    width: 160,
+                    transformOrigin: "top left",
+                    transform: "rotate(2deg) scale(0.8)",
+                }}
+            >
+                <AchievementBadgeHomepageWidget
+                    name={composition?.achievement2?.name ?? "Top contributor"}
+                    description={composition?.achievement2?.description ?? "10 badges"}
+                    icon={composition?.achievement2?.icon ?? "trophy"}
+                    color={composition?.achievement2?.color ?? "#3b82f6"}
                 />
             </CompositionTile>
         </div>
