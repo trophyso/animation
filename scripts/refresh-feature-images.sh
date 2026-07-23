@@ -10,7 +10,7 @@
 #   GHOST_ADMIN_API_KEY    Admin API key (id:secret)
 #
 # Usage:
-#   ./scripts/refresh-feature-images.sh [--limit N] [--slug SLUG] [--test]
+#   ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--test]
 #   npm run generate:feature-images -- --test --limit 3
 #
 
@@ -29,9 +29,10 @@ fi
 
 usage() {
     cat <<'EOF'
-Usage: ./scripts/refresh-feature-images.sh [--limit N] [--slug SLUG] [--test]
+Usage: ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--test]
 
-  --limit N    Process only the first N posts (oldest first)
+  --limit N    Process only N posts (after --offset, oldest first)
+  --offset N   Skip the first N posts (oldest first); useful to resume a run
   --slug SLUG  Process only the post with this slug (no-op if not found)
   --test       Generate images locally; skip Ghost upload and post update
 
@@ -41,6 +42,7 @@ EOF
 }
 
 LIMIT=""
+OFFSET=0
 SLUG=""
 TEST_MODE=0
 
@@ -52,6 +54,14 @@ while [ $# -gt 0 ]; do
                 exit 1
             fi
             LIMIT="$2"
+            shift 2
+            ;;
+        --offset)
+            if [ -z "${2:-}" ] || ! [[ "${2}" =~ ^[0-9]+$ ]]; then
+                echo "Error: --offset requires a non-negative integer" >&2
+                exit 1
+            fi
+            OFFSET="$2"
             shift 2
             ;;
         --slug)
@@ -131,11 +141,15 @@ fetch_posts() {
     local page=1
     local page_limit=100
     local collected='[]'
-    local response posts_page total_pages url encoded_slug count
+    local response posts_page total_pages url encoded_slug count want
 
-    # Request only as many as we need when --limit is set (avoids huge jq merges).
-    if [ -n "$LIMIT" ] && [ "$LIMIT" -lt "$page_limit" ]; then
-        page_limit="$LIMIT"
+    # Fetch enough posts to cover offset + limit (when limit is set).
+    want=""
+    if [ -n "$LIMIT" ]; then
+        want=$((OFFSET + LIMIT))
+        if [ "$want" -lt "$page_limit" ]; then
+            page_limit="$want"
+        fi
     fi
 
     while true; do
@@ -159,12 +173,10 @@ fetch_posts() {
             break
         fi
 
-        if [ -n "$LIMIT" ]; then
-            count=$(echo "$collected" | jq 'length')
-            if [ "$count" -ge "$LIMIT" ]; then
-                collected=$(echo "$collected" | jq -c ".[0:${LIMIT}]")
-                break
-            fi
+        count=$(echo "$collected" | jq 'length')
+        if [ -n "$want" ] && [ "$count" -ge "$want" ]; then
+            collected=$(echo "$collected" | jq -c ".[0:${want}]")
+            break
         fi
 
         if [ "$page" -ge "$total_pages" ]; then
@@ -173,7 +185,16 @@ fetch_posts() {
         page=$((page + 1))
     done
 
-    if [ -n "$LIMIT" ] && [ -z "$SLUG" ]; then
+    if [ -n "$SLUG" ]; then
+        printf '%s' "$collected"
+        return
+    fi
+
+    if [ "$OFFSET" -gt 0 ]; then
+        collected=$(echo "$collected" | jq -c ".[${OFFSET}:]")
+    fi
+
+    if [ -n "$LIMIT" ]; then
         collected=$(echo "$collected" | jq -c ".[0:${LIMIT}]")
     fi
 
@@ -183,18 +204,23 @@ fetch_posts() {
 upload_image() {
     local file_path="$1"
     local ref="$2"
-    local token response url
+    local token response url safe_path
+    # Copy to a path without special chars — curl -F treats ":" after @path as type metadata.
+    safe_path=$(mktemp "${TMPDIR:-/tmp}/ghost-upload.XXXXXX")
+    cp "$file_path" "$safe_path"
     token=$(ghost_admin_token)
     if ! response=$(curl -sS -f --connect-timeout 10 --max-time 60 \
         -X POST \
         -H "Authorization: Ghost ${token}" \
         -H "Accept-Version: ${ACCEPT_VERSION}" \
-        -F "file=@${file_path}" \
+        -F "file=@${safe_path};filename=${ref}" \
         -F "ref=${ref}" \
         "${GHOST_URL}/ghost/api/admin/images/upload/"); then
+        rm -f "$safe_path"
         echo "Error: failed to upload image ${file_path}" >&2
         exit 1
     fi
+    rm -f "$safe_path"
     url=$(echo "$response" | jq -r '.images[0].url // empty')
     if [ -z "$url" ]; then
         echo "Error: image upload did not return a URL" >&2
@@ -207,13 +233,15 @@ upload_image() {
 update_post_feature_image() {
     local post_id="$1"
     local feature_image="$2"
-    local updated_at="$3"
+    local feature_image_alt="$3"
+    local updated_at="$4"
     local token payload response
     token=$(ghost_admin_token)
     payload=$(jq -n \
         --arg feature_image "$feature_image" \
+        --arg feature_image_alt "$feature_image_alt" \
         --arg updated_at "$updated_at" \
-        '{posts: [{feature_image: $feature_image, updated_at: $updated_at}]}')
+        '{posts: [{feature_image: $feature_image, feature_image_alt: $feature_image_alt, updated_at: $updated_at}]}')
     if ! response=$(curl -sS -f --connect-timeout 10 --max-time 60 \
         -X PUT \
         -H "Authorization: Ghost ${token}" \
@@ -244,9 +272,14 @@ if [ "$TEST_MODE" -eq 1 ]; then
     echo "Test mode enabled: images will be generated locally; Ghost will not be updated."
 fi
 
+if [ "$OFFSET" -gt 0 ] && [ -z "$SLUG" ]; then
+    echo "Skipping first ${OFFSET} post(s) (--offset ${OFFSET})"
+fi
+
 echo "Processing ${POST_COUNT} post(s)..."
 
-INDEX=0
+INDEX=$OFFSET
+DISPLAY_TOTAL=$((OFFSET + POST_COUNT))
 while IFS= read -r post; do
     INDEX=$((INDEX + 1))
     POST_ID=$(echo "$post" | jq -r '.id')
@@ -254,7 +287,7 @@ while IFS= read -r post; do
     POST_SLUG=$(echo "$post" | jq -r '.slug')
     UPDATED_AT=$(echo "$post" | jq -r '.updated_at')
 
-    echo "[${INDEX}/${POST_COUNT}] Processing slug=${POST_SLUG}"
+    echo "[${INDEX}/${DISPLAY_TOTAL}] Processing slug=${POST_SLUG}"
 
     ESCAPED_TITLE=$(escape_title_for_thumbnail "$TITLE")
     OUTPUT_PATH=$(thumbnail_output_path "$ESCAPED_TITLE")
@@ -276,7 +309,7 @@ while IFS= read -r post; do
     IMAGE_URL=$(upload_image "$OUTPUT_PATH" "${POST_SLUG}.png")
     echo "  Uploaded: ${IMAGE_URL}"
 
-    update_post_feature_image "$POST_ID" "$IMAGE_URL" "$UPDATED_AT"
+    update_post_feature_image "$POST_ID" "$IMAGE_URL" "$TITLE" "$UPDATED_AT"
     echo "  Updated feature_image for slug=${POST_SLUG}"
 done < <(echo "$POSTS_JSON" | jq -c '.[]')
 
