@@ -11,6 +11,7 @@ import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemp
 import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
+import { GenericFeatureLaunch } from "./GenericFeatureLaunch/GenericFeatureLaunch";
 import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
 import { Widget_StreakEmailTemplate } from "./Widget_StreakEmailTemplate/Widget_StreakEmailTemplate";
 import { Widget_AchievementPushNotification } from "./Widget_AchievementPushNotification/Widget_AchievementPushNotification";
@@ -188,8 +189,9 @@ export const RemotionRoot: React.FC = () => {
         component={Podcast}
         durationInFrames={360}
         fps={60}
-        width={1920}
-        height={1080}
+        width={1200}
+        height={627}
+
       />
       <Composition
         id="GenericThumbnailImage"
@@ -214,6 +216,22 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="GenericFeatureLaunch"
+        component={GenericFeatureLaunch}
+        durationInFrames={180}
+        fps={60}
+        width={1500}
+        height={1500}
+        defaultProps={{
+          imagePath: "assets/leaderboard_schedule_form.png",
+          title: "Time-restricted leaderboards",
+        }}
+        schema={z.object({
+          imagePath: z.string(),
+          title: z.string(),
+        })}
       />
       <Composition
         id="SalesDocImage"
