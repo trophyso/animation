@@ -9,6 +9,7 @@ import {
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 import { FlickeringGrid } from "../components/FlickeringGrid";
+import { TypingCodeBlock } from "../components/TypingCodeBlock";
 
 const { fontFamily } = loadFont();
 
@@ -16,6 +17,17 @@ const TITLE_FONT_SIZE = 64;
 const TITLE_LINE_HEIGHT = 1.15;
 /** Approximate advance width for Plus Jakarta Sans Bold at 1px. */
 const TITLE_CHAR_WIDTH_RATIO = 0.58;
+
+const DEFAULT_CODE = `import { TrophyApiClient } from "@trophyso/node";
+
+const trophy = new TrophyApiClient({
+  apiKey: process.env.TROPHY_ADMIN_API_KEY as string,
+});
+
+// Create an API key scoped to user_123
+await trophy.admin.applicationApiKeys.create([
+  { userId: "user_123" }
+]);`;
 
 const wrapTitle = (text: string, maxWidth: number, fontSize: number): string[] => {
     const normalized = text.replace(/\s+/g, " ").trim();
@@ -40,17 +52,26 @@ const wrapTitle = (text: string, maxWidth: number, fontSize: number): string[] =
     return lines;
 };
 
-type GenericFeatureLaunchProps = {
+export type GenericFeatureLaunchProps = {
     imagePath?: string;
+    /** When set, renders a typing code block instead of the image. */
+    code?: string;
+    codeLanguage?: string;
+    codeFilename?: string;
     title?: string;
 };
 
 export const GenericFeatureLaunch: React.FC<GenericFeatureLaunchProps> = ({
     imagePath = "assets/leaderboard_schedule_form.png",
+    code,
+    codeLanguage = "typescript",
+    codeFilename = "client.ts",
     title = "Custom schedules for every leaderboard",
 }) => {
     const { width, height, fps } = useVideoConfig();
     const frame = useCurrentFrame();
+
+    const showCode = Boolean(code?.trim());
 
     const bumpDelay = Math.round(fps * 0.5);
     const titleDelay = Math.round(fps * 1);
@@ -68,12 +89,12 @@ export const GenericFeatureLaunch: React.FC<GenericFeatureLaunchProps> = ({
         },
     });
 
-    const topPadding = 250;
+    const topPadding = 180;
     const titleSidePadding = 80;
     const titleMaxWidth = (width - titleSidePadding * 2) * 0.72;
-    const imageMaxWidth = width * 0.68;
+    const contentMaxWidth = width * 0.68;
     // Leave room to bump down from center without clipping the bottom.
-    const imageMaxHeight = height * 0.62;
+    const contentMaxHeight = height * 0.62;
     const bumpDistance = 140;
 
     const lines = wrapTitle(title, titleMaxWidth, TITLE_FONT_SIZE);
@@ -151,53 +172,74 @@ export const GenericFeatureLaunch: React.FC<GenericFeatureLaunchProps> = ({
                     })}
                 </div>
 
-                {/* Liquid glass frame — centered at start, bumps down */}
+                {/* Content frame — centered at start, bumps down */}
                 <div
                     style={{
                         position: "absolute",
                         top: "50%",
                         left: "50%",
                         transform: `translate(-50%, calc(-50% + ${bumpOffset}px))`,
-                        width: imageMaxWidth,
-                        maxHeight: imageMaxHeight,
-                        borderRadius: 32,
-                        padding: 12,
+                        width: contentMaxWidth,
+                        height: contentMaxHeight,
+                        maxHeight: contentMaxHeight,
+                        borderRadius: showCode ? 20 : 32,
+                        padding: showCode ? 0 : 12,
                         boxSizing: "border-box",
-                        background:
-                            "linear-gradient(155deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.4) 42%, rgba(255,255,255,0.65) 100%)",
-                        boxShadow: [
-                            "0 1px 0 rgba(255,255,255,0.95) inset",
-                            "0 -1px 0 rgba(255,255,255,0.25) inset",
-                            "0 2px 4px rgba(15, 23, 42, 0.03)",
-                            "0 12px 28px -6px rgba(15, 23, 42, 0.1)",
-                            "0 32px 64px -12px rgba(15, 23, 42, 0.14)",
-                        ].join(", "),
+                        background: showCode
+                            ? "transparent"
+                            : "linear-gradient(155deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.4) 42%, rgba(255,255,255,0.65) 100%)",
+                        boxShadow: showCode
+                            ? [
+                                "0 2px 4px rgba(15, 23, 42, 0.03)",
+                                "0 12px 28px -6px rgba(15, 23, 42, 0.1)",
+                                "0 32px 64px -12px rgba(15, 23, 42, 0.14)",
+                            ].join(", ")
+                            : [
+                                "0 1px 0 rgba(255,255,255,0.95) inset",
+                                "0 -1px 0 rgba(255,255,255,0.25) inset",
+                                "0 2px 4px rgba(15, 23, 42, 0.03)",
+                                "0 12px 28px -6px rgba(15, 23, 42, 0.1)",
+                                "0 32px 64px -12px rgba(15, 23, 42, 0.14)",
+                            ].join(", "),
                     }}
                 >
                     <div
                         style={{
                             borderRadius: 20,
                             overflow: "hidden",
-                            background: "#fff",
-                            maxHeight: imageMaxHeight - 24,
-                            boxShadow: "0 0 0 1px rgba(15, 23, 42, 0.06)",
+                            background: showCode ? "#1E1E1E" : "#fff",
+                            width: "100%",
+                            height: "100%",
+                            boxShadow: showCode
+                                ? "none"
+                                : "0 0 0 1px rgba(15, 23, 42, 0.06)",
                         }}
                     >
-                        <Img
-                            src={staticFile(imagePath)}
-                            style={{
-                                display: "block",
-                                width: "100%",
-                                height: "auto",
-                                maxHeight: imageMaxHeight - 24,
-                                objectFit: "contain",
-                                borderRadius: 20,
-                                // scale: 1.25,
-                            }}
-                        />
+                        {showCode ? (
+                            <TypingCodeBlock
+                                code={code!}
+                                language={codeLanguage}
+                                filename={codeFilename}
+                                availableWidth={contentMaxWidth}
+                                delayInFrames={0}
+                            />
+                        ) : (
+                            <Img
+                                src={staticFile(imagePath)}
+                                style={{
+                                    display: "block",
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain",
+                                    borderRadius: 20,
+                                }}
+                            />
+                        )}
                     </div>
                 </div>
             </AbsoluteFill>
         </AbsoluteFill>
     );
 };
+
+export { DEFAULT_CODE };

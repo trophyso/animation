@@ -11,7 +11,7 @@ import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemp
 import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
-import { GenericFeatureLaunch } from "./GenericFeatureLaunch/GenericFeatureLaunch";
+import { GenericFeatureLaunch, DEFAULT_CODE } from "./GenericFeatureLaunch/GenericFeatureLaunch";
 import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
 import { Widget_StreakEmailTemplate } from "./Widget_StreakEmailTemplate/Widget_StreakEmailTemplate";
 import { Widget_AchievementPushNotification } from "./Widget_AchievementPushNotification/Widget_AchievementPushNotification";
@@ -220,16 +220,22 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="GenericFeatureLaunch"
         component={GenericFeatureLaunch}
-        durationInFrames={180}
+        durationInFrames={240}
         fps={60}
         width={1500}
         height={1500}
         defaultProps={{
           imagePath: "assets/leaderboard_schedule_form.png",
+          code: DEFAULT_CODE,
+          codeLanguage: "typescript",
+          codeFilename: "client.ts",
           title: "Time-restricted leaderboards",
         }}
         schema={z.object({
           imagePath: z.string(),
+          code: z.string(),
+          codeLanguage: z.string(),
+          codeFilename: z.string(),
           title: z.string(),
         })}
       />

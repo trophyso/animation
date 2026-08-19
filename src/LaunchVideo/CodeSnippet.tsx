@@ -206,7 +206,7 @@ await trophy.metrics.event("words-written", {
                         fontFamily: 'monospace',
                         marginLeft: '0.5rem'
                     }}>
-                        server.ts
+                        client.ts
                     </div>
                 </div>
                 <div style={{ padding: '1rem' }}>
