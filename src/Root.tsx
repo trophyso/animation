@@ -20,6 +20,7 @@ import { Widget_ReactivationPushNotification } from "./Widget_ReactivationPushNo
 import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Widget_RecapPushNotification";
 import { z } from "zod";
 import { HeroHomepageComposition } from "./HeroHomepageComposition/HeroHomepageComposition";
+import { Banner } from "./Banner/Banner";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -226,10 +227,10 @@ export const RemotionRoot: React.FC = () => {
         height={1500}
         defaultProps={{
           imagePath: "assets/leaderboard_schedule_form.png",
-          code: DEFAULT_CODE,
+          code: 'import { TrophyApiClient } from "@trophyso/node";\n\nconst trophy = new TrophyApiClient({\n  apiKey: process.env.TROPHY_ADMIN_API_KEY as string,\n});\n\n// Create an API key scoped to user_123\nawait trophy.admin.applicationApiKeys.create([\n  { userId: "user_123" }\n]);',
           codeLanguage: "typescript",
           codeFilename: "client.ts",
-          title: "Time-restricted leaderboards",
+          title: "New client-safe application API keys",
         }}
         schema={z.object({
           imagePath: z.string(),
@@ -246,6 +247,54 @@ export const RemotionRoot: React.FC = () => {
         fps={60}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="LinkedInCompanyBanner"
+        component={Banner}
+        durationInFrames={1}
+        fps={60}
+        width={1512}
+        height={256}
+        defaultProps={{
+          headline: "Powering gamification for 1M+ users",
+          rating: 5,
+        }}
+        schema={z.object({
+          headline: z.string(),
+          rating: z.number().min(0).max(5),
+        })}
+      />
+      <Composition
+        id="LinkedInProfileBanner"
+        component={Banner}
+        durationInFrames={1}
+        fps={60}
+        width={1584}
+        height={396}
+        defaultProps={{
+          headline: "Powering gamification for 1M+ users",
+          rating: 5,
+        }}
+        schema={z.object({
+          headline: z.string(),
+          rating: z.number().min(0).max(5),
+        })}
+      />
+      <Composition
+        id="TwitterBanner"
+        component={Banner}
+        durationInFrames={1}
+        fps={60}
+        width={1500}
+        height={500}
+        defaultProps={{
+          headline: "Powering gamification for 1M+ users",
+          rating: 5,
+        }}
+        schema={z.object({
+          headline: z.string(),
+          rating: z.number().min(0).max(5),
+        })}
       />
     </>
   );
