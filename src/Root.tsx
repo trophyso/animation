@@ -296,6 +296,22 @@ export const RemotionRoot: React.FC = () => {
           rating: z.number().min(0).max(5),
         })}
       />
+      <Composition
+        id="YouTubeBanner"
+        component={Banner}
+        durationInFrames={1}
+        fps={60}
+        width={2048}
+        height={1152}
+        defaultProps={{
+          headline: "Powering gamification for 1M+ users",
+          rating: 5,
+        }}
+        schema={z.object({
+          headline: z.string(),
+          rating: z.number().min(0).max(5),
+        })}
+      />
     </>
   );
 };
