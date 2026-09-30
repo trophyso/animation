@@ -260,11 +260,19 @@ function hexToRgba(hex: string, alpha: number): string {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function HexBadge({ Icon, color = "#4cc74a" }: { Icon: LucideIcon; color?: string }) {
+export function HexBadge({
+    Icon,
+    color = "#4cc74a",
+    size = 86,
+}: {
+    Icon: LucideIcon;
+    color?: string;
+    size?: number;
+}) {
     return (
         <div
             style={{
-                width: 86,
+                width: size,
                 aspectRatio: `${Math.sqrt(3)} / 2`,
                 position: "relative",
                 display: "flex",
@@ -288,7 +296,7 @@ function HexBadge({ Icon, color = "#4cc74a" }: { Icon: LucideIcon; color?: strin
                 />
             </svg>
             <div style={{ position: "relative", zIndex: 1 }}>
-                <Icon size={34} color="#fff" strokeWidth={2.2} />
+                <Icon size={Math.round(size * 0.4)} color="#fff" strokeWidth={2.2} />
             </div>
         </div>
     );

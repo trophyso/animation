@@ -98,6 +98,8 @@ type TypingCodeBlockProps = {
     framesPerLine?: number;
     /** Frames for a single line to fully type out. */
     lineTypingFrames?: number;
+    /** Hide the window chrome (traffic lights + filename) when embedded in another editor frame. */
+    showHeader?: boolean;
     style?: React.CSSProperties;
 };
 
@@ -109,6 +111,7 @@ export const TypingCodeBlock: React.FC<TypingCodeBlockProps> = ({
     delayInFrames = 0,
     framesPerLine = 12,
     lineTypingFrames = 22,
+    showHeader = true,
     style,
 }) => {
     const frame = useCurrentFrame();
@@ -159,7 +162,7 @@ export const TypingCodeBlock: React.FC<TypingCodeBlockProps> = ({
                     backgroundColor: "#2D2D2D",
                     padding: "0.75rem 1rem",
                     borderBottom: "1px solid #3D3D3D",
-                    display: "flex",
+                    display: showHeader ? "flex" : "none",
                     alignItems: "center",
                     gap: "0.5rem",
                 }}

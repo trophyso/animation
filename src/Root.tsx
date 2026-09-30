@@ -1,4 +1,4 @@
-import { Composition } from "remotion";
+import { Composition, Folder } from "remotion";
 import { LaunchVideo } from "./LaunchVideo/LaunchVideo";
 import { FeatureHighlight_Metrics } from "./FeatureHighlight_Metrics/FeatureHighlight_Metrics";
 import { Widget_Emails } from "./Widget_Emails/Widget_Emails";
@@ -21,6 +21,16 @@ import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Wid
 import { z } from "zod";
 import { HeroHomepageComposition } from "./HeroHomepageComposition/HeroHomepageComposition";
 import { Banner } from "./Banner/Banner";
+import {
+  McpLaunchVideo,
+  MCP_LAUNCH_VIDEO_DURATION,
+} from "./McpLaunchVideo/McpLaunchVideo";
+import { INTRO_DURATION, IntroScene } from "./McpLaunchVideo/scenes/IntroScene";
+import { SERVERS_DURATION, ServersScene } from "./McpLaunchVideo/scenes/ServersScene";
+import { CHAT_DURATION, ChatScene } from "./McpLaunchVideo/scenes/ChatScene";
+import { CODING_DURATION, CodingAgentScene } from "./McpLaunchVideo/scenes/CodingAgentScene";
+import { MOBILE_DURATION, MobileAppScene } from "./McpLaunchVideo/scenes/MobileAppScene";
+import { OUTRO_DURATION, OutroScene } from "./McpLaunchVideo/scenes/OutroScene";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -62,6 +72,64 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
+      <Composition
+        id="McpLaunchVideo"
+        component={McpLaunchVideo}
+        durationInFrames={MCP_LAUNCH_VIDEO_DURATION}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Folder name="McpLaunchVideo-Scenes">
+        <Composition
+          id="McpLaunchVideo-Intro"
+          component={IntroScene}
+          durationInFrames={INTRO_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="McpLaunchVideo-Servers"
+          component={ServersScene}
+          durationInFrames={SERVERS_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="McpLaunchVideo-Chat"
+          component={ChatScene}
+          durationInFrames={CHAT_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="McpLaunchVideo-CodingAgent"
+          component={CodingAgentScene}
+          durationInFrames={CODING_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="McpLaunchVideo-MobileApp"
+          component={MobileAppScene}
+          durationInFrames={MOBILE_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+        <Composition
+          id="McpLaunchVideo-Outro"
+          component={OutroScene}
+          durationInFrames={OUTRO_DURATION}
+          fps={60}
+          width={1920}
+          height={1080}
+        />
+      </Folder>
       <Composition
         id="FeatureHighlight-Metrics"
         component={FeatureHighlight_Metrics}
