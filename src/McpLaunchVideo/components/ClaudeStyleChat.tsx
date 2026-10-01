@@ -9,11 +9,11 @@ import {
   Plus,
   SlidersHorizontal,
   SquarePen,
-  Trophy,
 } from "lucide-react";
 import { useCurrentFrame } from "remotion";
 import { sansFont, serifFont } from "../fonts";
 import { CARD_SHADOW } from "../script";
+import { TrophyMark } from "./TrophyMark";
 
 export const CLAUDE_COLORS = {
   background: "#FAF9F5",
@@ -272,7 +272,7 @@ export const ConnectorIcon: React.FC<{ size?: number }> = ({ size = 30 }) => (
       flexShrink: 0,
     }}
   >
-    <Trophy size={size * 0.55} color={CLAUDE_COLORS.text} strokeWidth={2.2} />
+    <TrophyMark size={Math.round(size * 0.6)} color={CLAUDE_COLORS.text} />
   </div>
 );
 

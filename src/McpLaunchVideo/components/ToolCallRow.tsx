@@ -1,8 +1,9 @@
 import React from "react";
-import { Check, Wrench } from "lucide-react";
+import { Check } from "lucide-react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { monoFont, sansFont } from "../fonts";
 import { SERVER_LABELS, type McpServer } from "../script";
+import { TrophyMark } from "./TrophyMark";
 
 export const Spinner: React.FC<{
   size: number;
@@ -78,7 +79,7 @@ export const ToolCallRow: React.FC<{
           <Spinner size={iconSize} track="#333" head="#bdbdbd" />
         )}
       </div>
-      <Wrench size={iconSize * 0.85} color="#6f6f6f" />
+      <TrophyMark size={Math.round(iconSize * 0.8)} color="#d6d6d6" />
       <span>{done ? "Called" : "Calling"}</span>
       <span style={{ fontFamily: monoFont, color: "#d6d6d6" }}>{tool}</span>
       <span style={{ color: "#6f6f6f" }}>· {SERVER_LABELS[server]}</span>
