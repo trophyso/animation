@@ -1,5 +1,10 @@
 import React from "react";
-import { ArrowUp, ChevronDown, FileCode2, Infinity as InfinityIcon } from "lucide-react";
+import {
+  ArrowUp,
+  ChevronDown,
+  FileCode2,
+  Infinity as InfinityIcon,
+} from "lucide-react";
 import { monoFont, sansFont } from "../fonts";
 import { CARD_SHADOW } from "../script";
 
@@ -26,8 +31,19 @@ export const CursorStyleIde: React.FC<{
   editorTab: string;
   agent: React.ReactNode;
   agentComposer: React.ReactNode;
+  hideExplorer?: boolean;
+  agentWidth?: number;
   style?: React.CSSProperties;
-}> = ({ explorer, editor, editorTab, agent, agentComposer, style }) => {
+}> = ({
+  explorer,
+  editor,
+  editorTab,
+  agent,
+  agentComposer,
+  hideExplorer = false,
+  agentWidth = IDE_AGENT_WIDTH,
+  style,
+}) => {
   return (
     <div
       style={{
@@ -85,30 +101,32 @@ export const CursorStyleIde: React.FC<{
       </div>
 
       <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
-        <div
-          style={{
-            width: IDE_EXPLORER_WIDTH,
-            flexShrink: 0,
-            backgroundColor: IDE_COLORS.panel,
-            borderRight: `1px solid ${IDE_COLORS.border}`,
-            padding: "18px 0",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        {hideExplorer ? null : (
           <div
             style={{
-              padding: "0 22px 14px",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              color: IDE_COLORS.muted,
+              width: IDE_EXPLORER_WIDTH,
+              flexShrink: 0,
+              backgroundColor: IDE_COLORS.panel,
+              borderRight: `1px solid ${IDE_COLORS.border}`,
+              padding: "18px 0",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            EXPLORER
+            <div
+              style={{
+                padding: "0 22px 14px",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                color: IDE_COLORS.muted,
+              }}
+            >
+              EXPLORER
+            </div>
+            {explorer}
           </div>
-          {explorer}
-        </div>
+        )}
 
         <div
           style={{
@@ -154,7 +172,7 @@ export const CursorStyleIde: React.FC<{
 
         <div
           style={{
-            width: IDE_AGENT_WIDTH,
+            width: agentWidth,
             flexShrink: 0,
             display: "flex",
             flexDirection: "column",
@@ -183,7 +201,8 @@ export const CursorStyleIde: React.FC<{
               minHeight: 0,
               overflow: "hidden",
               position: "relative",
-              maskImage: "linear-gradient(to bottom, transparent 0, black 48px)",
+              maskImage:
+                "linear-gradient(to bottom, transparent 0, black 48px)",
               WebkitMaskImage:
                 "linear-gradient(to bottom, transparent 0, black 48px)",
             }}

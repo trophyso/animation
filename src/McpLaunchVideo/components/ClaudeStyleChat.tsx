@@ -58,8 +58,16 @@ export const ClaudeStyleChat: React.FC<{
   composer: React.ReactNode;
   title: string;
   sendPulse?: number;
+  columnWidth?: number;
   style?: React.CSSProperties;
-}> = ({ children, composer, title, sendPulse = 0, style }) => {
+}> = ({
+  children,
+  composer,
+  title,
+  sendPulse = 0,
+  columnWidth = CLAUDE_COLUMN_WIDTH,
+  style,
+}) => {
   return (
     <div
       style={{
@@ -161,7 +169,7 @@ export const ClaudeStyleChat: React.FC<{
             WebkitMaskImage: "linear-gradient(to bottom, transparent 0, black 56px)",
           }}
         >
-          <div style={{ width: CLAUDE_COLUMN_WIDTH, position: "relative" }}>
+          <div style={{ width: columnWidth, position: "relative" }}>
             {children}
           </div>
         </div>
@@ -176,7 +184,7 @@ export const ClaudeStyleChat: React.FC<{
         >
           <div
             style={{
-              width: CLAUDE_COLUMN_WIDTH,
+              width: columnWidth,
               borderRadius: 22,
               backgroundColor: "#fff",
               border: `1px solid ${CLAUDE_COLORS.border}`,

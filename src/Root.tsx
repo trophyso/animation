@@ -31,6 +31,14 @@ import { CHAT_DURATION, ChatScene } from "./McpLaunchVideo/scenes/ChatScene";
 import { CODING_DURATION, CodingAgentScene } from "./McpLaunchVideo/scenes/CodingAgentScene";
 import { MOBILE_DURATION, MobileAppScene } from "./McpLaunchVideo/scenes/MobileAppScene";
 import { OUTRO_DURATION, OutroScene } from "./McpLaunchVideo/scenes/OutroScene";
+import {
+  AccountShot,
+  ChatShot,
+  CodingAgentShot,
+  DocsShot,
+  IntroShot,
+} from "./McpLaunchShots/McpLaunchShots";
+import { SHOT_HEIGHT, SHOT_WIDTH } from "./McpLaunchShots/ShotLayout";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -129,6 +137,25 @@ export const RemotionRoot: React.FC = () => {
           width={1920}
           height={1080}
         />
+      </Folder>
+      <Folder name="McpLaunchShots">
+        {[
+          ["McpLaunchShot-1-Intro", IntroShot],
+          ["McpLaunchShot-2-Docs", DocsShot],
+          ["McpLaunchShot-3-Account", AccountShot],
+          ["McpLaunchShot-4-Chat", ChatShot],
+          ["McpLaunchShot-5-CodingAgent", CodingAgentShot],
+        ].map(([id, component]) => (
+          <Composition
+            key={id as string}
+            id={id as string}
+            component={component as React.FC}
+            durationInFrames={1}
+            fps={60}
+            width={SHOT_WIDTH}
+            height={SHOT_HEIGHT}
+          />
+        ))}
       </Folder>
       <Composition
         id="FeatureHighlight-Metrics"
