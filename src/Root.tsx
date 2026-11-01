@@ -39,6 +39,16 @@ import {
   IntroShot,
 } from "./McpLaunchShots/McpLaunchShots";
 import { SHOT_HEIGHT, SHOT_WIDTH } from "./McpLaunchShots/ShotLayout";
+import {
+  RewardsLaunchVideo,
+  REWARDS_LAUNCH_VIDEO_DURATION,
+} from "./RewardsLaunchVideo/RewardsLaunchVideo";
+import { INTRO_DURATION as REWARDS_INTRO_DURATION, IntroScene as RewardsIntroScene } from "./RewardsLaunchVideo/scenes/IntroScene";
+import { TRIGGERS_DURATION, TriggersScene } from "./RewardsLaunchVideo/scenes/TriggersScene";
+import { TYPES_DURATION, TypesScene } from "./RewardsLaunchVideo/scenes/TypesScene";
+import { CLAIM_DURATION, ClaimScene } from "./RewardsLaunchVideo/scenes/ClaimScene";
+import { CODE_DURATION, CodeScene } from "./RewardsLaunchVideo/scenes/CodeScene";
+import { OUTRO_DURATION as REWARDS_OUTRO_DURATION, OutroScene as RewardsOutroScene } from "./RewardsLaunchVideo/scenes/OutroScene";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -137,6 +147,34 @@ export const RemotionRoot: React.FC = () => {
           width={1920}
           height={1080}
         />
+      </Folder>
+      <Composition
+        id="RewardsLaunchVideo"
+        component={RewardsLaunchVideo}
+        durationInFrames={REWARDS_LAUNCH_VIDEO_DURATION}
+        fps={60}
+        width={1920}
+        height={1080}
+      />
+      <Folder name="RewardsLaunchVideo-Scenes">
+        {[
+          ["RewardsLaunchVideo-Intro", RewardsIntroScene, REWARDS_INTRO_DURATION],
+          ["RewardsLaunchVideo-Triggers", TriggersScene, TRIGGERS_DURATION],
+          ["RewardsLaunchVideo-Types", TypesScene, TYPES_DURATION],
+          ["RewardsLaunchVideo-Claim", ClaimScene, CLAIM_DURATION],
+          ["RewardsLaunchVideo-Code", CodeScene, CODE_DURATION],
+          ["RewardsLaunchVideo-Outro", RewardsOutroScene, REWARDS_OUTRO_DURATION],
+        ].map(([id, component, duration]) => (
+          <Composition
+            key={id as string}
+            id={id as string}
+            component={component as React.FC}
+            durationInFrames={duration as number}
+            fps={60}
+            width={1920}
+            height={1080}
+          />
+        ))}
       </Folder>
       <Folder name="McpLaunchShots">
         {[
