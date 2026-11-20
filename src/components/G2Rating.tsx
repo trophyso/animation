@@ -54,9 +54,10 @@ const StarSlot: React.FC<{
   size: number;
 }> = ({ rating, index, size }) => {
   const filled = rating >= index + 1;
-  const half = !filled && rating >= index + 0.5;
+  // Share of this star to fill: 4.8 fills the fifth star to 80%
+  const part = Math.max(0, Math.min(1, rating - index));
 
-  if (half) {
+  if (!filled && part > 0) {
     return (
       <div
         style={{
@@ -71,7 +72,7 @@ const StarSlot: React.FC<{
             position: "absolute",
             top: 0,
             left: 0,
-            width: "50%",
+            width: `${part * 100}%`,
             height: "100%",
             overflow: "hidden",
           }}

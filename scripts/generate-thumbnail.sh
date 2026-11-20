@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Renders the GenericThumbnailImage still: the same design as the web repo's
-# Open Graph image (src/app/og/route.tsx), 1200x630.
+# Open Graph image (src/app/og/route.tsx), 1600x1000 (16:10, the blog cards' aspect).
 #
 # The sky and person are picked from the title (so a title always gets the
 # same image) unless pinned with --sky / --person.
@@ -71,11 +71,11 @@ PROPS="{\"title\": \"$TITLE\""
 PROPS="$PROPS}"
 
 # Create filename from title (replace spaces with underscores)
-FILENAME=$(echo "$TITLE" | tr ' -' '_').png
+FILENAME=$(echo "$TITLE" | tr ' -' '_').jpg
 
 # Run the remotion command
 npx remotion still GenericThumbnailImage \
-    --image-format=png \
+    --image-format=jpeg --jpeg-quality=90 \
     --props="$PROPS" \
     --output="./out/$FILENAME" \
     --overwrite=true

@@ -1,21 +1,54 @@
-import { AbsoluteFill, Img, random, staticFile } from "remotion";
+import { useLayoutEffect, useRef, useState } from "react";
+import { AbsoluteFill, continueRender, delayRender, random } from "remotion";
 import { loadFont as loadDisplayFont } from "@remotion/google-fonts/FunnelDisplay";
 import { loadFont as loadMonoFont } from "@remotion/google-fonts/SplineSansMono";
-import { OG_INK, OG_SIZE, SKIES, type Sky, skyAsset } from "../og/constants";
+import {
+    GRAIN,
+    OG_INK,
+    SKIES,
+    SKY_BACKGROUND,
+    type Sky,
+    THUMBNAIL_SIZE,
+} from "../og/constants";
 import { OgLogo } from "../og/OgLogo";
 import { PEOPLE, type PersonKey } from "../og/people";
 import { personDots } from "../og/person-dots";
 
-const { fontFamily: displayFont } = loadDisplayFont("normal", {
+const display = loadDisplayFont("normal", {
     weights: ["400"],
     subsets: ["latin", "latin-ext"],
 });
-const { fontFamily: monoFont } = loadMonoFont("normal", {
+const mono = loadMonoFont("normal", {
     weights: ["400"],
     subsets: ["latin", "latin-ext"],
 });
 
 const CAST = Object.keys(PEOPLE) as PersonKey[];
+
+/**
+ * The web OG layout (1200 × 630) scaled by 4/3 onto the 16:10 canvas, with the
+ * logo and footer pulled in so a 2:1 social crop (100px off top and bottom)
+ * keeps them.
+ */
+const S = THUMBNAIL_SIZE.width / 1200;
+const EDGE = Math.round(64 * S);
+const LOGO_TOP = 136;
+const FOOTER_BOTTOM = 128;
+
+/** The person, a little taller than a straight 4/3 scale so it fills the taller canvas */
+const PERSON_HEIGHT = 760;
+const PERSON_WIDTH = Math.round((PERSON_HEIGHT * 120) / 140);
+
+/** Title sizing: the largest size from MAX down to MIN that fits in MAX_LINES */
+const TITLE_MAX = 80;
+const TITLE_MIN = 56;
+const TITLE_STEP = 2;
+const MAX_LINES = 4;
+const LINE_HEIGHT = 64 / 60;
+/** Up to the person's head */
+const TITLE_WIDTH = Math.round(780 * S);
+
+const lineHeightAt = (size: number) => Math.round(size * LINE_HEIGHT);
 
 /** Keep absurdly long copy from slowing the layout; the clamp does the rest */
 const clip = (text: string, max: number) =>
@@ -30,11 +63,11 @@ interface Props {
 }
 
 /**
- * The web repo's Open Graph image (src/app/og/route.tsx, Trophy Daylight's
- * homepage OG), rendered as a still: the title on a sky, with one person from
- * the cast drawn as a dots portrait. The web route picks the sky from the
- * current hour and the person at random; here both are seeded by the title so
- * re-running the generator gives the same image.
+ * The web repo's Open Graph image design (src/app/og/route.tsx, Trophy
+ * Daylight's homepage OG) as a blog feature image: the title on a sky, with
+ * one person from the cast drawn as a dots portrait. The web route picks the
+ * sky from the current hour and the person at random; here both are seeded by
+ * the title so re-running the generator gives the same image.
  */
 export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
     const text = clip(title.trim(), 200);
@@ -45,21 +78,83 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
     const ink = skyName === "night" ? OG_INK.night : OG_INK.day;
     const dots = personDots(who);
 
+    const measureRef = useRef<HTMLDivElement>(null);
+    const [fontSize, setFontSize] = useState<number | null>(null);
+    const [handle] = useState(() => delayRender("Fitting the title"));
+
+    useLayoutEffect(() => {
+        let cancelled = false;
+        Promise.all([display.waitUntilDone(), mono.waitUntilDone()])
+            .then(() => document.fonts.ready)
+            .then(() => {
+                if (cancelled) return;
+                const el = measureRef.current;
+                let fit = TITLE_MIN;
+                if (el) {
+                    for (let size = TITLE_MAX; size >= TITLE_MIN; size -= TITLE_STEP) {
+                        el.style.fontSize = `${size}px`;
+                        el.style.lineHeight = `${lineHeightAt(size)}px`;
+                        if (el.scrollHeight <= lineHeightAt(size) * MAX_LINES + 1) {
+                            fit = size;
+                            break;
+                        }
+                    }
+                }
+                setFontSize(fit);
+                continueRender(handle);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [handle, text]);
+
+    const titleStyle: React.CSSProperties = {
+        fontFamily: display.fontFamily,
+        fontWeight: 400,
+        letterSpacing: "-0.045em",
+        width: TITLE_WIDTH,
+        overflowWrap: "break-word",
+    };
+    const size = fontSize ?? TITLE_MAX;
+
     return (
-        <AbsoluteFill style={{ overflow: "hidden", color: ink.text }}>
-            <Img
-                src={staticFile(skyAsset(skyName))}
-                width={OG_SIZE.width}
-                height={OG_SIZE.height}
-                style={{ position: "absolute", top: 0, left: 0 }}
+        <AbsoluteFill
+            style={{
+                overflow: "hidden",
+                color: ink.text,
+                ...SKY_BACKGROUND[skyName],
+            }}
+        >
+            {/* Grain, as .dl-grain::after */}
+            <AbsoluteFill
+                style={{
+                    opacity: GRAIN.opacity,
+                    mixBlendMode: "overlay",
+                    backgroundImage: GRAIN.backgroundImage,
+                }}
             />
+
+            {/* Off-screen copy of the title, measured to pick its size */}
+            <div
+                ref={measureRef}
+                aria-hidden
+                style={{
+                    ...titleStyle,
+                    position: "absolute",
+                    left: -10000,
+                    top: 0,
+                    visibility: "hidden",
+                }}
+            >
+                {text}
+            </div>
 
             {/* The person: right of the sky, rising from the bottom, facing left */}
             <svg
-                width={446}
-                height={520}
+                width={PERSON_WIDTH}
+                height={PERSON_HEIGHT}
                 viewBox="0 0 120 140"
-                style={{ position: "absolute", right: -14, bottom: 0 }}
+                style={{ position: "absolute", right: Math.round(-14 * S), bottom: 0 }}
             >
                 {dots.map((d, i) => (
                     <circle
@@ -77,8 +172,15 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                 <circle cx={60} cy={122} r={3} fill={ink.glow} />
             </svg>
 
-            <div style={{ display: "flex", position: "absolute", left: 64, top: 56 }}>
-                <OgLogo width={146} color={ink.text} />
+            <div
+                style={{
+                    display: "flex",
+                    position: "absolute",
+                    left: EDGE,
+                    top: LOGO_TOP,
+                }}
+            >
+                <OgLogo width={Math.round(146 * S)} color={ink.text} />
             </div>
 
             <div
@@ -87,24 +189,20 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                     flexDirection: "column",
                     justifyContent: "center",
                     position: "absolute",
-                    left: 64,
-                    top: 120,
-                    bottom: 120,
-                    // Up to the person's head
-                    width: 780,
+                    left: EDGE,
+                    top: LOGO_TOP + 90,
+                    bottom: FOOTER_BOTTOM + 90,
                 }}
             >
                 <div
                     style={{
+                        ...titleStyle,
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: MAX_LINES,
                         overflow: "hidden",
-                        fontFamily: displayFont,
-                        fontWeight: 400,
-                        fontSize: 60,
-                        lineHeight: "64px",
-                        letterSpacing: "-0.045em",
+                        fontSize: size,
+                        lineHeight: `${lineHeightAt(size)}px`,
                         color: ink.text,
                     }}
                 >
@@ -116,12 +214,12 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                 style={{
                     display: "flex",
                     position: "absolute",
-                    left: 64,
-                    bottom: 52,
-                    fontFamily: monoFont,
+                    left: EDGE,
+                    bottom: FOOTER_BOTTOM,
+                    fontFamily: mono.fontFamily,
                     fontWeight: 400,
-                    fontSize: 22,
-                    lineHeight: "28px",
+                    fontSize: Math.round(22 * S),
+                    lineHeight: `${Math.round(28 * S)}px`,
                     letterSpacing: "0.01em",
                     color: ink.muted,
                 }}

@@ -10,7 +10,7 @@ import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_Re
 import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemplate/Widget_ReactivationEmailTemplate";
 import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
-import { OG_SIZE, SKIES } from "./og/constants";
+import { SKIES, THUMBNAIL_SIZE } from "./og/constants";
 import { PEOPLE, type PersonKey } from "./og/people";
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
 import { GenericFeatureLaunch, DEFAULT_CODE } from "./GenericFeatureLaunch/GenericFeatureLaunch";
@@ -23,6 +23,15 @@ import { Widget_RecapPushNotification } from "./Widget_RecapPushNotification/Wid
 import { z } from "zod";
 import { HeroHomepageComposition } from "./HeroHomepageComposition/HeroHomepageComposition";
 import { Banner } from "./Banner/Banner";
+import {
+  HEADER_DEFAULTS,
+  headerSchema,
+  LinkedInCompanyCover,
+  LinkedInPersonalBackground,
+  logoAvatarSchema,
+  SocialLogo,
+  XHeader,
+} from "./SocialAssets/SocialAssets";
 import {
   McpLaunchVideo,
   MCP_LAUNCH_VIDEO_DURATION,
@@ -334,8 +343,8 @@ export const RemotionRoot: React.FC = () => {
         component={GenericThumbnailImage}
         durationInFrames={1}
         fps={60}
-        width={OG_SIZE.width}
-        height={OG_SIZE.height}
+        width={THUMBNAIL_SIZE.width}
+        height={THUMBNAIL_SIZE.height}
         defaultProps={{
           title: "Enter title here",
         }}
@@ -385,6 +394,48 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
+      <Folder name="SocialAssets-Daylight">
+        <Composition
+          id="Daylight-LinkedInCompanyCover"
+          component={LinkedInCompanyCover}
+          durationInFrames={1}
+          fps={60}
+          width={1584}
+          height={288}
+          defaultProps={HEADER_DEFAULTS}
+          schema={headerSchema}
+        />
+        <Composition
+          id="Daylight-LinkedInPersonalBackground"
+          component={LinkedInPersonalBackground}
+          durationInFrames={1}
+          fps={60}
+          width={1584}
+          height={396}
+          defaultProps={HEADER_DEFAULTS}
+          schema={headerSchema}
+        />
+        <Composition
+          id="Daylight-XHeader"
+          component={XHeader}
+          durationInFrames={1}
+          fps={60}
+          width={1500}
+          height={500}
+          defaultProps={HEADER_DEFAULTS}
+          schema={headerSchema}
+        />
+        <Composition
+          id="Daylight-SocialLogo"
+          component={SocialLogo}
+          durationInFrames={1}
+          fps={60}
+          width={400}
+          height={400}
+          defaultProps={{ sky: "afternoon" as const }}
+          schema={logoAvatarSchema}
+        />
+      </Folder>
       <Composition
         id="LinkedInCompanyBanner"
         component={Banner}

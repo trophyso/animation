@@ -145,7 +145,7 @@ escape_title_for_thumbnail() {
 thumbnail_output_path() {
     local title="$1"
     local filename
-    filename=$(printf '%s' "$title" | tr ' -' '_').png
+    filename=$(printf '%s' "$title" | tr ' -' '_').jpg
     printf './out/%s' "$filename"
 }
 
@@ -323,7 +323,7 @@ while IFS= read -r post; do
         continue
     fi
 
-    IMAGE_URL=$(upload_image "$OUTPUT_PATH" "${POST_SLUG}.png")
+    IMAGE_URL=$(upload_image "$OUTPUT_PATH" "${POST_SLUG}.jpg")
     echo "  Uploaded: ${IMAGE_URL}"
 
     update_post_feature_image "$POST_ID" "$IMAGE_URL" "$TITLE" "$UPDATED_AT"
