@@ -188,15 +188,17 @@ export const Person: React.FC<{
   who: PersonKey;
   height: number;
   right: number;
+  /** Distance from the frame's bottom, where the visible area ends above it */
+  bottom?: number;
   sky: Sky;
   treatment?: Treatment;
-}> = ({ who, height, right, sky, treatment = "dots" }) => {
+}> = ({ who, height, right, bottom = 0, sky, treatment = "dots" }) => {
   const width = (height * 120) / 140;
   const night = sky === "night";
   const style: React.CSSProperties = {
     position: "absolute",
     right,
-    bottom: 0,
+    bottom,
     overflow: "visible",
   };
 

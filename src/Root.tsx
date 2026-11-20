@@ -32,6 +32,7 @@ import {
   SocialLogo,
   XHeader,
   G2Banner,
+  YouTubeBanner,
 } from "./SocialAssets/SocialAssets";
 import {
   McpLaunchVideo,
@@ -433,6 +434,16 @@ export const RemotionRoot: React.FC = () => {
           fps={60}
           width={1270}
           height={240}
+          defaultProps={HEADER_DEFAULTS}
+          schema={headerSchema}
+        />
+        <Composition
+          id="Daylight-YouTubeBanner"
+          component={YouTubeBanner}
+          durationInFrames={1}
+          fps={60}
+          width={2048}
+          height={1152}
           defaultProps={HEADER_DEFAULTS}
           schema={headerSchema}
         />

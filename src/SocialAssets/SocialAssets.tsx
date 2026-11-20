@@ -47,7 +47,7 @@ export const HEADER_DEFAULTS: HeaderProps = {
 type Layout = {
   /** The wordmark; null where the platform's own avatar already shows the logo */
   logo: { left: number; top: number; width: number } | null;
-  person: { height: number; right: number };
+  person: { height: number; right: number; bottom?: number };
   /**
    * The proof block. Right-aligned against the person by default; with
    * `left`, left-aligned from there and centred top to bottom.
@@ -58,7 +58,7 @@ type Layout = {
   chip: number | null;
 };
 
-type Platform = "linkedin-company" | "linkedin-personal" | "x" | "g2";
+type Platform = "linkedin-company" | "linkedin-personal" | "x" | "g2" | "youtube";
 
 const LAYOUT: Record<Platform, Layout> = {
   // 1584 × 288. The editor frames it at 5.5:1, the live Page shows 6:1
@@ -96,6 +96,16 @@ const LAYOUT: Record<Platform, Layout> = {
     proof: { right: 232, bottom: 48, maxWidth: 860, gap: 0 },
     headline: { size: 48, line: 54 },
     chip: null,
+  },
+  // 2048 × 1152. TVs show it all, desktop a 2048 × 338 band across the
+  // middle, phones only the centred 1235 × 338 safe area (x 407–1641,
+  // y 407–745), so everything sits inside that; the sky fills the rest.
+  youtube: {
+    logo: { left: 447, top: 447, width: 200 },
+    person: { height: 330, right: 407, bottom: 407 },
+    proof: { right: 724, bottom: 447, maxWidth: 640, gap: 22 },
+    headline: { size: 62, line: 66 },
+    chip: 0.96,
   },
 };
 
@@ -136,6 +146,7 @@ const Header: React.FC<HeaderProps & { platform: Platform }> = ({
         treatment={treatment as Treatment}
         height={l.person.height}
         right={l.person.right}
+        bottom={l.person.bottom}
       />
       {l.logo && (
         <div style={{ position: "absolute", ...l.logo, display: "flex" }}>
@@ -195,6 +206,10 @@ export const LinkedInPersonalBackground: React.FC<HeaderProps> = (p) => (
 );
 /** X header, 1500 × 500: the same for the company and for people */
 export const XHeader: React.FC<HeaderProps> = (p) => <Header {...p} platform="x" />;
+/** YouTube channel banner, 2048 × 1152, content in the 1235 × 338 safe area */
+export const YouTubeBanner: React.FC<HeaderProps> = (p) => (
+  <Header {...p} platform="youtube" />
+);
 /** G2 profile banner, 1270 × 240 */
 export const G2Banner: React.FC<HeaderProps> = (p) => <Header {...p} platform="g2" />;
 
