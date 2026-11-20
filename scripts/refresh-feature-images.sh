@@ -10,7 +10,7 @@
 #   GHOST_ADMIN_API_KEY    Admin API key (id:secret)
 #
 # Usage:
-#   ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--test]
+#   ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--slugs-file FILE] [--test]
 #   npm run generate:feature-images -- --test --limit 3
 #
 
@@ -29,11 +29,14 @@ fi
 
 usage() {
     cat <<'EOF'
-Usage: ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--test]
+Usage: ./scripts/refresh-feature-images.sh [--limit N] [--offset N] [--slug SLUG] [--slugs-file FILE] [--test]
 
   --limit N    Process only N posts (after --offset, oldest first)
   --offset N   Skip the first N posts (oldest first); useful to resume a run
   --slug SLUG  Process only the post with this slug (no-op if not found)
+  --slugs-file FILE
+               Process only posts whose slug is listed in FILE (one per line);
+               applied before --offset/--limit
   --test       Generate images locally; skip Ghost upload and post update
 
 Requires env: GHOST_URL, GHOST_CONTENT_API_KEY, GHOST_ADMIN_API_KEY
@@ -44,6 +47,7 @@ EOF
 LIMIT=""
 OFFSET=0
 SLUG=""
+SLUGS_FILE=""
 TEST_MODE=0
 
 while [ $# -gt 0 ]; do
@@ -62,6 +66,14 @@ while [ $# -gt 0 ]; do
                 exit 1
             fi
             OFFSET="$2"
+            shift 2
+            ;;
+        --slugs-file)
+            if [ -z "${2:-}" ] || [ ! -f "${2}" ]; then
+                echo "Error: --slugs-file requires an existing file" >&2
+                exit 1
+            fi
+            SLUGS_FILE="$2"
             shift 2
             ;;
         --slug)
@@ -188,6 +200,11 @@ fetch_posts() {
     if [ -n "$SLUG" ]; then
         printf '%s' "$collected"
         return
+    fi
+
+    if [ -n "$SLUGS_FILE" ]; then
+        collected=$(printf '%s' "$collected" | jq -c --rawfile slugs "$SLUGS_FILE" \
+            '($slugs | split("\n") | map(select(length > 0))) as $keep | map(select(.slug as $s | $keep | index($s)))')
     fi
 
     if [ "$OFFSET" -gt 0 ]; then

@@ -10,6 +10,8 @@ import { Widget_RecapEmailTemplate } from "./Widget_RecapEmailTemplate/Widget_Re
 import { Widget_ReactivationEmailTemplate } from "./Widget_ReactivationEmailTemplate/Widget_ReactivationEmailTemplate";
 import { Podcast } from "./Podcast/Podcast";
 import { GenericThumbnailImage } from "./GenericThumbnailImage/GenericThumbnailImage";
+import { OG_SIZE, SKIES } from "./og/constants";
+import { PEOPLE, type PersonKey } from "./og/people";
 import { HashBackground } from "./HashBackground/HashBackgroundComposition";
 import { GenericFeatureLaunch, DEFAULT_CODE } from "./GenericFeatureLaunch/GenericFeatureLaunch";
 import { SalesDocImage } from "./SalesDocImage/SalesDocImage";
@@ -332,15 +334,17 @@ export const RemotionRoot: React.FC = () => {
         component={GenericThumbnailImage}
         durationInFrames={1}
         fps={60}
-        width={1800}
-        height={1200}
+        width={OG_SIZE.width}
+        height={OG_SIZE.height}
         defaultProps={{
           title: "Enter title here",
         }}
         schema={z.object({
           title: z.string(),
-          imageUrl: z.string().optional(),
-          imageBorder: z.boolean().optional(),
+          sky: z.enum(SKIES).optional(),
+          person: z
+            .enum(Object.keys(PEOPLE) as [PersonKey, ...PersonKey[]])
+            .optional(),
         })}
       />
       <Composition

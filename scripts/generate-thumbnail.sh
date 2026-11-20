@@ -1,16 +1,48 @@
 #!/bin/bash
 
+# Renders the GenericThumbnailImage still: the same design as the web repo's
+# Open Graph image (src/app/og/route.tsx), 1200x630.
+#
+# The sky and person are picked from the title (so a title always gets the
+# same image) unless pinned with --sky / --person.
+#
 # Examples:
-#   ./generate-thumbnail.sh "Trophy Updates" "/assets/user_attributes.png"
-#   ./generate-thumbnail.sh --no-image-border "7 Health App Gamification Examples" "/assets/fitbit-gamification.png"
+#   ./generate-thumbnail.sh "Trophy Updates"
+#   ./generate-thumbnail.sh --sky dusk --person priya "7 Health App Gamification Examples"
 
-NO_IMAGE_BORDER=0
+SKIES="dawn morning noon afternoon dusk night"
+PEOPLE="tom joe priya sam mei leo ellie aisha"
+
+usage() {
+    echo "Usage: ./generate-thumbnail.sh [--sky SKY] [--person PERSON] \"Your Title Here\""
+    echo "  --sky     one of: $SKIES"
+    echo "  --person  one of: $PEOPLE"
+}
+
+SKY=""
+PERSON=""
 REMAINING=()
 while [ $# -gt 0 ]; do
     case "$1" in
-        --no-image-border)
-            NO_IMAGE_BORDER=1
-            shift
+        --sky)
+            if ! [[ " $SKIES " == *" ${2:-} "* ]] || [ -z "${2:-}" ]; then
+                echo "Error: --sky must be one of: $SKIES" >&2
+                exit 1
+            fi
+            SKY="$2"
+            shift 2
+            ;;
+        --person)
+            if ! [[ " $PEOPLE " == *" ${2:-} "* ]] || [ -z "${2:-}" ]; then
+                echo "Error: --person must be one of: $PEOPLE" >&2
+                exit 1
+            fi
+            PERSON="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
             ;;
         *)
             REMAINING+=("$1")
@@ -20,19 +52,23 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "${REMAINING[0]}" ]; then
-    echo "Error: Title is required"
-    echo "Usage: ./generate-thumbnail.sh [--no-image-border] \"Your Title Here\" [\"/assets/image.png\"]"
+    echo "Error: Title is required" >&2
+    usage >&2
+    exit 1
+fi
+
+if [ -n "${REMAINING[1]}" ]; then
+    echo "Error: unexpected argument \"${REMAINING[1]}\" (thumbnails no longer take an image)" >&2
+    usage >&2
     exit 1
 fi
 
 TITLE="${REMAINING[0]}"
-IMAGE_URL="${REMAINING[1]:-}"
 
-if [ "$NO_IMAGE_BORDER" -eq 1 ]; then
-    PROPS="{\"title\": \"$TITLE\", \"imageUrl\": \"$IMAGE_URL\", \"imageBorder\": false}"
-else
-    PROPS="{\"title\": \"$TITLE\", \"imageUrl\": \"$IMAGE_URL\"}"
-fi
+PROPS="{\"title\": \"$TITLE\""
+[ -n "$SKY" ] && PROPS="$PROPS, \"sky\": \"$SKY\""
+[ -n "$PERSON" ] && PROPS="$PROPS, \"person\": \"$PERSON\""
+PROPS="$PROPS}"
 
 # Create filename from title (replace spaces with underscores)
 FILENAME=$(echo "$TITLE" | tr ' -' '_').png
