@@ -54,10 +54,11 @@ type Layout = {
    */
   proof: { right?: number; bottom?: number; left?: number; maxWidth: number; gap: number };
   headline: { size: number; line: number };
-  chip: number;
+  /** Scale of the G2 pill; null leaves it out */
+  chip: number | null;
 };
 
-type Platform = "linkedin-company" | "linkedin-personal" | "x";
+type Platform = "linkedin-company" | "linkedin-personal" | "x" | "g2";
 
 const LAYOUT: Record<Platform, Layout> = {
   // 1584 × 288. The editor frames it at 5.5:1, the live Page shows 6:1
@@ -86,6 +87,15 @@ const LAYOUT: Record<Platform, Layout> = {
     proof: { right: 400, bottom: 96, maxWidth: 760, gap: 24 },
     headline: { size: 70, line: 72 },
     chip: 1,
+  },
+  // 1270 × 240, G2's profile banner. No G2 pill: the page shows the rating
+  // beside it already.
+  g2: {
+    logo: { left: 48, top: 44, width: 176 },
+    person: { height: 228, right: -12 },
+    proof: { right: 232, bottom: 48, maxWidth: 860, gap: 0 },
+    headline: { size: 48, line: 54 },
+    chip: null,
   },
 };
 
@@ -169,7 +179,7 @@ const Header: React.FC<HeaderProps & { platform: Platform }> = ({
         >
           <Headline text={headline} highlight={highlight} accent={ACCENT[sky]} />
         </div>
-        <G2Chip rating={rating} scale={l.chip} />
+        {l.chip !== null && <G2Chip rating={rating} scale={l.chip} />}
       </div>
     </AbsoluteFill>
   );
@@ -185,6 +195,8 @@ export const LinkedInPersonalBackground: React.FC<HeaderProps> = (p) => (
 );
 /** X header, 1500 × 500: the same for the company and for people */
 export const XHeader: React.FC<HeaderProps> = (p) => <Header {...p} platform="x" />;
+/** G2 profile banner, 1270 × 240 */
+export const G2Banner: React.FC<HeaderProps> = (p) => <Header {...p} platform="g2" />;
 
 /* Logo avatar: the mark on the sky, with room for the round crop ------------ */
 

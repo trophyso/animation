@@ -31,6 +31,7 @@ import {
   logoAvatarSchema,
   SocialLogo,
   XHeader,
+  G2Banner,
 } from "./SocialAssets/SocialAssets";
 import {
   McpLaunchVideo,
@@ -422,6 +423,16 @@ export const RemotionRoot: React.FC = () => {
           fps={60}
           width={1500}
           height={500}
+          defaultProps={HEADER_DEFAULTS}
+          schema={headerSchema}
+        />
+        <Composition
+          id="Daylight-G2Banner"
+          component={G2Banner}
+          durationInFrames={1}
+          fps={60}
+          width={1270}
+          height={240}
           defaultProps={HEADER_DEFAULTS}
           schema={headerSchema}
         />
