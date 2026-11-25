@@ -1,4 +1,4 @@
-import { Composition, Folder } from "remotion";
+import { Composition, Folder, Still } from "remotion";
 import { LaunchVideo } from "./LaunchVideo/LaunchVideo";
 import { FeatureHighlight_Metrics } from "./FeatureHighlight_Metrics/FeatureHighlight_Metrics";
 import { Widget_Emails } from "./Widget_Emails/Widget_Emails";
@@ -72,6 +72,7 @@ import {
   videoSchema as oapuSchema,
 } from "./OneAgentPerUser/OneAgentPerUser";
 import { STORIES as OAPU_STORIES, STORY_KEYS as OAPU_STORY_KEYS } from "./OneAgentPerUser/stories";
+import { OneAgentPerUserThumbnail } from "./OneAgentPerUser/Thumbnail";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -130,6 +131,20 @@ export const RemotionRoot: React.FC = () => {
             fps={60}
             width={1920}
             height={1080}
+          />
+        ))}
+      </Folder>
+      {/* A thumbnail per video: the story's sky, person and website headline */}
+      <Folder name="OneAgentPerUser-Thumbnails">
+        <Still id="OneAgentPerUser-Thumbnail" component={OneAgentPerUserThumbnail} width={THUMBNAIL_SIZE.width} height={THUMBNAIL_SIZE.height} />
+        {OAPU_STORY_KEYS.map((key) => (
+          <Still
+            key={key}
+            id={`OneAgentPerUser-${OAPU_STORIES[key].name}-Thumbnail`}
+            component={OneAgentPerUserThumbnail}
+            defaultProps={{ story: key }}
+            width={THUMBNAIL_SIZE.width}
+            height={THUMBNAIL_SIZE.height}
           />
         ))}
       </Folder>

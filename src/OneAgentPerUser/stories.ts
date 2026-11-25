@@ -87,6 +87,8 @@ export type Story = {
   narrator: Narrator;
   /** The website's sky for this story, the video's default */
   sky: Sky;
+  /** The website's headline for the story: the video's title and thumbnail */
+  headline: string;
   app: AppName;
   /** Their card in the split paths */
   fan: { channel: string; title: string; body: string; quiet?: boolean };
@@ -118,6 +120,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Mei",
     narrator: "female",
     sky: "morning",
+    headline: "Prevent churn before it happens",
     app: "Wordplay",
     fan: { channel: "Push · 07:15", title: "Ready for a harder puzzle, Mei?", body: "Today’s expert pack is a step up." },
     sub: "Wordplay · New York",
@@ -161,6 +164,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Joe",
     narrator: "male",
     sky: "noon",
+    headline: "Activate more users",
     app: "Flyway",
     fan: { channel: "Push · 19:30", title: "Still thinking about Rome?", body: "Your two shortlisted flights are still available." },
     sub: "Flyway · Manchester",
@@ -203,6 +207,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Aisha",
     narrator: "female",
     sky: "afternoon",
+    headline: "Launch offers that convert",
     app: "Learnr",
     fan: { channel: "Email · 17:00", title: "Meet Ultra, our new plan", body: "You’ve hit your usage limit 3 times in two weeks." },
     sub: "Learnr · Birmingham",
@@ -246,6 +251,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Ellie",
     narrator: "female",
     sky: "dawn",
+    headline: "Improve clarity and preserve trust",
     app: "Roastery",
     fan: { channel: "Email · 07:30", title: "20 points from Gold", body: "Double points this weekend gets you there." },
     sub: "Roastery · Bristol",
@@ -289,6 +295,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Priya",
     narrator: "female",
     sky: "dusk",
+    headline: "Get users to do more of what you want",
     app: "Snapr",
     fan: { channel: "Push · 18:40", title: "Your sunset shot was your top post", body: "3 friends joined this week’s Golden hour challenge." },
     sub: "Snapr · Lisbon",
@@ -331,6 +338,7 @@ export const STORIES: Record<StoryKey, Story> = {
     name: "Leo",
     narrator: "male",
     sky: "night",
+    headline: "The best message is no message",
     app: "Learnr",
     fan: { channel: "Nothing sent", title: "Studying daily anyway", body: "His agent saves the channel for when it counts.", quiet: true },
     sub: "Learnr · Edinburgh",
