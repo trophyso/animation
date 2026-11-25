@@ -54,8 +54,21 @@ const lineHeightAt = (size: number) => Math.round(size * LINE_HEIGHT);
 const clip = (text: string, max: number) =>
     text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 
+/**
+ * Where things sit. The default is the blog card (16:10, logo and footer
+ * pulled in for a 2:1 social crop); "youtube" is 16:9, viewed small, so the
+ * title is bigger and the margins hug the frame.
+ */
+type Layout = "blog" | "youtube";
+const LAYOUTS: Record<Layout, { logoTop: number; footerBottom: number; titleMax: number; titleMin: number; maxLines: number; titleWidth: number }> = {
+    blog: { logoTop: LOGO_TOP, footerBottom: FOOTER_BOTTOM, titleMax: TITLE_MAX, titleMin: TITLE_MIN, maxLines: MAX_LINES, titleWidth: TITLE_WIDTH },
+    // Narrower, so a long title wraps instead of running into the head
+    youtube: { logoTop: 84, footerBottom: 80, titleMax: 112, titleMin: 76, maxLines: 3, titleWidth: 940 },
+};
+
 interface Props {
     title: string;
+    layout?: Layout;
     /** Pin the sky; otherwise picked from the title, so a title always gets the same one */
     sky?: Sky;
     /** Pin the person; otherwise picked from the title */
@@ -69,7 +82,8 @@ interface Props {
  * sky from the current hour and the person at random; here both are seeded by
  * the title so re-running the generator gives the same image.
  */
-export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
+export const ThumbnailImage: React.FC<Props> = ({ title, sky, person, layout = "blog" }) => {
+    const L = LAYOUTS[layout];
     const text = clip(title.trim(), 200);
     const skyName =
         sky ?? SKIES[Math.floor(random(`sky:${text}`) * SKIES.length)];
@@ -89,12 +103,12 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
             .then(() => {
                 if (cancelled) return;
                 const el = measureRef.current;
-                let fit = TITLE_MIN;
+                let fit = L.titleMin;
                 if (el) {
-                    for (let size = TITLE_MAX; size >= TITLE_MIN; size -= TITLE_STEP) {
+                    for (let size = L.titleMax; size >= L.titleMin; size -= TITLE_STEP) {
                         el.style.fontSize = `${size}px`;
                         el.style.lineHeight = `${lineHeightAt(size)}px`;
-                        if (el.scrollHeight <= lineHeightAt(size) * MAX_LINES + 1) {
+                        if (el.scrollHeight <= lineHeightAt(size) * L.maxLines + 1) {
                             fit = size;
                             break;
                         }
@@ -106,16 +120,16 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
         return () => {
             cancelled = true;
         };
-    }, [handle, text]);
+    }, [handle, text, L]);
 
     const titleStyle: React.CSSProperties = {
         fontFamily: display.fontFamily,
         fontWeight: 400,
         letterSpacing: "-0.045em",
-        width: TITLE_WIDTH,
+        width: L.titleWidth,
         overflowWrap: "break-word",
     };
-    const size = fontSize ?? TITLE_MAX;
+    const size = fontSize ?? L.titleMax;
 
     return (
         <AbsoluteFill
@@ -177,7 +191,7 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                     display: "flex",
                     position: "absolute",
                     left: EDGE,
-                    top: LOGO_TOP,
+                    top: L.logoTop,
                 }}
             >
                 <OgLogo width={Math.round(146 * S)} color={ink.text} />
@@ -190,8 +204,8 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                     justifyContent: "center",
                     position: "absolute",
                     left: EDGE,
-                    top: LOGO_TOP + 90,
-                    bottom: FOOTER_BOTTOM + 90,
+                    top: L.logoTop + 90,
+                    bottom: L.footerBottom + 90,
                 }}
             >
                 <div
@@ -199,7 +213,7 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                         ...titleStyle,
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: MAX_LINES,
+                        WebkitLineClamp: L.maxLines,
                         overflow: "hidden",
                         fontSize: size,
                         lineHeight: `${lineHeightAt(size)}px`,
@@ -215,7 +229,7 @@ export const ThumbnailImage: React.FC<Props> = ({ title, sky, person }) => {
                     display: "flex",
                     position: "absolute",
                     left: EDGE,
-                    bottom: FOOTER_BOTTOM,
+                    bottom: L.footerBottom,
                     fontFamily: mono.fontFamily,
                     fontWeight: 400,
                     fontSize: Math.round(22 * S),

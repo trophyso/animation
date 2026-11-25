@@ -72,7 +72,7 @@ import {
   videoSchema as oapuSchema,
 } from "./OneAgentPerUser/OneAgentPerUser";
 import { STORIES as OAPU_STORIES, STORY_KEYS as OAPU_STORY_KEYS } from "./OneAgentPerUser/stories";
-import { OneAgentPerUserThumbnail } from "./OneAgentPerUser/Thumbnail";
+import { OneAgentPerUserThumbnail, YOUTUBE_THUMBNAIL_SIZE } from "./OneAgentPerUser/Thumbnail";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -145,6 +145,23 @@ export const RemotionRoot: React.FC = () => {
             defaultProps={{ story: key }}
             width={THUMBNAIL_SIZE.width}
             height={THUMBNAIL_SIZE.height}
+          />
+        ))}
+        <Still
+          id="OneAgentPerUser-YouTubeThumbnail"
+          component={OneAgentPerUserThumbnail}
+          defaultProps={{ youtube: true }}
+          width={YOUTUBE_THUMBNAIL_SIZE.width}
+          height={YOUTUBE_THUMBNAIL_SIZE.height}
+        />
+        {OAPU_STORY_KEYS.map((key) => (
+          <Still
+            key={`yt-${key}`}
+            id={`OneAgentPerUser-${OAPU_STORIES[key].name}-YouTubeThumbnail`}
+            component={OneAgentPerUserThumbnail}
+            defaultProps={{ story: key, youtube: true }}
+            width={YOUTUBE_THUMBNAIL_SIZE.width}
+            height={YOUTUBE_THUMBNAIL_SIZE.height}
           />
         ))}
       </Folder>
