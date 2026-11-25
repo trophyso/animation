@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
-import { loadFont as loadMontserrat } from "@remotion/google-fonts/Montserrat";
-import { loadFont as loadRoboto } from "@remotion/google-fonts/Roboto";
+import { loadFont as loadMontserrat } from "../fonts/Montserrat";
+import { loadFont as loadRoboto } from "../fonts/Roboto";
 import { Medal, PartyPopper, RefreshCw } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";
 

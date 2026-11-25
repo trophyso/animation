@@ -15,7 +15,7 @@ import {
     Wallet,
     type LucideIcon,
 } from "lucide-react";
-import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+import { loadFont } from "../../fonts/PlusJakartaSans";
 
 const { fontFamily } = loadFont();
 

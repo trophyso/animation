@@ -5,9 +5,9 @@
  * two in step when a token changes.
  */
 import type React from "react";
-import { loadFont as loadDisplayFont } from "@remotion/google-fonts/FunnelDisplay";
-import { loadFont as loadSansFont } from "@remotion/google-fonts/FunnelSans";
-import { loadFont as loadMonoFont } from "@remotion/google-fonts/SplineSansMono";
+import { loadFont as loadDisplayFont } from "../fonts/FunnelDisplay";
+import { loadFont as loadSansFont } from "../fonts/FunnelSans";
+import { loadFont as loadMonoFont } from "../fonts/SplineSansMono";
 import { G2Rating } from "../components/G2Rating";
 import { BUST, HAIR, HEAD, PEOPLE, type PersonKey } from "../og/people";
 import { personDots } from "../og/person-dots";

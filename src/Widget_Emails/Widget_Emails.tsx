@@ -1,5 +1,5 @@
 import { AbsoluteFill } from "remotion";
-import { loadFont } from "@remotion/google-fonts/Montserrat";
+import { loadFont } from "../fonts/Montserrat";
 import { Mail, RefreshCw, Trophy } from "lucide-react";
 import { BarChart2 } from "lucide-react";
 import { LightBackground } from "../components/LightBackground";

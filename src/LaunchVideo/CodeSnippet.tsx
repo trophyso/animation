@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { loadFont } from "@remotion/google-fonts/Montserrat";
+import { loadFont } from "../fonts/Montserrat";
 
 const { fontFamily } = loadFont();
 

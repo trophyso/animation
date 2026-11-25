@@ -1,6 +1,6 @@
 import { Img, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Bump } from "../components/Bump";
-import { loadFont } from '@remotion/google-fonts/Montserrat';
+import { loadFont } from '../fonts/Montserrat';
 
 const { fontFamily } = loadFont();
 

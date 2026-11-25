@@ -2,7 +2,7 @@ import { staticFile } from "remotion";
 import { Img } from "remotion";
 import { AbsoluteFill } from "remotion";
 import { HashBackground } from "../components/HashBackground";
-import { loadFont } from "@remotion/google-fonts/RobotoMono";
+import { loadFont } from "../fonts/RobotoMono";
 
 const { fontFamily } = loadFont();
 

@@ -1,4 +1,4 @@
-import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+import { loadFont } from "../fonts/PlusJakartaSans";
 import { AbsoluteFill, Img, Interactive, staticFile, useVideoConfig } from "remotion";
 import { FlickeringGrid } from "../components/FlickeringGrid";
 import { G2Rating } from "../components/G2Rating";

@@ -7,7 +7,7 @@ import {
     useCurrentFrame,
     useVideoConfig,
 } from "remotion";
-import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+import { loadFont } from "../fonts/PlusJakartaSans";
 import { FlickeringGrid } from "../components/FlickeringGrid";
 import { TypingCodeBlock } from "../components/TypingCodeBlock";
 
