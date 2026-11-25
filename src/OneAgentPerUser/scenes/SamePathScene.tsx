@@ -5,10 +5,8 @@ import { bez, lerp, prog } from "../../daylight/motion";
 import { EASE } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
 import { Words } from "../components/Words";
-import { C, COPY, CUE, EASE_IN, FPS, SHADOW_CARD, W, at, f } from "../script";
-
-export const SAME_PATH_DURATION = f(CUE.oneAgent - CUE.samePath);
-const T = (s: number) => at("samePath", s);
+import { C, COPY, EASE_IN, FPS, H, SHADOW_CARD, W, f } from "../script";
+import { useScene } from "../video";
 
 /** Geometry (px) */
 const LINE_Y = 420;
@@ -54,6 +52,7 @@ const slotX = (p: number): number => {
  */
 export const SamePathScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { T, ground } = useScene("samePath");
 
   const lineW = interpolate(frame, [0, T(0.6)], [330, W], {
     extrapolateLeft: "clamp",
@@ -77,8 +76,16 @@ export const SamePathScene: React.FC = () => {
 
   return (
     <Backdrop>
-      {/* Rail: the only thing that stays for the next scene */}
-      <div style={{ position: "absolute", left: 0, top: railY - LINE_STROKE / 2, width: lineW, height: LINE_STROKE, background: C.rail }} />
+      {/* Rail: the only thing that stays for the next scene. It is cut away inside the step rings, so the ground shows through them */}
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0 }}>
+        <mask id="same-path-rail">
+          <rect width={W} height={H} fill="#ffffff" />
+          {NODE_X.map((x, i) => (
+            <circle key={x} cx={x} cy={railY} r={RING_R * prog(frame, T(0.35 + i * 0.08), f(0.4), EASE.OUT) * (1 - ringsOut)} fill="#000000" />
+          ))}
+        </mask>
+        <rect x={0} y={railY - LINE_STROKE / 2} width={lineW} height={LINE_STROKE} fill={ground.rail} mask="url(#same-path-rail)" />
+      </svg>
 
       {/* Steps, and the message each one sends */}
       {NODE_X.map((x, i) => {
@@ -98,8 +105,7 @@ export const SamePathScene: React.FC = () => {
                 width: RING_R * 2 + RING_STROKE,
                 height: RING_R * 2 + RING_STROKE,
                 borderRadius: "50%",
-                border: `${RING_STROKE}px solid ${C.rail}`,
-                background: C.bg,
+                border: `${RING_STROKE}px solid ${ground.rail}`,
                 boxSizing: "border-box",
                 opacity: inP * (1 - ringsOut),
                 transform: `scale(${(lerp(inP, 0.5, 1) * lerp(ringsOut, 1, 0.85) * (1 + pulse * 0.22)).toFixed(4)})`,
@@ -116,8 +122,8 @@ export const SamePathScene: React.FC = () => {
                 translate: `0px ${((1 - inP) * 8).toFixed(2)}px`,
               }}
             >
-              <div style={{ fontFamily: sansFont, fontWeight: 600, fontSize: 25, lineHeight: "32px", color: C.labelStrong }}>{node.day}</div>
-              <div style={{ fontFamily: sansFont, fontWeight: 400, fontSize: 26, lineHeight: "32px", color: C.labelMuted }}>{node.sub}</div>
+              <div style={{ fontFamily: sansFont, fontWeight: 600, fontSize: 25, lineHeight: "32px", color: ground.labelStrong }}>{node.day}</div>
+              <div style={{ fontFamily: sansFont, fontWeight: 400, fontSize: 26, lineHeight: "32px", color: ground.labelMuted }}>{node.sub}</div>
             </div>
 
             {/* The step's message, popping up as the users land */}
@@ -173,8 +179,9 @@ export const SamePathScene: React.FC = () => {
               width: DOT_R * 2,
               height: DOT_R * 2,
               borderRadius: "50%",
-              background: C.walker,
-              boxShadow: "0 0 0 4px " + C.bg,
+              background: ground.walker,
+              // A gap where the dot meets the rail, on the flat ground
+              boxShadow: ground.grain === "fine" ? `0 0 0 4px ${ground.background}` : undefined,
               opacity: groupIn * leave * (1 - gone),
               transform: `scale(${(lerp(groupIn, 0.4, 1) * stretch).toFixed(4)}, ${lerp(groupIn, 0.4, 1).toFixed(4)})`,
             }}
@@ -193,7 +200,7 @@ export const SamePathScene: React.FC = () => {
           fontSize: 102,
           lineHeight: 1.06,
           letterSpacing: "-0.03em",
-          color: C.ink,
+          color: ground.ink,
           maxWidth: W - 2 * 122,
           textWrap: "balance",
           opacity: leave,

@@ -5,10 +5,8 @@ import { lerp, prog } from "../../daylight/motion";
 import { EASE } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
 import { Words, wordCount } from "../components/Words";
-import { C, COPY, CUE, EASE_IN, H, W, at, f } from "../script";
-
-export const ONE_AGENT_DURATION = f(CUE.fanOut - CUE.oneAgent);
-const T = (s: number) => at("oneAgent", s);
+import { COPY, EASE_IN, H, W, f } from "../script";
+import { useScene } from "../video";
 
 /** The grey rail left behind by the first scene, and where the agent lands on it */
 const RAIL_Y = 420;
@@ -35,6 +33,7 @@ const ACCENT_LINE = COPY.oneAgent[COPY.oneAgent.length - 1];
  */
 export const OneAgentScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { T, ground } = useScene("oneAgent");
 
   // The agent drops onto the rail and swells to fill the frame
   const drop = prog(frame, T(6.8), f(0.2), EASE.OUT);
@@ -49,7 +48,7 @@ export const OneAgentScene: React.FC = () => {
     <Backdrop>
       {flood < 1 ? (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0 }}>
-          <line x1={0} x2={W} y1={RAIL_Y} y2={RAIL_Y} stroke={C.rail} strokeWidth={8} />
+          <line x1={0} x2={W} y1={RAIL_Y} y2={RAIL_Y} stroke={ground.rail} strokeWidth={8} />
         </svg>
       ) : null}
       <div
@@ -60,7 +59,7 @@ export const OneAgentScene: React.FC = () => {
           width: agentR * 2,
           height: agentR * 2,
           borderRadius: "50%",
-          background: C.indigo,
+          background: ground.flood,
           opacity: dotIn,
         }}
       />
@@ -80,14 +79,14 @@ export const OneAgentScene: React.FC = () => {
           filter: exit > 0 ? `blur(${(exit * 12).toFixed(2)}px)` : undefined,
         }}
       >
-        <div style={{ color: C.onIndigo }}>
+        <div style={{ color: ground.floodInk }}>
           {LEAD.map((line, k) => (
             <div key={line}>
               <Words text={line} start={T(7.2)} index={wordCount(LEAD.slice(0, k))} />
             </div>
           ))}
         </div>
-        <div style={{ color: C.indigoLight, marginLeft: ACCENT.dx, translate: `0px ${ACCENT.dy}px` }}>
+        <div style={{ color: ground.floodAccent, marginLeft: ACCENT.dx, translate: `0px ${ACCENT.dy}px` }}>
           <Words text={ACCENT_LINE} start={T(7.95)} />
         </div>
       </div>

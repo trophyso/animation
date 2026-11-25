@@ -1,27 +1,27 @@
-# One AI lifecycle agent per user: voiceover script
+# One AI lifecycle agent per user: voiceover script, shared by every story
 #
-# The whole script is voiced as ONE take, so tone and pace stay consistent.
+# Each video is voiced as ONE take, so tone and pace stay consistent.
 # "@ Label" lines just mark sections; each section becomes its own paragraph,
-# and the paragraph break gives a natural pause between sections.
+# and the paragraph break gives a natural pause between sections. The empty
+# section (Decision) comes from the story: stories/<story>.txt.
 #
 # The model is eleven_v3: [excited] and other audio tags set the delivery, and
 # pauses inside a line come from "…" and dashes (v3 has no break tags).
 #
-# The video follows the voice: SYNC in ../script.ts ties visual moments to
-# phrases in this script (e.g. the ring lands on Push on "push") and holds the
-# animation as long as needed. If you reword a phrase that SYNC names, update
-# SYNC too.
+# The video follows the voice: the pins in ../timeline.ts tie visual moments
+# to phrases in this script (e.g. the paths swell into the next scene after
+# "just for them") and hold the animation as long as needed. If you reword a
+# phrase a pin names, update the pin too.
 #
-# Regenerate after editing: npm run voiceover
+# Regenerate after editing: npm run voiceover -- --story all --voice all
 
 @ Same path
-[casually, a little exasperated] Your lifecycle marketing tools send every user down the same path… Same steps, same timing, same message.
+[casually, a little exasperated] Your messaging tools send every user down the same path… Same steps, same timing, same message.
 
 @ One agent
 [excited] Trophy deploys an AI lifecycle marketing agent for each user — that creates personalized journeys just for them!
 
 @ Decision
-[warmly] Mei's agent sees her sessions are getting shorter… It picks push and reaches her at seven fifteen, right before she plays.
 
 @ Result
 [enthusiastically] Trophy's agents achieve up to forty percent higher engagement than with sequences!
@@ -30,4 +30,9 @@
 [playfully] Stop sending generic messages users ignore.
 
 @ Call to action
-[excited] Book a demo to see if Trophy's agents can outperform your current messaging tools! [short pause]
+[excited] Book a demo to see if Trophy's agents can outperform your current messaging tools!
+
+@ Tail
+# Never heard: the video stops the audio in the pause before it. Without a line
+# after it, ElevenLabs tends to cut the last real word off mid-sound.
+See you soon!

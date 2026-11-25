@@ -1,46 +1,72 @@
 import React from "react";
-import { AbsoluteFill, Sequence } from "remotion";
+import { AbsoluteFill, Sequence, type CalculateMetadataFunction } from "remotion";
 import { Voiceover } from "./components/Voiceover";
-import { C, CUE, TOTAL_FRAMES, f } from "./script";
-import { SAME_PATH_DURATION, SamePathScene } from "./scenes/SamePathScene";
-import { FAN_OUT_DURATION, FanOutScene } from "./scenes/FanOutScene";
-import { ONE_AGENT_DURATION, OneAgentScene } from "./scenes/OneAgentScene";
-import { DECISION_DURATION, DecisionScene } from "./scenes/DecisionScene";
-import { PUSH_DURATION, PushScene } from "./scenes/PushScene";
-import { CHART_DURATION, ChartScene } from "./scenes/ChartScene";
-import { OUTRO_DURATION, OutroScene } from "./scenes/OutroScene";
+import { f, type SceneName } from "./script";
+import { ChartScene } from "./scenes/ChartScene";
+import { DecisionScene } from "./scenes/DecisionScene";
+import { FanOutScene } from "./scenes/FanOutScene";
+import { MessageScene } from "./scenes/MessageScene";
+import { OneAgentScene } from "./scenes/OneAgentScene";
+import { OutroScene } from "./scenes/OutroScene";
+import { SamePathScene } from "./scenes/SamePathScene";
+import { VideoProvider, resolveVideo, useVideo, type VideoProps } from "./video";
 
-/** 1770 frames at 60fps */
-export const ONE_AGENT_PER_USER_DURATION = TOTAL_FRAMES;
+export { videoSchema, type VideoProps } from "./video";
+
+const SCENES: [SceneName, string, React.FC][] = [
+  ["samePath", "Same path", SamePathScene],
+  ["oneAgent", "One agent", OneAgentScene],
+  ["fanOut", "Fan out", FanOutScene],
+  ["decision", "Decision", DecisionScene],
+  ["message", "Message", MessageScene],
+  ["chart", "Chart", ChartScene],
+  ["outro", "Outro", OutroScene],
+];
+
+/** Mei's story on the flat ground: the original video */
+export const DEFAULT_VIDEO: VideoProps = { story: "mei", sky: "plain" };
+
+/** The video runs as long as its story's voice take needs */
+export const calculateVideoMetadata: CalculateMetadataFunction<VideoProps> = ({ props }) => ({
+  durationInFrames: resolveVideo(props).timeline.totalFrames,
+});
+
+const Scenes: React.FC = () => {
+  const { ground, timeline } = useVideo();
+  return (
+    <AbsoluteFill style={{ background: ground.background }}>
+      <Voiceover />
+      {SCENES.map(([scene, name, Scene]) => (
+        <Sequence key={scene} name={name} from={f(timeline.cue[scene])} durationInFrames={timeline.duration(scene)}>
+          <Scene />
+        </Sequence>
+      ))}
+    </AbsoluteFill>
+  );
+};
 
 /**
- * Scenes are hard cuts at the source's cue points; every scene paints its own
- * ground and handles its own exit (the agent dot flooding the frame with indigo and collapsing back, the
- * decision and chart frames blurring away), so no transition layer is needed.
+ * "One agent per user", for any of the website's user stories, on any ground,
+ * voiced by a narrator who matches the person. Scenes are hard cuts at the cue points; every scene paints
+ * its own ground and handles its own exit (the agent dot flooding the frame
+ * with indigo and collapsing back, the decision and chart frames blurring
+ * away), so no transition layer is needed.
  */
-export const OneAgentPerUser: React.FC = () => (
-  <AbsoluteFill style={{ background: C.bg }}>
-    <Voiceover />
-    <Sequence name="Same path" from={f(CUE.samePath)} durationInFrames={SAME_PATH_DURATION}>
-      <SamePathScene />
-    </Sequence>
-    <Sequence name="One agent" from={f(CUE.oneAgent)} durationInFrames={ONE_AGENT_DURATION}>
-      <OneAgentScene />
-    </Sequence>
-    <Sequence name="Fan out" from={f(CUE.fanOut)} durationInFrames={FAN_OUT_DURATION}>
-      <FanOutScene />
-    </Sequence>
-    <Sequence name="Decision" from={f(CUE.decision)} durationInFrames={DECISION_DURATION}>
-      <DecisionScene />
-    </Sequence>
-    <Sequence name="Push" from={f(CUE.push)} durationInFrames={PUSH_DURATION}>
-      <PushScene />
-    </Sequence>
-    <Sequence name="Chart" from={f(CUE.chart)} durationInFrames={CHART_DURATION}>
-      <ChartScene />
-    </Sequence>
-    <Sequence name="Outro" from={f(CUE.outro)} durationInFrames={OUTRO_DURATION}>
-      <OutroScene />
-    </Sequence>
-  </AbsoluteFill>
+export const OneAgentPerUser: React.FC<VideoProps> = (props) => (
+  <VideoProvider props={props}>
+    <Scenes />
+  </VideoProvider>
 );
+
+/** One scene on its own, for previewing in the Studio */
+export const OneAgentPerUserScene: React.FC<VideoProps & { scene: SceneName }> = ({ scene, ...props }) => {
+  const Scene = SCENES.find(([s]) => s === scene)![2];
+  return (
+    <VideoProvider props={props}>
+      <Scene />
+    </VideoProvider>
+  );
+};
+
+export const sceneDuration = (scene: SceneName, props: VideoProps = DEFAULT_VIDEO) => resolveVideo(props).timeline.duration(scene);
+export { SCENES as ONE_AGENT_SCENES };

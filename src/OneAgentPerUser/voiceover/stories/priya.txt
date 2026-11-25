@@ -1,0 +1,7 @@
+# Priya: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: female
+
+@ Decision
+[warmly] Priya's agent sees her sunset shot was her most liked post this month… It picks push and reaches her at six forty, right at golden hour.

@@ -1,0 +1,12 @@
+# Leo: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: male
+
+@ Decision
+[warmly] Leo's agent sees he's already studying every day for his exam… So it picks nothing at all, and saves the channel for when it counts.
+
+@ Logo
+# Overrides the shared line: ElevenLabs ended "users ignore" high here, as if
+# the sentence carried on. [firmly] keeps it urgent but final.
+[firmly] Stop sending generic messages users ignore.

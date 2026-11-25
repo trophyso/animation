@@ -7,11 +7,10 @@ import { EASE } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
 import { Cursor } from "../components/Cursor";
 import { Words, wordCount } from "../components/Words";
-import { C, COPY, CUE, EASE_IN, at, f } from "../script";
+import { COPY, EASE_IN, f } from "../script";
+import { BUTTON as BUTTON_COLOURS } from "../ground";
+import { useScene } from "../video";
 import { DOT_TARGET } from "./ChartScene";
-
-export const OUTRO_DURATION = f(CUE.end - CUE.outro);
-const T = (s: number) => at("outro", s);
 
 /** The close: logo, button and domain stacked about the centre */
 const LOGO_W = 470;
@@ -30,11 +29,12 @@ const hidden: React.CSSProperties = { opacity: 0 };
 
 /**
  * S7 · The close. The chart's dot blooms into the statement, written in word
- * by word; it clears for the logo, the call to action (clicked) and the
- * domain.
+ * by word; it clears for the logo, the call to action and the domain (up
+ * straight away), and the button is clicked.
  */
 export const OutroScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { T, ground } = useScene("outro");
 
   const glow = prog(frame, 0, f(0.1), EASE.SOFT);
   // The chart's dot lands here and blooms into a lavender disc
@@ -67,7 +67,7 @@ export const OutroScene: React.FC = () => {
             width: 90,
             height: 90,
             borderRadius: "50%",
-            background: bloom < 0.1 ? C.indigo : C.indigoLight,
+            background: bloom < 0.1 ? ground.agent : ground.agentLight,
             opacity: bloom < 0.1 ? 1 : lerp(bloomFade, 0.85, 0),
             transform: `scale(${lerp(bloom, 12 / 45, 1).toFixed(4)})`,
           }}
@@ -88,7 +88,7 @@ export const OutroScene: React.FC = () => {
             fontSize: STATEMENT_SIZE,
             lineHeight: `${STATEMENT_SIZE}px`,
             letterSpacing: "-0.035em",
-            color: C.ink,
+            color: ground.ink,
             opacity: 1 - statementOut,
             transform: `translateY(${(-statementOut * 90).toFixed(2)}px)`,
             filter: statementOut > 0 ? `blur(${(statementOut * 12).toFixed(2)}px)` : undefined,
@@ -105,10 +105,10 @@ export const OutroScene: React.FC = () => {
       {/* Logo: the mark pops, the wordmark wipes in */}
       <div style={{ position: "absolute", left: 960 - LOGO_W / 2, top: LOGO_TOP, width: LOGO_W, height: LOGO_H }}>
         <div style={{ position: "absolute", inset: 0, transformOrigin: MARK_ORIGIN, transform: `scale(${lerp(markIn, 0.3, 1).toFixed(4)})`, opacity: markIn }}>
-          <Logo width={LOGO_W} color={C.ink} word={hidden} />
+          <Logo width={LOGO_W} color={ground.ink} word={hidden} />
         </div>
         <div style={{ position: "absolute", inset: 0, ...revealLeftToRight(wordIn) }}>
-          <Logo width={LOGO_W} color={C.ink} lower={hidden} upper={hidden} />
+          <Logo width={LOGO_W} color={ground.ink} lower={hidden} upper={hidden} />
         </div>
       </div>
 
@@ -121,7 +121,7 @@ export const OutroScene: React.FC = () => {
           width: BUTTON.w,
           height: BUTTON.h,
           borderRadius: 9999,
-          background: C.button,
+          background: BUTTON_COLOURS.background,
           boxShadow: "0 16px 32px -12px rgba(10,20,30,0.45)",
           display: "flex",
           alignItems: "center",
@@ -130,7 +130,7 @@ export const OutroScene: React.FC = () => {
           fontWeight: 400,
           fontSize: 46,
           letterSpacing: "-0.02em",
-          color: "#f5f5f5",
+          color: BUTTON_COLOURS.ink,
           opacity: buttonIn,
           transform: `scale(${(lerp(buttonIn, 0.9, 1) * lerp(press, 1, 0.95)).toFixed(4)})`,
         }}
@@ -150,10 +150,11 @@ export const OutroScene: React.FC = () => {
           fontWeight: 500,
           fontSize: 40,
           letterSpacing: "-0.005em",
-          color: C.textSub,
+          color: ground.sub,
         }}
       >
-        <Words text={COPY.domain} start={T(29.3)} />
+        {/* Straight after the button, so the address is up for the whole close */}
+        <Words text={COPY.domain} start={T(28.1)} />
       </div>
 
       {cursorP > 0 ? <Cursor x={cursor.x} y={cursor.y} style={{ filter: `drop-shadow(0 4px 6px rgba(0,0,0,0.3))${cursorBlur > 0.2 ? ` blur(${cursorBlur.toFixed(2)}px)` : ""}` }} /> : null}

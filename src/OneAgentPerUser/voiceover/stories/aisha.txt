@@ -1,0 +1,12 @@
+# Aisha: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: female
+
+@ Decision
+[warmly] Aisha's agent sees she keeps hitting her usage limit, just as the new Ultra plan launches… It picks email and reaches her at five, right when she sits down to study.
+
+@ Same path
+# Overrides the shared line: ElevenLabs ended "same message" high here, as if
+# the sentence carried on. The pause and [firmly] make it land as the end.
+[casually, a little exasperated] Your messaging tools send every user down the same path… Same steps, same timing… [firmly] same message.

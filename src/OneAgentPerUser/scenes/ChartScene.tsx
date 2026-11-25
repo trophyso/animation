@@ -5,10 +5,8 @@ import { lerp, prog } from "../../daylight/motion";
 import { EASE, type Bez } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
 import { Words } from "../components/Words";
-import { C, COPY, CUE, EASE_IN, H, W, at, f } from "../script";
-
-export const CHART_DURATION = f(CUE.outro - CUE.chart);
-const T = (s: number) => at("chart", s);
+import { COPY, EASE_IN, H, W, f } from "../script";
+import { useScene } from "../video";
 
 type Pt = { x: number; y: number };
 type Curve = [Pt, Pt, Pt, Pt];
@@ -20,13 +18,14 @@ const AGENT: Curve = [
   { x: 1320, y: 495 },
   { x: 1801, y: 422 },
 ];
-/** The source's sequences curve shape, with its rise scaled so the agent ends exactly 40% higher */
+/** The source's sequences curve shape */
 const SEQUENCES_SHAPE: Curve = [
   { x: 165, y: 898 },
   { x: 759, y: 875 },
   { x: 1337, y: 745 },
   { x: 1800, y: 703 },
 ];
+/** The sequences curve, its rise scaled so the agent ends exactly 40% higher */
 const LIFT = 1 + COPY.chart.figure / 100;
 const SEQUENCES_RISE = (AXIS_Y - AGENT[3].y) / LIFT / (AXIS_Y - SEQUENCES_SHAPE[3].y);
 const SEQUENCES = SEQUENCES_SHAPE.map((p) => ({ x: p.x, y: AXIS_Y - (AXIS_Y - p.y) * SEQUENCES_RISE })) as Curve;
@@ -93,9 +92,10 @@ const lineLabel: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-/** S6 · The outcome: engagement with Trophy's AI agent against sequences, 40% higher */
+/** S6 · The outcome: engagement with Trophy's AI agent against sequences, 40% higher (the same for every story) */
 export const ChartScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { T, ground } = useScene("chart");
   const agentAt = useArcTable(AGENT);
 
   const draw = prog(frame, T(19.6), f(0.9), EASE_OUT_QUAD);
@@ -120,8 +120,8 @@ export const ChartScene: React.FC = () => {
     <Backdrop>
       <AbsoluteFill style={{ transformOrigin: "0px 1080px", transform: `scale(${zoom.toFixed(4)})` }}>
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
-          <path d={bezierPath(SEQUENCES)} fill="none" stroke={C.rail} strokeWidth={STROKE} strokeLinecap="round" {...span(undraw, baselineDraw)} />
-          <path d={bezierPath(AGENT)} fill="none" stroke={C.indigo} strokeWidth={STROKE} strokeLinecap="round" {...span(undraw, draw)} />
+          <path d={bezierPath(SEQUENCES)} fill="none" stroke={ground.baseline} strokeWidth={STROKE} strokeLinecap="round" {...span(undraw, baselineDraw)} />
+          <path d={bezierPath(AGENT)} fill="none" stroke={ground.agent} strokeWidth={STROKE} strokeLinecap="round" {...span(undraw, draw)} />
         </svg>
 
         <div
@@ -134,7 +134,7 @@ export const ChartScene: React.FC = () => {
             fontSize: 377,
             lineHeight: 1,
             letterSpacing: "-0.04em",
-            color: C.indigo,
+            color: ground.agent,
             fontVariantNumeric: "tabular-nums",
             whiteSpace: "nowrap",
             opacity: figureIn * (1 - copyOut),
@@ -152,7 +152,7 @@ export const ChartScene: React.FC = () => {
             fontWeight: 400,
             fontSize: 40,
             lineHeight: "42px",
-            color: C.ink,
+            color: ground.ink,
             opacity: 1 - copyOut,
           }}
         >
@@ -162,7 +162,7 @@ export const ChartScene: React.FC = () => {
           style={{
             ...lineLabel,
             top: AGENT[3].y - 52 - LABEL_SIZE,
-            color: C.indigo,
+            color: ground.agent,
             opacity: 1 - copyOut,
           }}
         >
@@ -172,7 +172,7 @@ export const ChartScene: React.FC = () => {
           style={{
             ...lineLabel,
             top: SEQUENCES[3].y + 132,
-            color: C.sequences,
+            color: ground.baseline,
             opacity: 1 - copyOut,
           }}
         >
@@ -190,7 +190,7 @@ export const ChartScene: React.FC = () => {
             width: HEAD_R * 2,
             height: HEAD_R * 2,
             borderRadius: "50%",
-            background: C.indigo,
+            background: ground.agent,
             filter: flyBlur > 0.05 ? `blur(${flyBlur.toFixed(2)}px)` : undefined,
           }}
         />

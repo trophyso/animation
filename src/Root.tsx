@@ -62,14 +62,16 @@ import { TYPES_DURATION, TypesScene } from "./RewardsLaunchVideo/scenes/TypesSce
 import { CLAIM_DURATION, ClaimScene } from "./RewardsLaunchVideo/scenes/ClaimScene";
 import { CODE_DURATION, CodeScene } from "./RewardsLaunchVideo/scenes/CodeScene";
 import { OUTRO_DURATION as REWARDS_OUTRO_DURATION, OutroScene as RewardsOutroScene } from "./RewardsLaunchVideo/scenes/OutroScene";
-import { ONE_AGENT_PER_USER_DURATION, OneAgentPerUser } from "./OneAgentPerUser/OneAgentPerUser";
-import { SAME_PATH_DURATION as OAPU_SAME_PATH_DURATION, SamePathScene as OapuSamePathScene } from "./OneAgentPerUser/scenes/SamePathScene";
-import { FAN_OUT_DURATION as OAPU_FAN_OUT_DURATION, FanOutScene as OapuFanOutScene } from "./OneAgentPerUser/scenes/FanOutScene";
-import { ONE_AGENT_DURATION as OAPU_ONE_AGENT_DURATION, OneAgentScene as OapuOneAgentScene } from "./OneAgentPerUser/scenes/OneAgentScene";
-import { DECISION_DURATION as OAPU_DECISION_DURATION, DecisionScene as OapuDecisionScene } from "./OneAgentPerUser/scenes/DecisionScene";
-import { PUSH_DURATION as OAPU_PUSH_DURATION, PushScene as OapuPushScene } from "./OneAgentPerUser/scenes/PushScene";
-import { CHART_DURATION as OAPU_CHART_DURATION, ChartScene as OapuChartScene } from "./OneAgentPerUser/scenes/ChartScene";
-import { OUTRO_DURATION as OAPU_OUTRO_DURATION, OutroScene as OapuOutroScene } from "./OneAgentPerUser/scenes/OutroScene";
+import {
+  DEFAULT_VIDEO as OAPU_DEFAULT,
+  ONE_AGENT_SCENES as OAPU_SCENES,
+  OneAgentPerUser,
+  OneAgentPerUserScene,
+  calculateVideoMetadata as oapuMetadata,
+  sceneDuration as oapuSceneDuration,
+  videoSchema as oapuSchema,
+} from "./OneAgentPerUser/OneAgentPerUser";
+import { STORIES as OAPU_STORIES, STORY_KEYS as OAPU_STORY_KEYS } from "./OneAgentPerUser/stories";
 
 const achievementBadgeIconSchema = z.enum([
   "rocket",
@@ -103,29 +105,42 @@ const heroCompositionConfigSchema = z.object({
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* "One agent per user": switch story and sky in the props panel */}
       <Composition
         id="OneAgentPerUser"
         component={OneAgentPerUser}
-        durationInFrames={ONE_AGENT_PER_USER_DURATION}
+        schema={oapuSchema}
+        defaultProps={OAPU_DEFAULT}
+        calculateMetadata={oapuMetadata}
+        durationInFrames={1}
         fps={60}
         width={1920}
         height={1080}
       />
-      <Folder name="OneAgentPerUser-Scenes">
-        {[
-          ["OneAgentPerUser-SamePath", OapuSamePathScene, OAPU_SAME_PATH_DURATION],
-          ["OneAgentPerUser-FanOut", OapuFanOutScene, OAPU_FAN_OUT_DURATION],
-          ["OneAgentPerUser-OneAgent", OapuOneAgentScene, OAPU_ONE_AGENT_DURATION],
-          ["OneAgentPerUser-Decision", OapuDecisionScene, OAPU_DECISION_DURATION],
-          ["OneAgentPerUser-Push", OapuPushScene, OAPU_PUSH_DURATION],
-          ["OneAgentPerUser-Chart", OapuChartScene, OAPU_CHART_DURATION],
-          ["OneAgentPerUser-Outro", OapuOutroScene, OAPU_OUTRO_DURATION],
-        ].map(([id, component, duration]) => (
+      <Folder name="OneAgentPerUser-Stories">
+        {OAPU_STORY_KEYS.map((key) => (
           <Composition
-            key={id as string}
-            id={id as string}
-            component={component as React.FC}
-            durationInFrames={duration as number}
+            key={key}
+            id={`OneAgentPerUser-${OAPU_STORIES[key].name}`}
+            component={OneAgentPerUser}
+            schema={oapuSchema}
+            defaultProps={{ story: key, sky: "story" as const }}
+            calculateMetadata={oapuMetadata}
+            durationInFrames={1}
+            fps={60}
+            width={1920}
+            height={1080}
+          />
+        ))}
+      </Folder>
+      <Folder name="OneAgentPerUser-Scenes">
+        {OAPU_SCENES.map(([scene, name]) => (
+          <Composition
+            key={scene}
+            id={`OneAgentPerUser-${name.replace(/\s+/g, "")}`}
+            component={OneAgentPerUserScene}
+            defaultProps={{ ...OAPU_DEFAULT, scene }}
+            durationInFrames={oapuSceneDuration(scene)}
             fps={60}
             width={1920}
             height={1080}

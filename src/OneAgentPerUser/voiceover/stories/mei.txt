@@ -1,0 +1,7 @@
+# Mei: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: female
+
+@ Decision
+[warmly] Mei's agent sees her sessions are getting shorter… It picks push and reaches her at seven fifteen, right before she plays.

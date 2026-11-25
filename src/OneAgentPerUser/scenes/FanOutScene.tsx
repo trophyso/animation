@@ -4,10 +4,9 @@ import { displayFont, sansFont } from "../../daylight/fonts";
 import { lerp, prog } from "../../daylight/motion";
 import { EASE, alpha } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
-import { C, COPY, CUE, EASE_IN, FPS, H, SHADOW_CARD, SHADOW_PILL, W, at, f } from "../script";
-
-export const FAN_OUT_DURATION = f(CUE.decision - CUE.fanOut);
-const T = (s: number) => at("fanOut", s);
+import { C, EASE_IN, FPS, H, SHADOW_CARD, SHADOW_PILL, W, f } from "../script";
+import { fanFor } from "../stories";
+import { useScene } from "../video";
 
 /** Geometry (px) */
 const DOT_LAND = { x: 560, y: 420 };
@@ -41,6 +40,9 @@ const branchPath = (from: { x: number; y: number }, to: { x: number; y: number }
  */
 export const FanOutScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { T, ground, story } = useScene("fanOut");
+  // The story's person first, then four others
+  const users = fanFor(story.key).map((s) => ({ initial: s.name[0], name: s.name, ...s.fan }));
 
   const FULL = Math.hypot(W, H) * 1.1;
   // The indigo ground collapses into the agent node
@@ -59,7 +61,7 @@ export const FanOutScene: React.FC = () => {
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
         {/* The agent's line takes over the rail from the left */}
         {takeover > 0 ? (
-          <line x1={-10} x2={lerp(takeover, -10, dot.x)} y1={dot.y} y2={dot.y} stroke={C.indigo} strokeWidth={LINE_STROKE} />
+          <line x1={-10} x2={lerp(takeover, -10, dot.x)} y1={dot.y} y2={dot.y} stroke={ground.agent} strokeWidth={LINE_STROKE} />
         ) : null}
         {/* Five branches */}
         {PILL_Y.map((y, i) => {
@@ -69,7 +71,7 @@ export const FanOutScene: React.FC = () => {
               key={i}
               d={branchPath(dot, { x: PILL_X, y })}
               fill="none"
-              stroke={i % 2 === 0 ? C.indigo : C.indigoLight}
+              stroke={i % 2 === 0 ? ground.agent : ground.agentLight}
               strokeWidth={BRANCH_STROKE}
               strokeLinecap="round"
               pathLength={1}
@@ -82,10 +84,10 @@ export const FanOutScene: React.FC = () => {
       </svg>
 
       {/* What each user's agent decided */}
-      {COPY.users.map((u, i) => {
+      {users.map((u, i) => {
         // Pops in as its path reaches it
         const p = spring({ frame: frame - T(branchStart(i) + BRANCH_DRAW * 0.8), fps: FPS, config: CARD_SPRING });
-        const quiet = "quiet" in u && u.quiet;
+        const quiet = Boolean(u.quiet);
         return (
           <div
             key={u.name}
@@ -112,7 +114,7 @@ export const FanOutScene: React.FC = () => {
                 width: AVATAR,
                 height: AVATAR,
                 borderRadius: "50%",
-                background: quiet ? C.rail : C.indigo,
+                background: quiet ? C.rail : ground.brand,
                 color: "#ffffff",
                 display: "inline-flex",
                 alignItems: "center",
@@ -135,8 +137,8 @@ export const FanOutScene: React.FC = () => {
                     fontSize: 17,
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
-                    color: quiet ? C.labelMuted : C.indigo,
-                    background: quiet ? alpha(C.rail, 0.25) : alpha(C.indigo, 0.09),
+                    color: quiet ? C.labelMuted : ground.brand,
+                    background: quiet ? alpha(C.rail, 0.25) : alpha(ground.brand, 0.09),
                     borderRadius: 9999,
                     padding: "5px 11px",
                   }}
@@ -175,7 +177,7 @@ export const FanOutScene: React.FC = () => {
           width: dotR * 2,
           height: dotR * 2,
           borderRadius: "50%",
-          background: C.indigo,
+          background: ground.flood,
         }}
       />
     </Backdrop>

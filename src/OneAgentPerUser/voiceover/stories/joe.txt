@@ -1,0 +1,7 @@
+# Joe: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: male
+
+@ Decision
+[warmly] Joe's agent sees he keeps coming back to two flights to Rome… It picks push and reaches him at seven thirty, while he's planning his trip.

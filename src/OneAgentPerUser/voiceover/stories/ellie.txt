@@ -1,0 +1,7 @@
+# Ellie: the story's own lines, dropped into ../script.txt by label.
+# The pins in ../../stories.ts (voice) name phrases here; keep them in step.
+# The narrator matches the person (Story.narrator in ../../stories.ts).
+voice: female
+
+@ Decision
+[warmly] Ellie's agent sees she's just eighty points from Gold, with double points this weekend… It picks email and reaches her at seven thirty, with one clear offer.
