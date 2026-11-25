@@ -1,0 +1,33 @@
+# One AI lifecycle agent per user: voiceover script
+#
+# The whole script is voiced as ONE take, so tone and pace stay consistent.
+# "@ Label" lines just mark sections; each section becomes its own paragraph,
+# and the paragraph break gives a natural pause between sections.
+#
+# The model is eleven_v3: [excited] and other audio tags set the delivery, and
+# pauses inside a line come from "…" and dashes (v3 has no break tags).
+#
+# The video follows the voice: SYNC in ../script.ts ties visual moments to
+# phrases in this script (e.g. the ring lands on Push on "push") and holds the
+# animation as long as needed. If you reword a phrase that SYNC names, update
+# SYNC too.
+#
+# Regenerate after editing: npm run voiceover
+
+@ Same path
+[excited] Your lifecycle marketing tools send every user down the same path… Same steps. Same timing. Same message.
+
+@ One agent
+Trophy deploys an AI lifecycle agent for each user — that creates personalized journeys just for them!
+
+@ Decision
+Mei's agent sees her sessions are getting shorter… It picks push and reaches her at seven fifteen, right before she plays.
+
+@ Result
+Trophy's AI lifecycle marketing agents achieve up to forty percent higher engagement than with sequences!
+
+@ Logo
+Stop sending generic messaging users ignore.
+
+@ Call to action
+Book a demo to see if Trophy's AI lifecycle agents can outperform your current messaging tools!
