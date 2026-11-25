@@ -1,4 +1,4 @@
-import { loadFont } from '@remotion/google-fonts/Montserrat';
+import { loadFont } from '../fonts/Montserrat';
 import { AbsoluteFill } from 'remotion';
 import { Theme } from '../types/theme';
 

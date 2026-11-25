@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
-import { loadFont } from "@remotion/google-fonts/Montserrat";
+import { loadFont } from "../fonts/Montserrat";
 import { Mail, Trophy, BarChart2, RefreshCw } from "lucide-react";
 
 const { fontFamily } = loadFont();

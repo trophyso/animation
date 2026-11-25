@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, Img, staticFile, spring, useVideoConfig } from "remotion";
-import { loadFont } from "@remotion/google-fonts/Montserrat";
+import { loadFont } from "../fonts/Montserrat";
 
 const { fontFamily } = loadFont();
 

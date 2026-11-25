@@ -37,6 +37,17 @@ npx remotion render
 npx remotion upgrade
 ```
 
+## Fonts
+
+Fonts are bundled locally with [@fontsource](https://fontsource.org) packages, so renders never fetch fonts from the network. Import a font's loader from `src/fonts/<Family>.ts` and use it like `@remotion/google-fonts`:
+
+```ts
+import { loadFont } from "../fonts/FunnelDisplay";
+const { fontFamily } = loadFont("normal", { weights: ["400", "500"] });
+```
+
+To add a family, install `@fontsource/<family>` with an exact version and add a module in `src/fonts` that imports the weights' CSS and calls `createLocalFont`.
+
 ## Docs
 
 Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).

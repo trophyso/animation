@@ -1,7 +1,7 @@
-import { loadFont as loadJakarta } from "@remotion/google-fonts/PlusJakartaSans";
-import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
-import { loadFont as loadSerif } from "@remotion/google-fonts/Lora";
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
+import { loadFont as loadJakarta } from "../fonts/PlusJakartaSans";
+import { loadFont as loadMono } from "../fonts/JetBrainsMono";
+import { loadFont as loadSerif } from "../fonts/Lora";
+import { loadFont as loadInter } from "../fonts/Inter";
 
 export const { fontFamily: sansFont } = loadJakarta("normal", {
   weights: ["400", "500", "600", "700", "800"],

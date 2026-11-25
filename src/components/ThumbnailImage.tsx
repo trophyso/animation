@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { AbsoluteFill, continueRender, delayRender, random } from "remotion";
-import { loadFont as loadDisplayFont } from "@remotion/google-fonts/FunnelDisplay";
-import { loadFont as loadMonoFont } from "@remotion/google-fonts/SplineSansMono";
+import { loadFont as loadDisplayFont } from "../fonts/FunnelDisplay";
+import { loadFont as loadMonoFont } from "../fonts/SplineSansMono";
 import {
     GRAIN,
     OG_INK,
