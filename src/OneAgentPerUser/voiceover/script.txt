@@ -15,19 +15,19 @@
 # Regenerate after editing: npm run voiceover
 
 @ Same path
-[excited] Your lifecycle marketing tools send every user down the same path… Same steps. Same timing. Same message.
+[casually, a little exasperated] Your lifecycle marketing tools send every user down the same path… Same steps, same timing, same message.
 
 @ One agent
-Trophy deploys an AI lifecycle agent for each user — that creates personalized journeys just for them!
+[excited] Trophy deploys an AI lifecycle marketing agent for each user — that creates personalized journeys just for them!
 
 @ Decision
-Mei's agent sees her sessions are getting shorter… It picks push and reaches her at seven fifteen, right before she plays.
+[warmly] Mei's agent sees her sessions are getting shorter… It picks push and reaches her at seven fifteen, right before she plays.
 
 @ Result
-Trophy's AI lifecycle marketing agents achieve up to forty percent higher engagement than with sequences!
+[enthusiastically] Trophy's agents achieve up to forty percent higher engagement than with sequences!
 
 @ Logo
-Stop sending generic messaging users ignore.
+[playfully] Stop sending generic messages users ignore.
 
 @ Call to action
-Book a demo to see if Trophy's AI lifecycle agents can outperform your current messaging tools!
+[excited] Book a demo to see if Trophy's agents can outperform your current messaging tools! [short pause]

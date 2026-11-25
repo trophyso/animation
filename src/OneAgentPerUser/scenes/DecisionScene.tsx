@@ -9,43 +9,91 @@ import { C, COPY, CUE, EASE_IN, H, SHADOW_CARD, W, at, f } from "../script";
 export const DECISION_DURATION = f(CUE.push - CUE.decision);
 const T = (s: number) => at("decision", s);
 
-/** World geometry (px, camera at rest = identity) */
-const LINE_Y = 452;
-const LINE_STROKE = 10;
-const CARD = { x: 423, y: 180, w: 1074, h: 547, r: 36, pad: 60 };
+/** Mei's card is drawn in base units, then scaled up by K */
+const K = 1.1;
+const BASE = { w: 1074, h: 643, pad: 60 };
+/** Row tops in base units: Streak, Sessions (double height, with its chart), Usually plays */
+const ROWS = [
+  { top: 192, h: 96 },
+  { top: 288, h: 192 },
+  { top: 480, h: 96 },
+];
 const AVATAR = 82;
-const DIVIDERS = [372, 468, 562];
-const ROW_H = 96;
-const OPTION = { y: 884, w: 350, h: 174, r: 19 };
+/** The session chart inside the Sessions row, base units */
+const SPARK = { x: 60, y: 288 + 102, w: 954, h: 80 };
+
+/** World geometry (px, camera at rest = identity) */
+const CARD = { x: Math.round(960 - (BASE.w * K) / 2), y: 120, w: BASE.w * K, h: BASE.h * K, r: 36 * K };
+const LINE_Y = CARD.y + 272 * K;
+const LINE_STROKE = 10;
+const OPTION = { y: 896, w: 350, h: 174, r: 19 };
 const OPTION_X = [672, 1071, 1471];
 const CONNECTOR_STROKE = 13;
 /** The scene opens zoomed out to 0.85 about the top centre */
 const OPEN_SCALE = 0.85;
 /** Camera after the lean towards the options: scale about the origin, then translate */
-const LEAN = { scale: 1.276, x: -632, y: -557 };
+const LEAN = { scale: 1.276, x: -632, y: -572 };
 /** Where the chosen card is on screen after the lean, and where the exit carries it */
 const PUSH_ON_SCREEN = { x: 970, y: 681 };
 const PUSH_EXIT = { x: 1131, y: 399, scale: 0.75 };
 
 const connectorPath = (): string => {
-  const x0 = CARD.x + 555;
+  const x0 = CARD.x + 555 * K;
   const y0 = CARD.y + CARD.h;
   const x1 = OPTION_X[1] + OPTION.w / 2;
   const y1 = OPTION.y;
   return `M ${x0} ${y0} C ${x0} ${y0 + 95}, ${x1} ${y1 - 95}, ${x1} ${y1}`;
 };
 
-/** A short falling sparkline for "Getting shorter" */
-const Spark: React.FC = () => (
-  <svg width={62} height={26} viewBox="0 0 62 26" style={{ display: "block" }}>
-    <path d="M2 4 C 12 4, 15 12, 24 14 S 48 20, 60 23" fill="none" stroke={C.indigo} strokeWidth={4} strokeLinecap="round" />
-  </svg>
-);
+/** Mei's minutes per session, drawn left to right as `p` goes 0 → 1 */
+const SessionChart: React.FC<{ p: number; labels: number }> = ({ p, labels }) => {
+  const data = COPY.mei.sessions;
+  // Scaled to the data's range so the drop reads clearly
+  const lo = 2.5;
+  const hi = 10;
+  const pts = data.map((v, i) => ({ x: SPARK.x + (i / (data.length - 1)) * SPARK.w, y: SPARK.y + (1 - (v - lo) / (hi - lo)) * SPARK.h }));
+  // Head of the line along the polyline
+  const span = p * (pts.length - 1);
+  const seg = Math.min(pts.length - 2, Math.floor(span));
+  const k = span - seg;
+  const head = { x: lerp(k, pts[seg].x, pts[seg + 1].x), y: lerp(k, pts[seg].y, pts[seg + 1].y) };
+  const drawn = [...pts.slice(0, seg + 1), head];
+  const line = drawn.map((q, i) => `${i ? "L" : "M"} ${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" ");
+  const floor = SPARK.y + SPARK.h + 8;
+  const area = `${line} L ${head.x.toFixed(1)} ${floor} L ${pts[0].x} ${floor} Z`;
+  return (
+    <svg width={BASE.w} height={BASE.h} viewBox={`0 0 ${BASE.w} ${BASE.h}`} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+      <defs>
+        <linearGradient id="mei-area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={C.indigo} stopOpacity={0.16} />
+          <stop offset="1" stopColor={C.indigo} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      {p > 0 ? (
+        <>
+          <path d={area} fill="url(#mei-area)" />
+          <path d={line} fill="none" stroke={C.indigo} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" />
+          {pts.map((q, i) =>
+            i / (pts.length - 1) <= p ? <circle key={i} cx={q.x} cy={q.y} r={5.5} fill={C.card} stroke={C.indigo} strokeWidth={3.5} /> : null,
+          )}
+          <circle cx={head.x} cy={head.y} r={10} fill={C.indigo} />
+        </>
+      ) : null}
+      <text x={pts[0].x + 16} y={pts[0].y - 16} fontFamily={sansFont} fontSize={24} fill={C.labelMuted} opacity={labels}>
+        {`${Math.round(data[0])} min`}
+      </text>
+      <text x={pts[pts.length - 1].x} y={pts[pts.length - 1].y - 22} textAnchor="end" fontFamily={sansFont} fontSize={26} fontWeight={600} fill={C.indigo} opacity={labels}>
+        {`${Math.round(data[data.length - 1])} min`}
+      </text>
+    </svg>
+  );
+};
 
 /**
  * S4 · What the agent knows, and what it decides. The indigo ground shrinks
- * into Mei's card, the card fills in, a connector drops to the channel
- * options, the camera leans in, and the choice slides from Email to Push.
+ * into Mei's card, the card fills in, her session lengths draw in as a
+ * falling line, a connector drops to the channel options, the camera leans
+ * in, and the choice slides from Email to Push.
  */
 export const DecisionScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -82,6 +130,9 @@ export const DecisionScene: React.FC = () => {
   const morphColor = interpolateColors(whiten, [0, 0.6, 1], [C.indigo, "#c8c4ee", C.card]);
 
   const lineP = prog(frame, T(12.4), f(0.15), EASE.OUT);
+  // Her session chart draws on "sessions are getting shorter"
+  const chartP = prog(frame, T(13.6), f(1.0), EASE.IN_OUT);
+  const chartLabels = prog(frame, T(14.35), f(0.3), EASE.OUT);
   const connectorP = prog(frame, T(14.6), f(0.25), EASE.OUT);
   const optionsIn = prog(frame, T(14.6), f(0.25), EASE.OUT);
 
@@ -92,9 +143,9 @@ export const DecisionScene: React.FC = () => {
   const settle = prog(frame, T(15.24), f(0.08), EASE.SOFT);
 
   // Exit: the camera pulls back about the chosen card, then whips up and everything fades
-  const pullBack = prog(frame, T(16.45), f(0.3), EASE.SOFT);
-  const sweep = prog(frame, T(16.45), f(0.3), EASE_IN);
-  const allOut = prog(frame, T(16.66), f(0.14), EASE.SOFT);
+  const pullBack = prog(frame, T(16.15), f(0.3), EASE.SOFT);
+  const sweep = prog(frame, T(16.15), f(0.3), EASE_IN);
+  const allOut = prog(frame, T(16.36), f(0.14), EASE.SOFT);
   const exitScale = lerp(pullBack, 1, PUSH_EXIT.scale);
   const exitX = (PUSH_EXIT.x - PUSH_ON_SCREEN.x) * pullBack;
   const exitY = (PUSH_EXIT.y - PUSH_ON_SCREEN.y) * sweep;
@@ -167,60 +218,69 @@ export const DecisionScene: React.FC = () => {
                 opacity: morphDone ? 1 : 0,
               }}
             >
-              <div style={{ position: "absolute", left: CARD.pad + 3, top: 59, display: "flex", alignItems: "center", gap: 28, ...fadeUp(frame, T(12.9), f(0.35), 10, EASE.OUT) }}>
-                <span
-                  style={{
-                    width: AVATAR,
-                    height: AVATAR,
-                    borderRadius: "50%",
-                    background: C.avatarBg,
-                    color: C.avatarInk,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: sansFont,
-                    fontWeight: 400,
-                    fontSize: 36,
-                  }}
-                >
-                  {COPY.mei.initial}
-                </span>
-                <span>
-                  <div style={{ fontFamily: sansFont, fontWeight: 500, fontSize: 51, lineHeight: "56px", color: C.ink }}>{COPY.mei.name}</div>
-                  <div style={{ fontFamily: sansFont, fontWeight: 400, fontSize: 28.5, lineHeight: "34px", color: C.textSub, marginTop: 2 }}>{COPY.mei.sub}</div>
-                </span>
-              </div>
-              {DIVIDERS.map((y) => (
-                <div key={y} style={{ position: "absolute", left: CARD.pad, right: CARD.pad, top: y - CARD.y, height: 2, background: C.divider, ...fadeUp(frame, T(12.95), f(0.3), 0) }} />
-              ))}
-              {COPY.mei.rows.map((row, i) => (
-                <div
-                  key={row.label}
-                  style={{
-                    position: "absolute",
-                    left: CARD.pad,
-                    right: CARD.pad,
-                    top: DIVIDERS[i] - CARD.y,
-                    height: ROW_H,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    fontFamily: sansFont,
-                    fontSize: 35,
-                    ...fadeUp(frame, T(13.0 + i * 0.07), f(0.35), 10, EASE.OUT),
-                  }}
-                >
-                  <span style={{ color: C.textRow, fontWeight: 400 }}>{row.label}</span>
-                  {"trend" in row && row.trend ? (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 20, color: C.indigo, fontWeight: 400 }}>
-                      <Spark />
-                      {row.value}
-                    </span>
-                  ) : (
-                    <span style={{ color: C.textValue, fontWeight: 400 }}>{row.value}</span>
-                  )}
+              <div style={{ position: "absolute", left: 0, top: 0, width: BASE.w, height: BASE.h, transformOrigin: "0 0", transform: `scale(${K})` }}>
+                <div style={{ position: "absolute", left: BASE.pad + 3, top: 59, display: "flex", alignItems: "center", gap: 28, ...fadeUp(frame, T(12.6), f(0.35), 10, EASE.OUT) }}>
+                  <span
+                    style={{
+                      width: AVATAR,
+                      height: AVATAR,
+                      borderRadius: "50%",
+                      background: C.avatarBg,
+                      color: C.avatarInk,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: sansFont,
+                      fontWeight: 400,
+                      fontSize: 36,
+                    }}
+                  >
+                    {COPY.mei.initial}
+                  </span>
+                  <span>
+                    <div style={{ fontFamily: sansFont, fontWeight: 500, fontSize: 51, lineHeight: "56px", color: C.ink }}>{COPY.mei.name}</div>
+                    <div style={{ fontFamily: sansFont, fontWeight: 400, fontSize: 28.5, lineHeight: "34px", color: C.textSub, marginTop: 2 }}>{COPY.mei.sub}</div>
+                  </span>
                 </div>
-              ))}
+                {ROWS.map((r) => (
+                  <div key={r.top} style={{ position: "absolute", left: BASE.pad, right: BASE.pad, top: r.top, height: 2, background: C.divider, ...fadeUp(frame, T(12.65), f(0.3), 0) }} />
+                ))}
+                {COPY.mei.rows.map((row, i) => {
+                  const isTrend = "trend" in row && row.trend;
+                  const streak = Math.round(14 * prog(frame, T(12.7), f(0.6), EASE.OUT));
+                  return (
+                    <div
+                      key={row.label}
+                      style={{
+                        position: "absolute",
+                        left: BASE.pad,
+                        right: BASE.pad,
+                        top: ROWS[i].top,
+                        height: 96,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        fontFamily: sansFont,
+                        fontSize: 35,
+                        ...fadeUp(frame, T(12.7 + i * 0.07), f(0.35), 10, EASE.OUT),
+                      }}
+                    >
+                      <span style={{ color: C.textRow, fontWeight: 400 }}>{row.label}</span>
+                      {isTrend ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 14, color: C.indigo, fontWeight: 500, opacity: chartLabels }}>
+                          <svg width={30} height={30} viewBox="0 0 30 30" style={{ display: "block" }}>
+                            <path d="M15 4 V24 M6 16 L15 25 L24 16" fill="none" stroke={C.indigo} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          {row.value}
+                        </span>
+                      ) : (
+                        <span style={{ color: C.textValue, fontWeight: 400, fontVariantNumeric: "tabular-nums" }}>{i === 0 ? `${streak} days` : row.value}</span>
+                      )}
+                    </div>
+                  );
+                })}
+                <SessionChart p={chartP} labels={chartLabels} />
+              </div>
             </div>
           </div>
 

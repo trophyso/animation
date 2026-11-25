@@ -11,7 +11,7 @@
  *   src/OneAgentPerUser/voiceover/timings.ts   (read by the composition)
  *
  * Env (shell or .env): ELEVENLABS_API_KEY (required), ELEVENLABS_VOICE_ID,
- * ELEVENLABS_MODEL_ID. Pass --force to regenerate an unchanged script.
+ * ELEVENLABS_MODEL_ID, ELEVENLABS_SEED (default 7; a different seed gives a different take). Pass --force to regenerate an unchanged script.
  */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -36,8 +36,13 @@ const loadDotEnv = () => {
 loadDotEnv();
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
-/** "Liam": young, energetic American, from the ElevenLabs default library */
-const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "TX3LPaxmHKxFdv7VOQHJ";
+/**
+ * "Lucy - Fresh & Casual": young, energetic British woman from the ElevenLabs
+ * voice library. Other casual British voices tried: Verity oW8bn5YtBB89X2nJ0DT9,
+ * Cass WbwwsO6cCyUItWWlHOKN, Charlotte 6fZce9LFNG3iEITDfqZZ; earlier takes used
+ * Alice Xb7hH8MSUJpSbSDYk0k2 and Liam TX3LPaxmHKxFdv7VOQHJ.
+ */
+const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "lcMyyd2HUfFzxdCaC4Ta";
 /**
  * eleven_v3 takes audio tags like [excited] for delivery. It has no
  * <break /> tags: pause with "…", dashes and paragraph breaks.
@@ -45,13 +50,14 @@ const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "TX3LPaxmHKxFdv7VOQHJ";
 const MODEL_ID = process.env.ELEVENLABS_MODEL_ID || "eleven_v3";
 const IS_V3 = MODEL_ID.startsWith("eleven_v3");
 /**
- * An upbeat founder read. v3 stability is 0 (Creative), 0.5 (Natural) or
- * 1 (Robust); the audio tags drive the energy.
+ * An off-the-cuff founder read. v3 stability is 0 (Creative), 0.5 (Natural)
+ * or 1 (Robust): Creative is the most expressive and least even, which is the
+ * point; the audio tags drive the mood of each section.
  */
 const VOICE_SETTINGS = IS_V3
-  ? { stability: 0.5, similarity_boost: 0.75, use_speaker_boost: true, speed: 1.12 }
+  ? { stability: 0, similarity_boost: 0.75, use_speaker_boost: true, speed: 1.05 }
   : { stability: 0.3, similarity_boost: 0.75, style: 0.5, use_speaker_boost: true, speed: 1.12 };
-const SEED = 7;
+const SEED = Number(process.env.ELEVENLABS_SEED || 7);
 const FORCE = process.argv.includes("--force");
 
 if (!API_KEY) {

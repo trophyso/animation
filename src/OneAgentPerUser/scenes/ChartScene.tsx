@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { displayFont, sansFont } from "../../daylight/fonts";
-import { blurIn, fadeUp, lerp, prog } from "../../daylight/motion";
+import { lerp, prog } from "../../daylight/motion";
 import { EASE, type Bez } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
+import { Words } from "../components/Words";
 import { C, COPY, CUE, EASE_IN, H, W, at, f } from "../script";
 
 export const CHART_DURATION = f(CUE.outro - CUE.chart);
@@ -34,8 +35,8 @@ const LABEL_RIGHT = 1800;
 const LABEL_SIZE = 62;
 const STROKE = 9;
 const HEAD_R = 12;
-/** Where the head dot flies on exit: the centre of the outro's logo mark */
-export const DOT_TARGET: Pt = { x: 727, y: 540 };
+/** Where the head dot flies on exit: the centre of the frame, where the outro blooms from it */
+export const DOT_TARGET: Pt = { x: 960, y: 540 };
 /** Matches the source count: 18% of the way at 0.1 s, 57% at 0.3 s, 94% at 0.7 s */
 const EASE_OUT_QUAD: Bez = [0.25, 0.46, 0.45, 0.94];
 /** The chart opens 4.5% larger and settles back about the bottom-left corner */
@@ -100,12 +101,11 @@ export const ChartScene: React.FC = () => {
   const draw = prog(frame, T(19.6), f(0.9), EASE_OUT_QUAD);
   const figure = Math.round(COPY.chart.figure * draw);
   const figureIn = prog(frame, T(19.62), f(0.12), EASE.SOFT);
-  const caption = fadeUp(frame, T(21.35), f(0.3), 14, EASE.OUT);
+  // On screen while the figure counts up
   const settle = prog(frame, T(21.4), f(2.2), EASE.IN_OUT);
   const zoom = lerp(settle, OPEN_SCALE, 1);
-  const baselineDraw = prog(frame, T(23.5), f(0.6), EASE.OUT);
-  const agentText = blurIn(frame, T(21.5), f(0.45), 0);
-  const baselineText = blurIn(frame, T(23.7), f(0.45), 0);
+  // The comparison follows soon after the agent line, ahead of "than with sequences"
+  const baselineDraw = prog(frame, T(21.7), f(0.6), EASE.OUT);
 
   // Exit: lines retract from the left, copy blurs away, the head dot flies to the logo
   const undraw = prog(frame, T(25.22), f(0.25), EASE_IN);
@@ -153,33 +153,30 @@ export const ChartScene: React.FC = () => {
             fontSize: 40,
             lineHeight: "42px",
             color: C.ink,
-            ...caption,
-            opacity: (caption.opacity as number) * (1 - copyOut),
+            opacity: 1 - copyOut,
           }}
         >
-          {COPY.chart.caption}
+          <Words text={COPY.chart.caption} start={T(19.7)} />
         </div>
         <div
           style={{
             ...lineLabel,
             top: AGENT[3].y - 52 - LABEL_SIZE,
             color: C.indigo,
-            ...agentText,
-            opacity: (agentText.opacity as number) * (1 - copyOut),
+            opacity: 1 - copyOut,
           }}
         >
-          {COPY.chart.agent}
+          <Words text={COPY.chart.agent} start={T(21.5)} />
         </div>
         <div
           style={{
             ...lineLabel,
             top: SEQUENCES[3].y + 132,
             color: C.sequences,
-            ...baselineText,
-            opacity: (baselineText.opacity as number) * (1 - copyOut),
+            opacity: 1 - copyOut,
           }}
         >
-          {COPY.chart.baseline}
+          <Words text={COPY.chart.baseline} start={T(21.9)} />
         </div>
       </AbsoluteFill>
 

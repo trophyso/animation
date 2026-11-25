@@ -1,41 +1,53 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { displayFont } from "../../daylight/fonts";
+import { displayFont, sansFont } from "../../daylight/fonts";
 import { Logo } from "../../daylight/Logo";
 import { lerp, prog, revealLeftToRight } from "../../daylight/motion";
 import { EASE } from "../../daylight/tokens";
 import { Backdrop } from "../components/Backdrop";
 import { Cursor } from "../components/Cursor";
+import { Words, wordCount } from "../components/Words";
 import { C, COPY, CUE, EASE_IN, at, f } from "../script";
 import { DOT_TARGET } from "./ChartScene";
 
 export const OUTRO_DURATION = f(CUE.end - CUE.outro);
 const T = (s: number) => at("outro", s);
 
-const LOGO_W = 593;
+/** The close: logo, button and domain stacked about the centre */
+const LOGO_W = 470;
 const LOGO_H = (LOGO_W * 155) / 596;
-const LOGO_LEFT = 960 - LOGO_W / 2;
-const LOGO_TOP = 540 - LOGO_H / 2;
+const LOGO_TOP = 300;
 /** The mark's centre inside the logo box (viewBox 60,77 of 596x155) */
 const MARK_ORIGIN = `${((60 / 596) * 100).toFixed(2)}% ${((77 / 155) * 100).toFixed(2)}%`;
-const BUTTON = { w: 398, h: 102, cx: 961, cy: 540 };
-const CURSOR_FROM = { x: 1560, y: 860 };
-const CURSOR_TO = { x: 1112, y: 530 };
+const BUTTON = { w: 398, h: 102, cx: 960, cy: 606 };
+const DOMAIN_Y = 712;
+const CURSOR_FROM = { x: 1560, y: 900 };
+const CURSOR_TO = { x: 1108, y: 598 };
+
+const STATEMENT_SIZE = 112;
 
 const hidden: React.CSSProperties = { opacity: 0 };
 
-/** S7 · Brand close and the call to action, clicked */
+/**
+ * S7 · The close. The chart's dot blooms into the statement, written in word
+ * by word; it clears for the logo, the call to action (clicked) and the
+ * domain.
+ */
 export const OutroScene: React.FC = () => {
   const frame = useCurrentFrame();
 
   const glow = prog(frame, 0, f(0.1), EASE.SOFT);
-  // The chart's dot lands here and blooms into a lavender disc behind the mark
+  // The chart's dot lands here and blooms into a lavender disc
   const bloom = prog(frame, T(25.6), f(0.45), EASE.OUT);
   const bloomFade = prog(frame, T(25.6), f(0.45), [0, 0, 1, 1]);
-  const markIn = prog(frame, T(25.7), f(0.25), EASE.OUT);
-  const wordIn = prog(frame, T(25.95), f(0.3), EASE.MOVE);
-  const logoOut = prog(frame, T(27.68), f(0.2), EASE_IN);
-  const buttonIn = prog(frame, T(28.0), f(0.15), EASE.OUT);
+
+  // Statement
+  const statementOut = prog(frame, T(27.3), f(0.25), EASE_IN);
+
+  // Logo, button, domain
+  const markIn = prog(frame, T(27.55), f(0.25), EASE.OUT);
+  const wordIn = prog(frame, T(27.75), f(0.3), EASE.MOVE);
+  const buttonIn = prog(frame, T(28.0), f(0.18), EASE.OUT);
   const cursorP = prog(frame, T(28.15), f(0.8), EASE.MOVE);
   const press = prog(frame, T(29.1), f(0.08), EASE.OUT) * (1 - prog(frame, T(29.25), f(0.15), EASE.OUT));
 
@@ -62,18 +74,36 @@ export const OutroScene: React.FC = () => {
         />
       ) : null}
 
-      {/* Logo: the mark pops from the dot, the wordmark wipes in */}
-      <div
-        style={{
-          position: "absolute",
-          left: LOGO_LEFT,
-          top: LOGO_TOP - logoOut * 135,
-          width: LOGO_W,
-          height: LOGO_H,
-          opacity: 1 - logoOut,
-          filter: logoOut > 0 ? `blur(${(logoOut * 10).toFixed(2)}px)` : undefined,
-        }}
-      >
+      {/* "Stop sending generic sequences users ignore." */}
+      {statementOut < 1 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 540 - STATEMENT_SIZE,
+            textAlign: "center",
+            fontFamily: displayFont,
+            fontWeight: 400,
+            fontSize: STATEMENT_SIZE,
+            lineHeight: `${STATEMENT_SIZE}px`,
+            letterSpacing: "-0.035em",
+            color: C.ink,
+            opacity: 1 - statementOut,
+            transform: `translateY(${(-statementOut * 90).toFixed(2)}px)`,
+            filter: statementOut > 0 ? `blur(${(statementOut * 12).toFixed(2)}px)` : undefined,
+          }}
+        >
+          {COPY.statement.map((line, k) => (
+            <div key={line}>
+              <Words text={line} start={T(25.7)} index={wordCount(COPY.statement.slice(0, k))} />
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {/* Logo: the mark pops, the wordmark wipes in */}
+      <div style={{ position: "absolute", left: 960 - LOGO_W / 2, top: LOGO_TOP, width: LOGO_W, height: LOGO_H }}>
         <div style={{ position: "absolute", inset: 0, transformOrigin: MARK_ORIGIN, transform: `scale(${lerp(markIn, 0.3, 1).toFixed(4)})`, opacity: markIn }}>
           <Logo width={LOGO_W} color={C.ink} word={hidden} />
         </div>
@@ -106,6 +136,24 @@ export const OutroScene: React.FC = () => {
         }}
       >
         {COPY.cta}
+      </div>
+
+      {/* The website, for anyone who'd rather look first */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: DOMAIN_Y,
+          textAlign: "center",
+          fontFamily: sansFont,
+          fontWeight: 500,
+          fontSize: 40,
+          letterSpacing: "-0.005em",
+          color: C.textSub,
+        }}
+      >
+        <Words text={COPY.domain} start={T(29.3)} />
       </div>
 
       {cursorP > 0 ? <Cursor x={cursor.x} y={cursor.y} style={{ filter: `drop-shadow(0 4px 6px rgba(0,0,0,0.3))${cursorBlur > 0.2 ? ` blur(${cursorBlur.toFixed(2)}px)` : ""}` }} /> : null}

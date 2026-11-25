@@ -15,7 +15,7 @@ export const ONE_AGENT_PER_USER_DURATION = TOTAL_FRAMES;
 
 /**
  * Scenes are hard cuts at the source's cue points; every scene paints its own
- * ground and handles its own exit (the fan node swelling to indigo, the
+ * ground and handles its own exit (the agent dot flooding the frame with indigo and collapsing back, the
  * decision and chart frames blurring away), so no transition layer is needed.
  */
 export const OneAgentPerUser: React.FC = () => (
@@ -24,11 +24,11 @@ export const OneAgentPerUser: React.FC = () => (
     <Sequence name="Same path" from={f(CUE.samePath)} durationInFrames={SAME_PATH_DURATION}>
       <SamePathScene />
     </Sequence>
-    <Sequence name="Fan out" from={f(CUE.fanOut)} durationInFrames={FAN_OUT_DURATION}>
-      <FanOutScene />
-    </Sequence>
     <Sequence name="One agent" from={f(CUE.oneAgent)} durationInFrames={ONE_AGENT_DURATION}>
       <OneAgentScene />
+    </Sequence>
+    <Sequence name="Fan out" from={f(CUE.fanOut)} durationInFrames={FAN_OUT_DURATION}>
+      <FanOutScene />
     </Sequence>
     <Sequence name="Decision" from={f(CUE.decision)} durationInFrames={DECISION_DURATION}>
       <DecisionScene />

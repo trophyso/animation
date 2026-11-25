@@ -45,10 +45,10 @@ export const SHADOW_PILL = "0 8px 20px -10px rgba(22,22,29,0.3)";
 /** Scene boundaries, seconds on the source clock (measured from a 10 fps pass) */
 export const SOURCE_CUE = {
   samePath: 0,
-  fanOut: 6.8,
-  oneAgent: 9.0,
+  oneAgent: 6.8,
+  fanOut: 9.2,
   decision: 12.0,
-  push: 16.8,
+  push: 16.5,
   chart: 19.5,
   outro: 25.6,
   end: 29.5,
@@ -57,7 +57,7 @@ export const SOURCE_CUE = {
 /** Video time (s) where the voiceover file starts playing */
 export const VO_OFFSET = 0.25;
 
-type Word = { w: string; s: number; e: number; n: string };
+type Word = { w: string; s: number; e: number; section: number; n: string };
 const norm = (w: string) => w.toLowerCase().replace(/[^a-z0-9']/g, "");
 const WORDS: Word[] = (VOICEOVER?.words ?? []).map((w) => ({ ...w, n: norm(w.w) })).filter((w) => w.n);
 
@@ -81,44 +81,64 @@ type VoiceRef = {
   offset?: number;
 };
 
+/** A file time in the take to video seconds: the take plays as one continuous file, never split or spaced out */
+const fileToVideo = (t: number): number => VO_OFFSET + t;
+
 const timeOf = (ref: VoiceRef, index: number): number => {
   const w = WORDS[index + (ref.word ?? 0)];
-  return VO_OFFSET + (ref.edge === "end" ? w.e : w.s) + (ref.offset ?? 0);
+  return fileToVideo(ref.edge === "end" ? w.e : w.s) + (ref.offset ?? 0);
 };
 
-/** Video time (s) of a phrase in the voiceover, or `fallback` if there is no take or no match */
-export const voiceTime = (ref: VoiceRef, fallback: number): number => {
-  const i = findPhrase(ref.say);
-  return i < 0 ? fallback : timeOf(ref, i);
+type Pin = VoiceRef & {
+  /** The visual moment, source clock */
+  at: number;
+  /** A still moment before `at` where the animation can wait */
+  holdAt: number;
+  /** If the voice is ahead, drop up to this many seconds of still time after `holdAt` */
+  cut?: number;
+  why: string;
 };
 
 /**
- * The video follows the voice. Each entry pins a visual moment (`at`, source
- * clock) to a phrase in the take; the animation holds at `holdAt` (a moment
- * when nothing is moving) for as long as it takes the voice to get there.
- * Where the voice is ahead, a pin with `cut` may instead drop up to that many
- * seconds of still time after `holdAt`.
- * Entries run in script order. Note the first word of each paragraph absorbs
- * the pause before it in the alignment, so pins use a later word and an offset.
+ * The video follows the voice. Each pin ties a visual moment (`at`, source
+ * clock) to a phrase in the take. The animation holds at `holdAt` until the
+ * voice gets there. Where the voice is ahead, `cut` drops still time first,
+ * and anything still early is reported in SYNC_EARLY (fix it by tightening the
+ * animation; the voice is never paused).
+ *
+ * Pins run in script order. The first word of a paragraph absorbs the pause
+ * before it in the alignment, so pins name a later word with a negative offset.
  */
-export const SYNC: (VoiceRef & { at: number; holdAt: number; cut?: number; why: string })[] = [
-  { at: 5.75, holdAt: 5.6, say: "same message", why: '"We miss you!" pops on "Same message"' },
-  { at: 6.8, holdAt: 6.25, say: "deploys", offset: -0.75, why: 'the paths split just before "Trophy deploys"' },
-  { at: 9.0, holdAt: 8.3, say: "agent for each user", why: 'the "One AI lifecycle agent" title lands on "agent"' },
-  { at: 11.86, holdAt: 11.5, say: "just for them", word: 2, edge: "end", offset: -0.1, why: 'the title lifts away as "…just for them!" ends' },
-  { at: 15.0, holdAt: 14.0, say: "picks push", word: 1, offset: -0.08, why: 'the ring lands on Push on "push"' },
-  { at: 19.6, holdAt: 18.5, say: "ai lifecycle marketing", offset: -0.45, why: 'the chart starts drawing on "Trophy\'s AI…"' },
-  { at: 23.5, holdAt: 23.45, say: "than with sequences", why: 'the grey line draws on "than with sequences!"' },
-  // The chart is still between the grey label landing (24.15) and its exit (25.22)
-  { at: 25.7, holdAt: 24.25, cut: 0.9, say: "sending generic", offset: -0.4, why: 'the logo pops on "Stop sending…"' },
-  { at: 28.0, holdAt: 27.3, say: "a demo", offset: -0.4, why: 'the button appears on "Book a demo"' },
+export const SYNC: Pin[] = [
+  // S1 · the same sequence: the users spring from step to step with the read
+  { at: 1.2, holdAt: 1.1, say: "every user", why: 'the users spring to Day 1 on "…send every user"' },
+  { at: 2.5, holdAt: 2.4, say: "same steps", why: 'the users spring to Day 3 on "Same steps"' },
+  { at: 3.35, holdAt: 3.3, say: "same timing", why: 'the users spring to Day 7 on "Same timing"' },
+  { at: 4.6, holdAt: 4.0, cut: 0.3, say: "same message", why: 'the users spring to Day 14 on "Same message"' },
+  // S2 · the title (the first scene has lifted away by 5.66; only the rail is left): the agent drops onto the rail and floods the frame; "…for each user" lands with the read
+  { at: 6.8, holdAt: 5.75, cut: 1.05, say: "deploys", offset: -0.3, why: 'the agent drops onto the rail just before "Trophy deploys"' },
+  { at: 7.95, holdAt: 7.9, say: "for each user", offset: -0.1, why: 'the accent line lands on "…for each user"' },
+  // S3 · the split paths: the title clears into the agent node, and each user's message pops in
+  { at: 9.0, holdAt: 8.6, cut: 0.3, say: "that creates", offset: -0.3, why: 'the title clears just before "that creates…"' },
+  { at: 11.24, holdAt: 10.9, say: "just for them", word: 2, edge: "end", offset: 0, why: 'the paths hold through "…just for them!", then swell into the next scene' },
+  // S4 · Mei: the voice waits for her card; the chart draws on "sessions"; the ring lands on "push"
+  // The frame is solid indigo from 11.4 (the swell) until her card starts forming at 11.94; her details fade in from 12.6
+  { at: 12.6, holdAt: 11.42, cut: 0.5, say: "agent sees", offset: -0.25, why: 'Mei\'s card fills in on "Mei\'s agent…"' },
+  { at: 13.6, holdAt: 13.55, say: "sessions are getting shorter", why: 'her session chart draws on "sessions are getting shorter"' },
+  { at: 15.0, holdAt: 14.55, say: "picks push", word: 1, offset: -0.08, why: 'the ring lands on Push on "push"' },
+  // S6 · the result. The decision is still between the ring settling on Push (15.32) and its exit (16.15)
+  { at: 19.6, holdAt: 15.6, cut: 0.7, say: "agents achieve", offset: -0.4, why: 'the chart starts drawing on "Trophy\'s agents…"' },
+  // S7 · close. The chart is still between the grey label landing (22.35) and its exit (25.22)
+  { at: 25.7, holdAt: 22.6, cut: 2.5, say: "sending generic", offset: -0.4, why: 'the statement writes in on "Stop sending…"' },
+  { at: 27.3, holdAt: 26.6, cut: 0.6, say: "users ignore", word: 1, edge: "end", offset: 0, why: 'the statement clears after "…users ignore."' },
+  { at: 27.55, holdAt: 27.5, say: "a demo", offset: -0.45, why: 'the logo pops just before "Book a demo"' },
   { at: 29.1, holdAt: 28.12, say: "messaging tools", word: 1, why: 'the click lands on "tools!"' },
-  { at: 29.5, holdAt: 29.45, say: "messaging tools", word: 1, edge: "end", offset: 0.5, why: "a short tail after the last word" },
+  { at: 29.5, holdAt: 29.45, say: "messaging tools", word: 1, edge: "end", offset: 1.8, why: "trophy.so stays up after the last word" },
 ];
 
 /** Seconds inserted (or, if negative, still time dropped) at source time `at`; everything scheduled from then on shifts */
 export const HOLDS: { at: number; extra: number; why: string }[] = [];
-/** Pins the voice reaches before the animation can (the hold would be negative) */
+/** Pins the voice reaches before the animation can */
 export const SYNC_EARLY: string[] = [];
 {
   let cursor = 0;
@@ -131,11 +151,19 @@ export const SYNC_EARLY: string[] = [];
     cursor = i;
     const sofar = HOLDS.reduce((t, h) => (pin.at >= h.at ? t + h.extra : t), pin.at);
     const want = timeOf(pin, i) - sofar;
+    // Voice ahead: drop still time
     const extra = Math.max(want, -(pin.cut ?? 0));
     if (want - extra < -0.05) SYNC_EARLY.push(`${pin.why}: voice is ${(extra - want).toFixed(2)} s early`);
     HOLDS.push({ at: pin.holdAt, extra, why: pin.why });
   }
 }
+
+
+/** Video time (s) of a phrase in the voiceover, or `fallback` if there is no take or no match */
+export const voiceTime = (ref: VoiceRef, fallback: number): number => {
+  const i = findPhrase(ref.say);
+  return i < 0 ? fallback : timeOf(ref, i);
+};
 
 /** Source-clock seconds to video seconds */
 export const warp = (s: number): number => HOLDS.reduce((t, h) => (s >= h.at ? t + h.extra : t), s);
@@ -164,36 +192,48 @@ export const COPY = {
     { day: "Day 7", sub: "We miss you" },
     { day: "Day 14", sub: "Discount" },
   ],
-  samePath: "Every user gets the same sequence.",
-  blast: "We miss you!",
+  /** What the sequence sends everyone at each step */
+  sequence: [
+    { channel: "Email", title: "Welcome to the app!", body: "Here’s everything you need to get started." },
+    { channel: "Push", title: "Time to come back!", body: "Pick up where you left off today." },
+    { channel: "Push", title: "We miss you!", body: "It’s been a while. Come back and play." },
+    { channel: "Email", title: "20% off, today only", body: "Upgrade now before the offer ends." },
+  ],
+  samePath: "Your lifecycle marketing tools send every user down the same path",
+  /** What each user's agent decided, from the website's user stories */
   users: [
-    { initial: "M", label: "Mei · push at 07:15" },
-    { initial: "J", label: "Joe · email at 12:15" },
-    { initial: "A", label: "Aisha · in-app card" },
-    { initial: "L", label: "Leo · left alone today" },
-    { initial: "E", label: "Ellie · push at 05:15" },
+    { initial: "M", name: "Mei", channel: "Push · 07:15", title: "Ready for a harder puzzle, Mei?", body: "Today’s expert pack is a step up." },
+    { initial: "J", name: "Joe", channel: "Push · 19:30", title: "Still thinking about Rome?", body: "Your two shortlisted flights are still available." },
+    { initial: "A", name: "Aisha", channel: "Email · 17:00", title: "Ultra is here before your exams", body: "You’ve hit your study limit 3 times in two weeks." },
+    { initial: "L", name: "Leo", channel: "Nothing sent", title: "Studying daily anyway", body: "His agent saves the channel for when it counts.", quiet: true },
+    { initial: "E", name: "Ellie", channel: "Email · 07:30", title: "20 points from Gold", body: "Double points this weekend gets you there." },
   ],
   /** The last line is the light-indigo accent */
-  oneAgent: ["One AI", "lifecycle agent", "per user."],
+  oneAgent: ["Trophy deploys", "an AI lifecycle", "marketing agent", "for each user"],
   mei: {
     initial: "M",
     name: "Mei",
-    sub: "Puzzle app · New York",
+    sub: "Wordplay · New York",
     rows: [
       { label: "Streak", value: "14 days" },
       { label: "Sessions", value: "Getting shorter", trend: true },
       { label: "Usually plays", value: "Before 7:30am" },
     ],
+    /** Minutes per session over her 14-day streak */
+    sessions: [9.2, 8.7, 9.4, 8.9, 8.4, 8.8, 7.9, 7.5, 7.7, 6.6, 5.8, 5.1, 4.0, 3.1],
   },
   options: [
     { kicker: "Not picked", title: "Email" },
     { kicker: "Sent 07:15", title: "Push" },
     { kicker: "If unseen", title: "In-app" },
   ],
+  /** The notification the agent wrote: {braces} mark the variables it chose */
   push: {
-    app: "Puzzle app · 07:15",
-    title: "Two puzzles to beat your best week, Mei.",
-    body: "A new hard pack just unlocked for you.",
+    app: "Wordplay",
+    time: "07:15",
+    title: "Ready for a {harder puzzle}, Mei?",
+    body: "You’ve been {breezing through}. Today’s {expert pack} is a step up from your usual.",
+    why: "Sent at 07:15, before Mei usually plays",
   },
   chart: {
     figure: 40,
@@ -201,5 +241,7 @@ export const COPY = {
     agent: "With Trophy's AI agent",
     baseline: "With sequences",
   },
+  statement: ["Stop sending generic", "messages users ignore."],
   cta: "Book a demo",
+  domain: "trophy.so",
 } as const;
