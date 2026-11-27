@@ -44,7 +44,8 @@
     "lint": "eslint src && tsc",
     "generate:thumbnail": "./scripts/generate-thumbnail.sh",
     "generate:feature-images": "./scripts/refresh-feature-images.sh",
-    "voiceover": "node scripts/generate-voiceover.mjs"
+    "voiceover": "node scripts/generate-voiceover.mjs",
+    "music": "node scripts/generate-music.mjs"
   },
   "sideEffects": [
     "*.css"

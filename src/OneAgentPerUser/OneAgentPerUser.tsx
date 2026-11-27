@@ -1,6 +1,9 @@
 import React from "react";
 import { AbsoluteFill, Sequence, type CalculateMetadataFunction } from "remotion";
+import type { MusicKey } from "../music";
+import { Music } from "./components/Music";
 import { Voiceover } from "./components/Voiceover";
+import type { StoryKey } from "./stories";
 import { f, type SceneName } from "./script";
 import { ChartScene } from "./scenes/ChartScene";
 import { DecisionScene } from "./scenes/DecisionScene";
@@ -24,7 +27,10 @@ const SCENES: [SceneName, string, React.FC][] = [
 ];
 
 /** Mei's story on the flat ground: the original video */
-export const DEFAULT_VIDEO: VideoProps = { story: "mei", sky: "plain" };
+export const DEFAULT_VIDEO: VideoProps = { story: "mei", sky: "plain", music: "none" };
+
+/** Stories whose video has background music (the rest are as first published) */
+export const STORY_MUSIC: Partial<Record<StoryKey, MusicKey>> = { aisha: "indie-electronic" };
 
 /** The video runs as long as its story's voice take needs */
 export const calculateVideoMetadata: CalculateMetadataFunction<VideoProps> = ({ props }) => ({
@@ -36,6 +42,7 @@ const Scenes: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: ground.background }}>
       <Voiceover />
+      <Music />
       {SCENES.map(([scene, name, Scene]) => (
         <Sequence key={scene} name={name} from={f(timeline.cue[scene])} durationInFrames={timeline.duration(scene)}>
           <Scene />

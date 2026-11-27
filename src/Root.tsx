@@ -65,6 +65,7 @@ import { OUTRO_DURATION as REWARDS_OUTRO_DURATION, OutroScene as RewardsOutroSce
 import {
   DEFAULT_VIDEO as OAPU_DEFAULT,
   ONE_AGENT_SCENES as OAPU_SCENES,
+  STORY_MUSIC as OAPU_STORY_MUSIC,
   OneAgentPerUser,
   OneAgentPerUserScene,
   calculateVideoMetadata as oapuMetadata,
@@ -125,7 +126,7 @@ export const RemotionRoot: React.FC = () => {
             id={`OneAgentPerUser-${OAPU_STORIES[key].name}`}
             component={OneAgentPerUser}
             schema={oapuSchema}
-            defaultProps={{ story: key, sky: "story" as const }}
+            defaultProps={{ story: key, sky: "story" as const, music: OAPU_STORY_MUSIC[key] ?? ("none" as const) }}
             calculateMetadata={oapuMetadata}
             durationInFrames={1}
             fps={60}
