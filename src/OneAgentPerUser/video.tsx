@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { z } from "zod";
+import { MUSIC, MUSIC_KEYS, type MusicKey, type MusicTrack } from "../music";
 import { GROUNDS, groundFor, type Ground, type GroundName } from "./ground";
 import type { SceneName } from "./script";
 import { STORIES, STORY_KEYS, type Narrator, type Story, type StoryKey } from "./stories";
@@ -16,6 +17,8 @@ export const videoSchema = z.object({
   story: z.enum(STORY_KEYS as [StoryKey, ...StoryKey[]]),
   /** "story" uses the story's own sky from the website */
   sky: z.enum(["story", ...GROUNDS] as ["story", ...GroundName[]]),
+  /** Background music under the voice (src/music.ts), or none */
+  music: z.enum(["none", ...MUSIC_KEYS] as ["none", ...MusicKey[]]),
 });
 export type VideoProps = z.infer<typeof videoSchema>;
 
@@ -25,13 +28,14 @@ export type Video = {
   narrator: Narrator;
   /** The voice take, if it has been generated (npm run voiceover) */
   take: VoiceoverTake | undefined;
+  music: MusicTrack | undefined;
   timeline: Timeline;
 };
 
 /** The take for a story: voiceover/takes/<story>-<narrator>.ts */
 export const takeKey = (story: Story) => `${story.key}-${story.narrator}`;
 
-export const resolveVideo = ({ story, sky }: VideoProps): Video => {
+export const resolveVideo = ({ story, sky, music }: VideoProps): Video => {
   const s = STORIES[story];
   const take = TAKES[takeKey(s)];
   return {
@@ -39,6 +43,7 @@ export const resolveVideo = ({ story, sky }: VideoProps): Video => {
     ground: groundFor(sky === "story" ? s.sky : sky),
     narrator: s.narrator,
     take,
+    music: music === "none" ? undefined : MUSIC[music],
     timeline: buildTimeline(s, take),
   };
 };
@@ -46,8 +51,8 @@ export const resolveVideo = ({ story, sky }: VideoProps): Video => {
 const VideoContext = createContext<Video | null>(null);
 
 export const VideoProvider: React.FC<{ props: VideoProps; children: React.ReactNode }> = ({ props, children }) => {
-  const { story, sky } = props;
-  const video = useMemo(() => resolveVideo({ story, sky }), [story, sky]);
+  const { story, sky, music } = props;
+  const video = useMemo(() => resolveVideo({ story, sky, music }), [story, sky, music]);
   return <VideoContext.Provider value={video}>{children}</VideoContext.Provider>;
 };
 
